@@ -41,9 +41,14 @@ h4 {
     border-style: dashed;
     border-color: #c3c3c3;
     text-align:left;
+    padding-left: 10px;
 }
 
 /* all input elements get a fixed width */
 input {
     width:80px;
+}
+input[type=text] {
+    width:120px;
+}
 }

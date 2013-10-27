@@ -42,6 +42,8 @@ define(["jquery", "straight_line", "circle.js"],
             return Math.floor(Math.random()*(context.canvas.height/4))+5
 	   // return 4;
         };
+        
+        
             
         // generate random color in hex notation
         var randomColor = function() {
@@ -168,6 +170,17 @@ define(["jquery", "straight_line", "circle.js"],
 		//and redraw the scene
 		sceneController.scene.draw(sceneController.context);
 
+         });
+         
+         $("#btnParamCurve").click(function() {
+        	var style = { 
+                width: Math.floor(Math.random()*3)+1,
+                color: randomColor()
+            	};
+            	
+            	var param_curve = new ParametricCurve();
+            	
+         
          });
     
     };

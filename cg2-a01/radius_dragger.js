@@ -6,24 +6,4 @@
 
 // requireJS module definition
 
-define(["util", "scene"]),
-		 (function(Util, Scene){
 
-		"use strict";
-		
-		var RadiusDragger = function (getPos, setPos, drawStyle) {
-
-
-
-
-
-		
-
-
-		}
-
-
-
-
-
-})); //define
