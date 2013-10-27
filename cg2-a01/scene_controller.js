@@ -140,13 +140,11 @@ define(["util", "scene", "circle"],
 	if (obj.radius != undefined) {
 		$("#inputRadius_area").show();
 		$("#inputRadius").val(obj.radius);
-		$("#inputParam_Parametric").hide();
 		
-	// if object is a straight_line, dont show the radius and the parameters of a 
+	// if object is a straight_line, don't show the radius and the parameters of a 
 	// parametric/bezier curve	
 	} else if (obj.point1 == undefined) {
 		$("#inputRadius_area").hide();
-		$("#inputParam_Parametric").hide();
 		
 	// show the parameters of a parametric / bezier curve
 	} else {

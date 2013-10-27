@@ -1,0 +1,5 @@
+/* default: white background, sans serif font */
+body {
+    font-family:Arial,Helvetica;
+    background-color:white;
+}

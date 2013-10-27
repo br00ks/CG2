@@ -1,0 +1,25 @@
+<?php
+	echo "Hallo \"Welt\" <br> ";
+	$vorname = "Ruli";
+	$nachname = "Iakovi";
+	$stadt = "Berlin";
+	
+	$telefon = "0123 333 333 2";
+	
+	$zahl1 = 10;
+	$zahl2 = 2;
+	$ergebnis = $zahl1 + $zahl2;
+	
+	echo "Meine Freundin heißt $vorname $nachname und kommt aus $stadt <br>";
+	
+?>
+<hr>
+<b> Hier steht plötzlich HTML Code </b> <br>
+<hr>
+<?php
+
+	echo "Und hier steht wieder PHP Code. <br>";
+
+
+
+?>

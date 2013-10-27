@@ -11,8 +11,8 @@
 
  
 /* requireJS module definition */
-define(["jquery", "straight_line", "circle.js"], 
-       (function($, StraightLine, Circle) {
+define(["jquery", "straight_line", "circle.js", "parametric_curve.js"], 
+       (function($, StraightLine, Circle, ParametricCurve) {
 
     "use strict"; 
                 
@@ -25,6 +25,7 @@ define(["jquery", "straight_line", "circle.js"],
     
 	//hide the radius-input by default
 	$("#inputRadius_area").hide();
+	$("#inputParam_Parametric").hide();
 	
         // generate random X coordinate within the canvas
         var randomX = function() { 
@@ -87,7 +88,7 @@ define(["jquery", "straight_line", "circle.js"],
 	
 	// event handler for "new circle" - button
 	 $("#btnNewCircle").click( (function() {
-       		//console.log("you clicked on New Circle");
+            //console.log("you clicked on New Circle");
             // create the actual circle and add it to the scene
             var style = { 
                 width: Math.floor(Math.random()*3)+1, //
@@ -106,6 +107,27 @@ define(["jquery", "straight_line", "circle.js"],
             sceneController.select(circle); // this will also redraw
                         
         }));
+        //----------------------------------------------------->>>
+        // event handler for "new parametric curve"-button
+          $("#btnParamCurve").click(function() {
+        	var style = { 
+                width: Math.floor(Math.random()*3)+1,
+                color: randomColor()
+            	};
+            	
+            	var x = function() { return 2;};
+            	var y = function() { return 3;};
+            	
+            	
+            	var paramcurve = new ParametricCurve(1,2,3,4,5,style);
+
+ 		scene.addObjects([paramcurve]);
+
+            	// deselect all objects, then select the newly created object
+            	sceneController.deselect();
+            	sceneController.select(paramcurve); // this will also redraw
+         
+         });
 
 	$("#inputColor").change(function() {
 		//console.log("changed");
@@ -172,16 +194,7 @@ define(["jquery", "straight_line", "circle.js"],
 
          });
          
-         $("#btnParamCurve").click(function() {
-        	var style = { 
-                width: Math.floor(Math.random()*3)+1,
-                color: randomColor()
-            	};
-            	
-            	var param_curve = new ParametricCurve();
-            	
-         
-         });
+       
     
     };
 

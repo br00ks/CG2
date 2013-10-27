@@ -15,6 +15,10 @@
 define(["util", "vec2", "scene", "point_dragger"], 
        (function(Util,vec2,Scene,PointDragger) {
        
+       "use strict";
+       
+       
+       //COMMENT!!!!
        var ParametricCurve =  function (xt, yt, tmin, tmax, segments, lineStyle) {
        
              	// given function x(t)     
@@ -30,8 +34,19 @@ define(["util", "vec2", "scene", "point_dragger"],
       		// draw style for drawing the parametric curve
       		this.lineStyle = lineStyle || { width: "2", color: "#0000AA" };
               	
-       }
+       };
        
+       ParametricCurve.prototype.draw = function(context) {
+       	
+       	for (var i = 0; i <= this.segments + 1;  i++) {
+       		console.log(test);
+       		
+       	}
+       
+       
+       
+       
+       }
        
        
        
