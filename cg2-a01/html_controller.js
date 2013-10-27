@@ -142,7 +142,8 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve.js"],
 
 		//deselect and select the object to change the color of the draggers
 		sceneController.deselect();
-		sceneController.select(selectedObject);
+		sceneController.select(selectedObject);//In seinem Code stand das malt die Szene
+		//zusätzlich neu
 
 		//and redraw the scene
 		sceneController.scene.draw(sceneController.context);
@@ -179,7 +180,8 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve.js"],
 		var selectedObject = sceneController.getSelectedObject();
 
 		//if radius < 0, set radius to 0
-		if (parseFloat($("#inputRadius").val()) >= 0) {
+		if (parseFloat($("#inputRadius").val()) >= 0) {	
+			//parseFloat: transforms a passed string into a number
 			selectedObject.radius = parseFloat($("#inputRadius").val());
 		} else {
 

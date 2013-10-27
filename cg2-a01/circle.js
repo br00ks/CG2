@@ -6,7 +6,7 @@
  * A Circle knows how to draw itself into a specified 2D context,
  * can tell whether a certain mouse position "hits" the object,
  * and implements the function createDraggers() to create a set of
- * draggers to manipulate itself.
+ * draggers to manipulate itself. (centerpoint and radius)
  * 
  */
 
@@ -46,6 +46,8 @@ define(["util", "vec2", "scene", "point_dragger", "radius_dragger"],
 		// set drawing style
 		context.lineWidth = this.lineStyle.width;
 		context.strokeStyle = this.lineStyle.color;
+		
+		//fehlt nicht noch context.closePath(); ???
 		
 		// actually start drawing
 		context.stroke(); 
