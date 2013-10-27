@@ -102,10 +102,7 @@ define(["util", "vec2", "scene", "point_dragger", "radius_dragger"],
         
    	};
 
-	Circle.prototype.getDraggers = function() {
-		return 
 
-	}
 
 	return Circle;
 

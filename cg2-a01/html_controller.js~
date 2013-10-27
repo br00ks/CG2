@@ -21,12 +21,7 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve.js"],
      * and provide them with a closure defining context and scene
      */
     var HtmlController = function(context, scene, sceneController) {
-    
-    
-	//hide the radius-input by default
-	$("#inputRadius_area").hide();
-	$("#inputParam_Parametric").hide();
-	
+    	
         // generate random X coordinate within the canvas
         var randomX = function() { 
             return Math.floor(Math.random()*(context.canvas.width-10))+5; 
@@ -89,6 +84,7 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve.js"],
 	// event handler for "new circle" - button
 	 $("#btnNewCircle").click( (function() {
             //console.log("you clicked on New Circle");
+            
             // create the actual circle and add it to the scene
             var style = { 
                 width: Math.floor(Math.random()*3)+1, //
@@ -98,8 +94,7 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve.js"],
             var circle = new Circle( [randomX(),randomY()], 
                                         randomRadius(), 
                                          style );
-	   // $("#inputNumber") = circle.style.width;
-	  //  $("#inputColor") = circle.style.color;
+
             scene.addObjects([circle]);
 
             // deselect all objects, then select the newly created object
@@ -110,17 +105,14 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve.js"],
         //----------------------------------------------------->>>
         // event handler for "new parametric curve"-button
           $("#btnParamCurve").click(function() {
-        	var style = { 
-                width: Math.floor(Math.random()*3)+1,
-                color: randomColor()
-            	};
-            	
-            	var x = function() { return 2;};
-            	var y = function() { return 3;};
-            	
-            	
-            	var paramcurve = new ParametricCurve(1,2,3,4,5,style);
-            	console.log("Test");
+                    	
+            	var paramcurve = new ParametricCurve();		
+
+ 		scene.addObjects([paramcurve]);
+
+            	// deselect all objects, then select the newly created object
+            	sceneController.deselect();
+            	sceneController.select(paramcurve); // this will also redraw
          
          });
 
