@@ -97,9 +97,36 @@ define(["util", "vec2", "scene", "point_dragger", "radius_dragger"],
 		//push the new dragger to the list
 		draggers.push( new PointDragger(getP0, setP0, draggerStyle) );
 
-		// CREATE RADIUSDRAGGER
+		
+		
+//---->Zusatzaufgabe Nummer 5  //BEZEICHNER vielleicht nicht gut gewählt???
+		// CREATE RADIUSDRAGGER	
+			//getting the position of the radiusdragger
+           var getRadiusPos = function(){
+		   
+				var pos = [];
+				//takes the array object for the point of the existing position of the radius
+				var posRadiuspos = _circle.center[0] + _circle.radius;
+				var poshorizontalpos = _circle.center[1];
+						//[ radiusposition , "horizontale position zum centerpoint von da aus" ]
+				return [ posRadiuspos, poshorizontalpos];			
+						
+			};
 
+            //setting the position of the new Radiusdraggerposition (to change the size of the circle)
+            var setRadiusPos = function(dragEvent) {
+				//set the position for the RadiusDragger
+					//_circle.center = dragEvent.position;-->geht nicht, weil sich die radiusposition diesmal verändern soll
+                var newRDp = dragEvent.position;  //newRadiusDrawingPosition
+                _circle.radius = newRDp[0] -  _circle.center[0];
 
+            };
+
+            draggers.push( new RadiusDragger(getRadiusPos, setRadiusPos, draggerStyle) );
+			//vielleicht noch einbauen wenn <0 dann ??
+			//und bei radiusDragger-klasse nichts verändert nur pointDraggerKlasse kopiert
+			//muss es dann eine extra Klasse geben???
+		
 		return draggers;
         
    	};
@@ -138,3 +165,14 @@ define(["util", "vec2", "scene", "point_dragger", "radius_dragger"],
 
 		draggers.push( new RadiusDragger (getRadiusPos, setRadiusPos, draggerStyle));
 		*/
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
