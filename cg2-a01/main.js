@@ -2,7 +2,7 @@
  *
  * Module main: CG2 Aufgabe 1, Winter 2013/2014
  * (C)opyright Hartmut Schirmacher, hschirmacher.beuth-hochschule.de 
- *
+ * test test
  */
 
 
