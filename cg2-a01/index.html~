@@ -56,12 +56,12 @@
 	</div>
 	<div id="inputParam_Parametric">
 
-		<input id="inputX" type="text" >&nbsp x(t):  </input> <br>
-		<input id="inputY" type="text" >&nbsp y(t):  </input> <br>
-		<input id="inputMinT" type="number" min = "0" > &nbsp min t:  </input>
+		<input id="inputX" type="text" > x(t):  </input> <br>
+		<input id="inputY" type="text" > y(t):  </input> <br>
+		<input id="inputMinT" type="number" min = "0" > min t:  </input>
 		<input id="inputMaxT" type="number" min = "0" > max t:  </input>
 		<input id="inputSegments" type="number" min = "0" > segments:  </input>
-		<input id="inputTicks" type="checkbox">tick marks:  </input>
+		<input id="inputTicks" type="checkbox"> tick marks:  </input>
 	</div>
         <!-- add more here... -->
 

@@ -35,8 +35,8 @@
 
 
 /* requireJS module definition */
-define(["util", "scene", "circle"], 
-       (function(util,Scene, Circle) {
+define(["util.js", "scene.js", "circle.js", "straight_line.js"], 
+       (function(util,Scene, Circle, StraightLine) {
 
     "use strict";
 
@@ -137,22 +137,31 @@ define(["util", "scene", "circle"],
 
 	// test if the objects has a attribute radius (otherwise it's no circle-object)
 	// show the inputRadius-div, when this attribute exists, else hide it
-	if (obj.radius != undefined) {
+	if (obj instanceof Circle) {
 		$("#inputRadius_area").show();
+		$("#inputParam_Parametric").hide();
 		$("#inputRadius").val(obj.radius);
+		console.log("circle");
 		
 	// if object is a straight_line, don't show the radius and the parameters of a 
 	// parametric/bezier curve	
-	} else if (obj.point1 == undefined) {
+	} else if (obj instanceof StraightLine) {
 		$("#inputRadius_area").hide();
+		$("#inputParam_Parametric").hide();
+		console.log("line");
 		
 	// show the parameters of a parametric / bezier curve
 	} else {
 		$("#inputParam_Parametric").show();
+		$("#inputRadius_area").hide();
+		console.log("paramcurve");
 	};
-        // redraw
-        this.scene.draw(this.context);
-    
+       // redraw
+       this.scene.draw(this.context);
+       
+    	//HIER FUNKTIONIERTS NOCH NICHT RICHTIG!!!! BEI LINE WERDEN IMMER NOCH ZU VIELE 
+    	//ELEMENTE/DIVS ANGEZEIGT! SOLLTE EIGENTLICH NUR FARBE & LINIENDICKE SEIN!
+    	// -........................:::!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!:..............
     };
     
     /*

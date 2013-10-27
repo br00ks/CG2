@@ -21,12 +21,7 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve.js"],
      * and provide them with a closure defining context and scene
      */
     var HtmlController = function(context, scene, sceneController) {
-    
-    
-	//hide the radius-input by default
-	$("#inputRadius_area").hide();
-	$("#inputParam_Parametric").hide();
-	
+    	
         // generate random X coordinate within the canvas
         var randomX = function() { 
             return Math.floor(Math.random()*(context.canvas.width-10))+5; 
@@ -89,6 +84,7 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve.js"],
 	// event handler for "new circle" - button
 	 $("#btnNewCircle").click( (function() {
             //console.log("you clicked on New Circle");
+            
             // create the actual circle and add it to the scene
             var style = { 
                 width: Math.floor(Math.random()*3)+1, //
@@ -98,8 +94,7 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve.js"],
             var circle = new Circle( [randomX(),randomY()], 
                                         randomRadius(), 
                                          style );
-	   // $("#inputNumber") = circle.style.width;
-	  //  $("#inputColor") = circle.style.color;
+
             scene.addObjects([circle]);
 
             // deselect all objects, then select the newly created object
@@ -110,16 +105,22 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve.js"],
         //----------------------------------------------------->>>
         // event handler for "new parametric curve"-button
           $("#btnParamCurve").click(function() {
-        	var style = { 
+          
+          	//   var ParametricCurve =  function (xt, yt, tmin, tmax, segments, lineStyle)
+          	var style = { 
                 width: Math.floor(Math.random()*3)+1,
                 color: randomColor()
             	};
-            	
-            	var x = function() { return 2;};
-            	var y = function() { return 3;};
-            	
-            	
-            	var paramcurve = new ParametricCurve(1,2,3,4,5,style);
+              var tickmarks;
+              
+              if ($("inputTicks").val() == "checked") {
+              	tickmarks = true;
+              } else {
+              	tickmarks = false;
+              } 
+              
+              //HIER NOCH EVAL"!???!??!??!?!??!?!?ß"                  	
+            	var paramcurve = new ParametricCurve($("functionX").val(), $("functionY").val(),parseInt($("inputMinT").val()),parseInt($("inputMaxT").val()),parseInt($("inputSegments").val()),style,tickmarks);		
 
  		scene.addObjects([paramcurve]);
 
@@ -196,8 +197,56 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve.js"],
 
          });
          
+       $("#functionX").change(function() {
+       	console.log("changed function X");
+       	//TO_DO!!!!!!!!!!!!!!!!!!!!! <----------------------------
+       });
        
+       $("#functionY").change(function() {
+       	console.log("changed function Y");
+       	//TO_DO!!!!!!!!!!!!!!!!!!!!! <----------------------------
+       });
     
+    	$("#inputMinT").change(function() {
+       	console.log("changed mint");
+       	
+       	//get the selected object
+		var selectedObject = sceneController.getSelectedObject();
+		selectedObject.tmin = parseInt($("#inputMinT").val());
+		
+		//deselect() and select() to update the radius instantly
+		sceneController.deselect();
+		sceneController.select(selectedObject);
+
+		//and redraw the scene
+		sceneController.scene.draw(sceneController.context);
+		
+       });
+       
+       $("#inputMaxT").change(function() {
+       	console.log("changed maxt");
+       	
+       	//get the selected object
+		var selectedObject = sceneController.getSelectedObject();
+		selectedObject.tmax = parseInt($("#inputMaxT").val());
+		
+		//deselect() and select() to update the radius instantly
+		sceneController.deselect();
+		sceneController.select(selectedObject);
+
+		//and redraw the scene
+		sceneController.scene.draw(sceneController.context);
+       });
+       
+       $("#inputSegments").change(function() {
+       	console.log("changed segments");
+       	//TO_DO!!!!!!!!!!!!!!!!!!!!! <----------------------------
+       });
+       
+       $("#inputTicks").change(function() {
+       	console.log("changed Ticks");
+       	//TO_DO!!!!!!!!!!!!!!!!!!!!! <----------------------------
+       });
     };
 
     // return the constructor function 

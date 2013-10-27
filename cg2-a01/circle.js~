@@ -95,6 +95,30 @@ define(["util", "vec2", "scene", "point_dragger", "radius_dragger"],
 		//push the new dragger to the list
 		draggers.push( new PointDragger(getP0, setP0, draggerStyle) );
 
+		// CREATE RADIUSDRAGGER
+
+
+		return draggers;
+        
+   	};
+
+	Circle.prototype.getDraggers = function() {
+		return 
+
+	}
+
+	return Circle;
+
+	}
+	
+));
+
+
+
+
+
+
+
 
 		/*
 		// CREATE RADIUSDRAGGER
@@ -115,17 +139,3 @@ define(["util", "vec2", "scene", "point_dragger", "radius_dragger"],
 
 		draggers.push( new RadiusDragger (getRadiusPos, setRadiusPos, draggerStyle));
 		*/
-		return draggers;
-        
-   	};
-
-	Circle.prototype.getDraggers = function() {
-		return 
-
-	}
-
-	return Circle;
-
-	}
-	
-));
