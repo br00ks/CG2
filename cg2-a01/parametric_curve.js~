@@ -19,21 +19,24 @@ define(["util", "vec2", "scene", "point_dragger"],
        
        
        //COMMENT!!!!
-       var ParametricCurve =  function (xt, yt, tmin, tmax, segments, lineStyle) {
+       var ParametricCurve =  function (xt, yt, tmin, tmax, segments, lineStyle, tickmarks) {
        
              	// given function x(t)     
-      		this.xt = xt || function(t){return -2*t +t*t};
+      		this.xt = xt || function(t){return 2+ Math.sin(t)};
       		// given function y(t)  
-      		this.yt = yt || function(t){return t};
+      		this.yt = yt || function(t){return Math.cos(t)};
       		
       		// given interval 
       		this.tmin = tmin || 1;
       		this.tmax = tmax || 20;
       		// number of segments of the parametric curve
-      		this.segments = segments || 100;
+      		this.segments = segments || 10;
       		
       		// draw style for drawing the parametric curve
       		this.lineStyle = lineStyle || { width: "3", color: "#0000AA" };
+      		
+      		//
+      		this.tickmarks = tickmarks || false;
       		
       		//array of nodes
       		this.nodes = new Array();

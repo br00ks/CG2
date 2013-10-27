@@ -105,9 +105,23 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve.js"],
         //----------------------------------------------------->>>
         // event handler for "new parametric curve"-button
           $("#btnParamCurve").click(function() {
-                    	
-            	var paramcurve = new ParametricCurve();		
-		//hier noch die werte aus den input-feldern ziehen!!!!!
+          
+          	//   var ParametricCurve =  function (xt, yt, tmin, tmax, segments, lineStyle)
+          	var style = { 
+                width: Math.floor(Math.random()*3)+1,
+                color: randomColor()
+            	};
+              var tickmarks;
+              
+              if ($("inputTicks").val() == "checked") {
+              	tickmarks = true;
+              } else {
+              	tickmarks = false;
+              } 
+              
+              //HIER NOCH EVAL"!???!??!??!?!??!?!?ß"                  	
+            	var paramcurve = new ParametricCurve($("functionX").val(), $("functionY").val(),parseInt($("inputMinT").val()),parseInt($("inputMaxT").val()),parseInt($("inputSegments").val()),style,tickmarks);		
+
  		scene.addObjects([paramcurve]);
 
             	// deselect all objects, then select the newly created object
@@ -181,8 +195,56 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve.js"],
 
          });
          
+       $("#functionX").change(function() {
+       	console.log("changed function X");
+       	//TO_DO!!!!!!!!!!!!!!!!!!!!! <----------------------------
+       });
        
+       $("#functionY").change(function() {
+       	console.log("changed function Y");
+       	//TO_DO!!!!!!!!!!!!!!!!!!!!! <----------------------------
+       });
     
+    	$("#inputMinT").change(function() {
+       	console.log("changed mint");
+       	
+       	//get the selected object
+		var selectedObject = sceneController.getSelectedObject();
+		selectedObject.tmin = parseInt($("#inputMinT").val());
+		
+		//deselect() and select() to update the radius instantly
+		sceneController.deselect();
+		sceneController.select(selectedObject);
+
+		//and redraw the scene
+		sceneController.scene.draw(sceneController.context);
+		
+       });
+       
+       $("#inputMaxT").change(function() {
+       	console.log("changed maxt");
+       	
+       	//get the selected object
+		var selectedObject = sceneController.getSelectedObject();
+		selectedObject.tmax = parseInt($("#inputMaxT").val());
+		
+		//deselect() and select() to update the radius instantly
+		sceneController.deselect();
+		sceneController.select(selectedObject);
+
+		//and redraw the scene
+		sceneController.scene.draw(sceneController.context);
+       });
+       
+       $("#inputSegments").change(function() {
+       	console.log("changed segments");
+       	//TO_DO!!!!!!!!!!!!!!!!!!!!! <----------------------------
+       });
+       
+       $("#inputTicks").change(function() {
+       	console.log("changed Ticks");
+       	//TO_DO!!!!!!!!!!!!!!!!!!!!! <----------------------------
+       });
     };
 
     // return the constructor function 

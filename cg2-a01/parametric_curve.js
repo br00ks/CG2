@@ -19,7 +19,7 @@ define(["util", "vec2", "scene", "point_dragger"],
        
        
        //COMMENT!!!!
-       var ParametricCurve =  function (xt, yt, tmin, tmax, segments, lineStyle) {
+       var ParametricCurve =  function (xt, yt, tmin, tmax, segments, lineStyle, tickmarks) {
        
              	// given function x(t)     
       		this.xt = xt || function(t){return -2*t +t*t};
@@ -30,10 +30,12 @@ define(["util", "vec2", "scene", "point_dragger"],
       		this.tmin = tmin || 1;
       		this.tmax = tmax || 20;
       		// number of segments of the parametric curve
-      		this.segments = segments || 100;
+      		this.segments = segments || 10;
       		
       		// draw style for drawing the parametric curve
       		this.lineStyle = lineStyle || { width: "3", color: "#0000AA" };
+      		//
+      		this.tickmarks = tickmarks || false;
       		
       		//array of nodes
       		this.nodes = new Array();
@@ -43,7 +45,7 @@ define(["util", "vec2", "scene", "point_dragger"],
        
        ParametricCurve.prototype.draw = function(context) {
        
- 		//FORSCHLEIFE RICHTIG??? muss noch getestet werden!???
+ 		//FORSCHLEIFE RICHTIG??? muss noch getestet werden!
              	for (var x = 0; x < this.segments; x++) {
 
        		var t = this.tmin + x/this.segments * (this.tmin + this.tmax);
