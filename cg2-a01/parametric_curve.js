@@ -20,9 +20,12 @@ define(["util", "vec2", "scene", "point_dragger"],
        
        //COMMENT!!!!
        var ParametricCurve =  function (xt, yt, tmin, tmax, segments, lineStyle, tickmarks) {
+	   
+	   
        
              	// given function x(t)     
       		this.xt = xt || function(t){return -2*t +t*t};
+			console.log("start drawing" + this.xt);
       		// given function y(t)  
       		this.yt = yt || function(t){return t};
       		

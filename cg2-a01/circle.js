@@ -120,7 +120,7 @@ define(["util", "vec2", "scene", "point_dragger", "radius_dragger"],
                 var newRDp = dragEvent.position;  //newRadiusDrawingPosition
                 _circle.radius = newRDp[0] -  _circle.center[0];
 
-            };
+            };	
 
             draggers.push( new RadiusDragger(getRadiusPos, setRadiusPos, draggerStyle) );
 			//vielleicht noch einbauen wenn <0 dann ??
