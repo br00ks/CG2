@@ -19,19 +19,23 @@ define(["util", "vec2", "scene", "point_dragger"],
        
        
        //COMMENT!!!!
+
        var ParametricCurve =  function (xt, yt, tmin, tmax, segments, lineStyle, tickmarks) {
 	   
 	   
        
              	// given function x(t)     
-      		this.xt = xt || function(t){return -2*t +t*t};
+      		//this.xt = xt || function(t){return -2*t +t*t};
+			//in Aufgabenstellung:
+				//eval() gibt wenn übergebendes Argument als Rechenoperation interpretiert werden kann, dessen Ergebnis zurück
+				//Beispiel: http://de.selfhtml.org/javascript/objekte/unabhaengig.htm#eval
+			this.xt = eval(this.xt) || function(t){return -2*t +t*t};
 			console.log("start drawing" + this.xt);
-       var ParametricCurve =  function (xt, yt, tmin, tmax, segments, lineStyle) {
-       
-             	// given function x(t)     
-      		this.xt = xt || function (t) {return -2*t +t*t};
+
       		// given function y(t)  
-      		this.yt = yt || function (t) {return t};
+      		//this.yt = yt || function (t) {return t};
+			this.yt = eval(this.yt) || function (t) {return t};			//Wo finden das Abfangen der Fehleingabe statt? http://www.peterkropff.de/site/javascript/fehlerbehandlung.htm
+																		//try {} catch(e) {if()  alert();}
       		
       		// given interval 
       		this.tmin = tmin || 1;
@@ -60,9 +64,10 @@ define(["util", "vec2", "scene", "point_dragger"],
  		//FORSCHLEIFE RICHTIG??? muss noch getestet werden!
              	for (var x = 0; x < this.segments; x++) {
 
-       		var t = this.tmin + x/this.segments * (this.tmin + this.tmax);
+       		//var t = this.tmin + x/this.segments * (this.tmin + this.tmax); //in seiner formel steht t.max-t.min???
+			var t = this.tmin + x/this.segments * (this.tmax - this.tmin); 
        		console.log(t);
-       		this.nodes[x] = [this.xt(t), this.yt(t)];
+       		this.nodes[x] = [eval(this.xt(t)), eval(this.yt(t))];	//eval??? Wieder muss die Prüfung stattfinden?
        	}; 
        	//console.log(this.nodes.length);
        	
@@ -84,7 +89,16 @@ define(["util", "vec2", "scene", "point_dragger"],
        	
        };
        //TO-DO!!!!!!!!!!!!!!!!!!!!!!!!!!! <-------------------------------------------------------------
+	   // test whether the mouse position is on this curve segment
        ParametricCurve.prototype.isHit = function(context , mousePos) {
+	   
+			for (var i = 1; i < this.nodes.length - 1; i++) {
+			
+				if( (this.nodes[i]).isHit == true ) {
+					return true;
+					}
+			}
+	   
        	return false;
        };
        

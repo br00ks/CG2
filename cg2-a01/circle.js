@@ -104,7 +104,7 @@ define(["util", "vec2", "scene", "point_dragger", "radius_dragger"],
 			//getting the position of the radiusdragger
            var getRadiusPos = function(){
 		   
-				var pos = [];
+				var pos = []; //var pos = new Array();
 				//takes the array object for the point of the existing position of the radius
 				var posRadiuspos = _circle.center[0] + _circle.radius;
 				var poshorizontalpos = _circle.center[1];
