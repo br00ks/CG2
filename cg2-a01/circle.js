@@ -117,8 +117,8 @@ define(["util", "vec2", "scene", "point_dragger", "radius_dragger"],
             var setRadiusPos = function(dragEvent) {
 				//set the position for the RadiusDragger
 					//_circle.center = dragEvent.position;-->geht nicht, weil sich die radiusposition diesmal verändern soll
-                var newRDp = dragEvent.position;  //newRadiusDrawingPosition
-                _circle.radius = newRDp[0] -  _circle.center[0];
+            		var newRDp = dragEvent.position;  //newRadiusDrawingPosition
+            		_circle.radius = newRDp[0] -  _circle.center[0];
 
             };
 

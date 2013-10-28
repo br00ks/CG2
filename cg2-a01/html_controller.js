@@ -106,13 +106,12 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve.js"],
         // event handler for "new parametric curve"-button
           $("#btnParamCurve").click(function() {
           
-          	//   var ParametricCurve =  function (xt, yt, tmin, tmax, segments, lineStyle)
           	var style = { 
                 width: Math.floor(Math.random()*3)+1,
                 color: randomColor()
             	};
               var tickmarks;
-              
+              //hier noch falsch!!
               if ($("inputTicks").val() == "checked") {
               	tickmarks = true;
               } else {
