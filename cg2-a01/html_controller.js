@@ -39,8 +39,6 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve.js"],
 	   // return 4;
         };
         
-        
-            
         // generate random color in hex notation
         var randomColor = function() {
 
@@ -59,12 +57,12 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve.js"],
             return "#"+toHex2(r)+toHex2(g)+toHex2(b);
         };
         
-        /*
-         * event handler for "new line" - button.
-         */
+        // ########################### CLICK-METHODS ###################################
+       
+        // event handler for "new line" - button
         $("#btnNewLine").click( (function() {
         
-            // create the actual line and add it to the scene
+            // create the line and add it to the scene
             var style = { 
                 width: Math.floor(Math.random()*3)+1,
                 color: randomColor()
@@ -81,11 +79,11 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve.js"],
                         
         }));
 	
-	// event handler for "new circle" - button
+	 // event handler for "new circle" - button
 	 $("#btnNewCircle").click( (function() {
             //console.log("you clicked on New Circle");
             
-            // create the actual circle and add it to the scene
+            // create the circle and add it to the scene
             var style = { 
                 width: Math.floor(Math.random()*3)+1, //
                 color: randomColor()
@@ -102,7 +100,7 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve.js"],
             sceneController.select(circle); // this will also redraw
                         
         }));
-        //----------------------------------------------------->>>
+
         // event handler for "new parametric curve"-button
           $("#btnParamCurve").click(function() {
           
@@ -110,16 +108,11 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve.js"],
                 width: Math.floor(Math.random()*3)+1,
                 color: randomColor()
             	};
-              var tickmarks;
-              //hier noch falsch!!
-              if ($("inputTicks").val() == "checked") {
-              	tickmarks = true;
-              } else {
-              	tickmarks = false;
-              } 
-              
-              //HIER NOCH EVAL"!???!??!??!?!??!?!?ß"                  	
-            	var paramcurve = new ParametricCurve($("functionX").val(), $("functionY").val(),parseInt($("inputMinT").val()),parseInt($("inputMaxT").val()),parseInt($("inputSegments").val()),style,tickmarks);		
+                                                   
+              var tmin = parseInt($("inputMinT").val());
+              var tmax = parseInt($("inputMaxT").val());
+              var segments = parseInt($("inputSegments").val());
+            	var paramcurve = new ParametricCurve($("functionX").val(), $("functionY").val(), tmin, tmax, segments, style);	
 
  		scene.addObjects([paramcurve]);
 
@@ -127,8 +120,12 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve.js"],
             	sceneController.deselect();
             	sceneController.select(paramcurve); // this will also redraw
          
-         });
-
+       });
+       
+       // ########################### CHANGE-METHODS ##################################
+      
+	// if the color is changed, set the new value of the selected object
+       // and redraw the scene with the new value
 	$("#inputColor").change(function() {
 		//console.log("changed");
 		//console.log($("#inputColor").val());
@@ -145,11 +142,13 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve.js"],
 		sceneController.select(selectedObject);//In seinem Code stand das malt die Szene
 		//zusätzlich neu
 
-		//and redraw the scene
+		//and redraw the scene _ JA WIRKLICH???????notewendig?????????????????????????????
 		sceneController.scene.draw(sceneController.context);
 
-         });
-
+       });
+       
+	// if the value of the width is changed, set the new value of the selected object
+       // and redraw the scene with the new value
 	$("#inputNumber").change(function() {
 		//console.log("changed");
 		//console.log($("#inputNumber").val());
@@ -158,7 +157,6 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve.js"],
 		var selectedObject = sceneController.getSelectedObject();
 
 		//set its new width
-		//http://api.jquery.com/val/
 		selectedObject.lineStyle.width = $("#inputNumber").val();
 
 		//deselect() and select() to update the width instantly
@@ -168,7 +166,7 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve.js"],
 		//and redraw the scene
 		sceneController.scene.draw(sceneController.context);
 
-         });
+        });
 	 
 	// When radius is changed and the new radius > 0, set the new radius
 	// else set the radius to 0.0 by default
@@ -184,7 +182,6 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve.js"],
 			//parseFloat: transforms a passed string into a number
 			selectedObject.radius = parseFloat($("#inputRadius").val());
 		} else {
-
 			selectedObject.radius = 0.0;
 		};
             	//deselect() and select() to update the radius instantly
@@ -194,18 +191,25 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve.js"],
 		//and redraw the scene
 		sceneController.scene.draw(sceneController.context);
 
-         });
-         
-       $("#functionX").change(function() {
-       	console.log("changed function X");
-       	//TO_DO!!!!!!!!!!!!!!!!!!!!! <----------------------------
        });
        
+       // if the value of the functionX ( x (t) ) is changed, set the new value of the selected object
+       // and redraw the scene  
+       $("#functionX").change(function() {
+       	console.log("changed function X");
+       	//TO_DO!!!!!!!!!!!!!!!!!!!!! <-------------------------------------------------------------
+       });
+       
+      	// if the value of the functionY ( y (t) ) is changed, set the new value of the selected object
+       // and redraw the scene
        $("#functionY").change(function() {
        	console.log("changed function Y");
-       	//TO_DO!!!!!!!!!!!!!!!!!!!!! <----------------------------
+       	//TO_DO!!!!!!!!!!!!!!!!!!!!! <-------------------------------------------------------------
+	
        });
-    
+       
+     	// if the value of the minimum t is changed, set the new value of the selected object
+       // and redraw the scene
     	$("#inputMinT").change(function() {
        	console.log("changed mint");
        	
@@ -222,6 +226,8 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve.js"],
 		
        });
        
+       // if the value of the maximum t is changed, set the new value of the selected object
+       // and redraw the scene
        $("#inputMaxT").change(function() {
        	console.log("changed maxt");
        	
@@ -237,14 +243,45 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve.js"],
 		sceneController.scene.draw(sceneController.context);
        });
        
+       // if the value of the segments is changed, set the new value of the selected object
+       // and redraw the scene with the new value
        $("#inputSegments").change(function() {
-       	console.log("changed segments");
-       	//TO_DO!!!!!!!!!!!!!!!!!!!!! <----------------------------
+       
+       	var selectedObject = sceneController.getSelectedObject();
+		selectedObject.segments = parseInt($("#inputSegments").val());
+		
+		//deselect() and select() to update the radius instantly
+		sceneController.deselect();
+		sceneController.select(selectedObject);
+
+		//and redraw the scene
+		sceneController.scene.draw(sceneController.context);
        });
        
+       // if the value of the checkbox is changed, set the new value of the selected object
+       // and redraw the scene
        $("#inputTicks").change(function() {
-       	console.log("changed Ticks");
-       	//TO_DO!!!!!!!!!!!!!!!!!!!!! <----------------------------
+				
+		var selectedObject = sceneController.getSelectedObject();	
+		
+		// find out if the value of inputTicks is undefined, then it is not checked
+		// therefore set the attribute checkedValue to false, else true
+		if ( selectedObject instanceof ParametricCurve ) {
+		
+			if ($("#inputTicks").attr("checked") == "checked") {
+              		selectedObject.setCheckedValue(true);
+              		
+              	} else { 
+              		selectedObject.setCheckedValue(false);
+             		}
+              }
+		//deselect() and select() to update the radius instantly
+		sceneController.deselect();
+		sceneController.select(selectedObject);
+
+		//and redraw the scene
+		sceneController.scene.draw(sceneController.context);
+		console.log(selectedObject.checkedValue);
        });
     };
 
