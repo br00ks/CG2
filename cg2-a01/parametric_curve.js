@@ -26,8 +26,12 @@ define(["util", "vec2", "scene", "point_dragger"],
              	// given function x(t)     
       		this.xt = xt || function(t){return -2*t +t*t};
 			console.log("start drawing" + this.xt);
+       var ParametricCurve =  function (xt, yt, tmin, tmax, segments, lineStyle) {
+       
+             	// given function x(t)     
+      		this.xt = xt || function (t) {return -2*t +t*t};
       		// given function y(t)  
-      		this.yt = yt || function(t){return t};
+      		this.yt = yt || function (t) {return t};
       		
       		// given interval 
       		this.tmin = tmin || 1;
@@ -37,14 +41,19 @@ define(["util", "vec2", "scene", "point_dragger"],
       		
       		// draw style for drawing the parametric curve
       		this.lineStyle = lineStyle || { width: "3", color: "#0000AA" };
-      		//
-      		this.tickmarks = tickmarks || false;
-      		
+            		
       		//array of nodes
       		this.nodes = new Array();
       		
+      		// ticks are deactivated by default
+      		this.checkedValue = false;
+      		
               	
        };
+       // sets the value of the checkbox
+       ParametricCurve.prototype.setCheckedValue = function (value) {
+      		this.checkedValue = value;
+       }
        
        ParametricCurve.prototype.draw = function(context) {
        
@@ -74,7 +83,7 @@ define(["util", "vec2", "scene", "point_dragger"],
        	
        	
        };
-       //TO-DO!!!!
+       //TO-DO!!!!!!!!!!!!!!!!!!!!!!!!!!! <-------------------------------------------------------------
        ParametricCurve.prototype.isHit = function(context , mousePos) {
        	return false;
        };
