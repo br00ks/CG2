@@ -98,7 +98,7 @@ define(["util", "vec2", "scene", "point_dragger", "radius_dragger"],
 		draggers.push( new PointDragger(getP0, setP0, draggerStyle) );
 
 		
-		
+		//test
 //---->Zusatzaufgabe Nummer 5  //BEZEICHNER vielleicht nicht gut gewählt???
 		// CREATE RADIUSDRAGGER	
 			//getting the position of the radiusdragger
