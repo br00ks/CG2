@@ -21,16 +21,14 @@ define(["util", "vec2", "scene", "point_dragger"],
        //COMMENT!!!!
 
        var ParametricCurve =  function (xt, yt, tmin, tmax, segments, lineStyle, tickmarks) {
-	   
-	   
+	      
        
-           // given function x(t)     
-			this.xt = this.xt || function(t){return -2*t +t*t};
-			console.log("start drawing" + this.xt);
+           	// given function x(t)     
+		this.xt = this.xt || function(t) {return -2*t +t*t};
+		console.log("start drawing" + this.xt);
 
       		// given function y(t)  
-			this.yt = this.yt || function (t) {return t};			//Wo finden das Abfangen der Fehleingabe statt? http://www.peterkropff.de/site/javascript/fehlerbehandlung.htm
-																		//try {} catch(e) {if()  alert();}
+		this.yt = this.yt || function (t) {return t};
       		
       		// given interval 
       		this.tmin = tmin || 1;

@@ -141,10 +141,6 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve"],
 		//deselect and select the object to change the color of the draggers
 		sceneController.deselect();
 		sceneController.select(selectedObject);//In seinem Code stand das malt die Szene
-		//zusätzlich neu
-
-		//and redraw the scene _ JA WIRKLICH???????notewendig?????????????????????????????
-		sceneController.scene.draw(sceneController.context);
 
        });
        
@@ -311,7 +307,6 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve"],
 			$("#inputRadius_area").show();
 			$("#inputParam_Parametric").hide();
 			$("#inputRadius").val(selectedObject.radius);
-			console.log("circle");
 			
 		// test if the object has a function xt (otherwise it's no parametric curve)
 		} else if (selectedObject.xt != undefined ){
@@ -320,12 +315,18 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve"],
 			$("#inputMinT").val(selectedObject.tmin);
 			$("#inputMaxT").val(selectedObject.tmax);
 			$("#inputSegments").val(selectedObject.segments);
-			console.log("paramcurve");
+			
+			var returnValue1 = selectedObject.xt;
+			var returnValue2 = selectedObject.yt;
+			
+			$("#functionX").val(returnValue1);
+			$("#functionY").val(returnValue2);
+			console.log(returnValue1);
+			// inputValues aktualisieren!! <------------------------------------TO Do ------------------------
 			
 		} else {
 			$("#inputRadius_area").hide();
 			$("#inputParam_Parametric").hide();
-			console.log("line");
 		}
        };
        
