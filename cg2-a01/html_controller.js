@@ -200,7 +200,19 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve.js"],
        // and redraw the scene  
        $("#functionX").change(function() {
        	console.log("changed function X");
-       	//TO_DO!!!!!!!!!!!!!!!!!!!!! <-------------------------------------------------------------
+			
+			//eval() gibt wenn übergebendes Argument als Rechenoperation interpretiert werden kann, dessen Ergebnis zurück
+			var selectedObject = sceneController.getSelectedObject();
+			//selectedObject.xt = eval($("#functionX"));
+			
+			//Testfunktion um eval() zu testen
+			var f = function(t) {
+				return eval(t);
+				console.log(t);
+			}
+			selectedObject.xt = f(selectedObject.tmax);
+		
+		
        });
        
       	// if the value of the functionY ( y (t) ) is changed, set the new value of the selected object
