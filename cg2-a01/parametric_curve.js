@@ -12,8 +12,8 @@
  
   
 /* requireJS module definition */
-define(["util", "vec2", "scene", "point_dragger"], 
-       (function(Util,vec2,Scene,PointDragger) {
+define(["util", "vec2", "scene", "point_dragger", "straight_line"], 
+       (function(Util,vec2,Scene,PointDragger, StraightLine) {
        
        "use strict";
        
@@ -42,6 +42,9 @@ define(["util", "vec2", "scene", "point_dragger"],
       		//array of nodes
       		this.nodes = new Array();
       		
+      		//array of straightlines
+      		this.straightLines = new Array();
+      		
       		// ticks are deactivated by default
       		this.checkedValue = false;
       		
@@ -57,40 +60,53 @@ define(["util", "vec2", "scene", "point_dragger"],
  		//FORSCHLEIFE muss noch getestet werden!
              	for (var x = 0; x < this.segments; x++) {
 
-       		//var t = this.tmin + x/this.segments * (this.tmin + this.tmax); //in seiner formel steht t.max-t.min???
+       		// var t = this.tmin + x/this.segments * (this.tmin + this.tmax); 
+       		// in seiner formel steht t.max-t.min???
+       		
 			var t = this.tmin + x/this.segments * (this.tmax - this.tmin); 
-       		console.log(t);
+
        		this.nodes[x] = [this.xt(t),this.yt(t)];	
        	}; 
-       	//console.log(this.nodes.length);
        	
        	//FORSCHLEIFE RICHTIG??? muss noch getestet werden!
        	//draw 
-       	for (var i = 1; i < this.nodes.length - 1; i++) {
-       	
-                       //console.log(this.nodes[i]);
-                       context.beginPath();
-                       context.moveTo(this.nodes[i][0], this.nodes[i][1]);
-                       context.lineTo(this.nodes[i+1][0], this.nodes[i+1][1]);
-                       context.lineWidth = this.lineStyle.width;
-                       context.strokeStyle = this.lineStyle.color;
-                       context.stroke();
+       	for (var i = 0; i < this.nodes.length - 1; i++) {
+       		  
+       		  var tempLine = new StraightLine([this.nodes[i][0], this.nodes[i][1]], 
+       		  					[this.nodes[i+1][0], this.nodes[i+1][1]],
+       		  					 this.lineStyle)
+       		  					 
+       		  // save the lines in an array to be able to use it for the draw-function
+       		  this.straightLines[i] = tempLine;
+       		  tempLine.draw(context);
+       		  
+       		  
+       		  // 1 Version, aber bei isHit auf Grenzen gestossen!
+                       // context.beginPath();
+                       // context.moveTo(this.nodes[i][0], this.nodes[i][1]);
+                       // context.lineTo(this.nodes[i+1][0], this.nodes[i+1][1]);
+                       // context.lineWidth = this.lineStyle.width;
+                       // context.strokeStyle = this.lineStyle.color;
+                       // context.stroke();
+                       
                    
-              }
+              };
             
        };
-       // TO-DO!!!!!!!!!!!!!!!!!!!!!!!!!!! <-------------------------------------------------------------
-	// test whether the mouse position is on this curve segment
+   	// test whether the mouse position is on this curve segment
        ParametricCurve.prototype.isHit = function(context , mousePos) {
-	   
-			for (var i = 1; i < this.nodes.length - 1; i++) {
-			
-				if( (this.nodes[i]).isHit == true ) {
-					return true;
-					}
-			}
-	   
+       
+       	for (var i = 0; i <= this.straightLines; i++) {
+       		var tempLine = this.straightLines[i];
+       		if (tempLine.isHit(context, mousePos)) {
+       			return true;
+       			console.log("true-HIT");
+       		};
+       	
+       	};
        	return false;
+       	console.log("false-HIT");
+       	// FUNKTIONIERT NOCH NICHT! <-------------------------------------- TO DO!
        };
        
        // returns an empty list of draggers

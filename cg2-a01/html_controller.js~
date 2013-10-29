@@ -113,7 +113,8 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve"],
               var tmin = parseInt($("inputMinT").val());
               var tmax = parseInt($("inputMaxT").val());
               var segments = parseInt($("inputSegments").val());
-            	var paramcurve = new ParametricCurve($("functionX").val(), $("functionY").val(), tmin, tmax, segments, style);	
+            	var paramcurve = new ParametricCurve($("functionX").val(), $("functionY").val(), 
+            						   tmin, tmax, segments, style);	
 
  		scene.addObjects([paramcurve]);
 
@@ -194,16 +195,17 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve"],
        $("#functionX").change(function() {
        	console.log("changed function X");
 			
-			//eval() gibt wenn übergebendes Argument als Rechenoperation interpretiert werden kann, dessen Ergebnis zurück
-			var selectedObject = sceneController.getSelectedObject();
-			//selectedObject.xt = eval($("#functionX"));
-			
-			//Testfunktion um eval() zu testen
-			var f = function(t) {
-				return eval(t);
-				console.log(t);
-			}
-			selectedObject.xt = f(selectedObject.tmax);
+		// eval() gibt wenn übergebendes Argument als Rechenoperation 
+		// interpretiert werden kann, dessen Ergebnis zurück
+		var selectedObject = sceneController.getSelectedObject();
+		//selectedObject.xt = eval($("#functionX"));
+	
+		//Testfunktion um eval() zu testen
+		var f = function(t) {
+			return eval(t);
+			console.log(t);
+		}
+		selectedObject.xt = f(selectedObject.tmax);
 		
 		
        });
@@ -292,7 +294,9 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve"],
 
        });
        
-       // TO DO!!!!!!!!!! <-----------------------------------------------------------------------
+       // if an object is selected some input-divs are hidden, and some are shown
+       // the color and width are shown in all objects
+       // furthermore the input-fields are being updated
        var onObjSelection = function() {
        
        	// selectedObject represents the current selected object
@@ -322,7 +326,8 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve"],
 			$("#functionX").val(returnValue1);
 			$("#functionY").val(returnValue2);
 			console.log(returnValue1);
-			
+			// inputValues aktualisieren!! <--------------TO Do ------------------------
+		// else we can tell that the selected object is a straightline	
 		} else {
 			$("#inputRadius_area").hide();
 			$("#inputParam_Parametric").hide();

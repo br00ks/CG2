@@ -127,14 +127,10 @@ define(["util.js", "scene.js", "circle.js", "straight_line.js"],
         
         // if it exists, trigger onSelection callback
         this.selectCallback && this.selectCallback(obj);
-
 	
-       // redraw
-       this.scene.draw(this.context);
+        // redraw
+        this.scene.draw(this.context);
        
-    	//HIER FUNKTIONIERTS NOCH NICHT RICHTIG!!!! BEI LINE WERDEN IMMER NOCH ZU VIELE 
-    	//ELEMENTE/DIVS ANGEZEIGT! SOLLTE EIGENTLICH NUR FARBE & LINIENDICKE SEIN!
-    	// -........................:::!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!:..............
     };
     
     /*

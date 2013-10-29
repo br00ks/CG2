@@ -27,7 +27,7 @@
   <!-- this element will be used to display buttons on the top -->
   <div id = "buttons" align="top">
 	<h4>Create Objects:</h4>
-        <button id="btnNewLine" type="button"   >New Line</button>
+       <button id="btnNewLine" type="button"   >New Line</button>
 	<button id="btnNewCircle" type="button" >New Circle</button>
 	<button id="btnParamCurve" type= "button"> New Parametric Curve </button>
 	<button id="btnBezierCurve" type= "button"> New Bezier Curve </button>
@@ -56,7 +56,7 @@
 	</div>
 	<div id="inputParam_Parametric">
 
-		<input id="functionX" type="text" > x(t):  </input> <br>
+		<input id="functionX" type="text"" > x(t):  </input> <br>
 		<input id="functionY" type="text" > y(t):  </input> <br>
 		<input id="inputMinT" type="number" min = "0" > min t:  </input>
 		<input id="inputMaxT" type="number" min = "0" > max t:  </input>
