@@ -108,7 +108,8 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve.js"],
                 width: Math.floor(Math.random()*3)+1,
                 color: randomColor()
             	};
-                                                   
+              //HIER EVAL?!
+                                              
               var tmin = parseInt($("inputMinT").val());
               var tmax = parseInt($("inputMaxT").val());
               var segments = parseInt($("inputSegments").val());

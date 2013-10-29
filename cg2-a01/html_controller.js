@@ -108,7 +108,8 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve.js"],
                 width: Math.floor(Math.random()*3)+1,
                 color: randomColor()
             	};
-                                                   
+              //HIER EVAL?!
+                                              
               var tmin = parseInt($("inputMinT").val());
               var tmax = parseInt($("inputMaxT").val());
               var segments = parseInt($("inputSegments").val());
@@ -192,6 +193,8 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve.js"],
 		sceneController.scene.draw(sceneController.context);
 
        });
+       
+       
        
        // if the value of the functionX ( x (t) ) is changed, set the new value of the selected object
        // and redraw the scene  

@@ -47,6 +47,7 @@ define(["util", "vec2", "scene", "point_dragger", "radius_dragger"],
 		context.lineWidth = this.lineStyle.width;
 		context.strokeStyle = this.lineStyle.color;
 		
+		context.closePath();
 		//fehlt nicht noch context.closePath(); ???
 		
 		// actually start drawing
@@ -62,7 +63,7 @@ define(["util", "vec2", "scene", "point_dragger", "radius_dragger"],
 
 		//check if distance is between mouse and the center
 		var dx = mousePos[0] - this.center[0];
-       		var dy = mousePos[1] -	this.center[1];
+       	var dy = mousePos[1] - this.center[1];
 
 		//tolerance of 2 pixel
 		var tolerance = 2;
@@ -97,14 +98,12 @@ define(["util", "vec2", "scene", "point_dragger", "radius_dragger"],
 		//push the new dragger to the list
 		draggers.push( new PointDragger(getP0, setP0, draggerStyle) );
 
-		
-		
-//---->Zusatzaufgabe Nummer 5  //BEZEICHNER vielleicht nicht gut gewählt???
+
 		// CREATE RADIUSDRAGGER	
-			//getting the position of the radiusdragger
-           var getRadiusPos = function(){
+		//getting the position of the radiusdragger
+           	var getRadiusPos = function(){
 		   
-				var pos = [];
+				var pos = []; //var pos = new Array();
 				//takes the array object for the point of the existing position of the radius
 				var posRadiuspos = _circle.center[0] + _circle.radius;
 				var poshorizontalpos = _circle.center[1];
@@ -115,12 +114,13 @@ define(["util", "vec2", "scene", "point_dragger", "radius_dragger"],
 
             //setting the position of the new Radiusdraggerposition (to change the size of the circle)
             var setRadiusPos = function(dragEvent) {
-				//set the position for the RadiusDragger
-					//_circle.center = dragEvent.position;-->geht nicht, weil sich die radiusposition diesmal verändern soll
-                var newRDp = dragEvent.position;  //newRadiusDrawingPosition
-                _circle.radius = newRDp[0] -  _circle.center[0];
+			// set the position for the RadiusDragger
+			// _circle.center = dragEvent.position;-->geht nicht, weil 
+			// sich die radiusposition diesmal verändern soll
+            		var newRDp = dragEvent.position;  //newRadiusDrawingPosition
+            		_circle.radius = newRDp[0] -  _circle.center[0];
 
-            };
+            };	
 
             draggers.push( new RadiusDragger(getRadiusPos, setRadiusPos, draggerStyle) );
 			//vielleicht noch einbauen wenn <0 dann ??
@@ -139,40 +139,4 @@ define(["util", "vec2", "scene", "point_dragger", "radius_dragger"],
 	
 ));
 
-
-
-
-
-
-
-
-		/*
-		// CREATE RADIUSDRAGGER
-		// After dragging, the new position of the radius has to be calculated
-		var getRadiusPos = new function() {
-			var pos = [];
-			var pos[0] = _circle.center[0];
-			var pos[1] = _circle.center[1] - _circle.radius;
-			
-			return pos;
-
-		};
-		//
-		var setRadiusPos = new function(dragEvent) {
-
-			_circle.radius = dragEvent.radius; 
-		};
-
-		draggers.push( new RadiusDragger (getRadiusPos, setRadiusPos, draggerStyle));
-		*/
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		

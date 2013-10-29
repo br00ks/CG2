@@ -26,9 +26,9 @@ define(["util", "vec2", "scene", "point_dragger"],
        
              	// given function x(t)     
       		//this.xt = xt || function(t){return -2*t +t*t};
-			//in Aufgabenstellung:
-				//eval() gibt wenn übergebendes Argument als Rechenoperation interpretiert werden kann, dessen Ergebnis zurück
-				//Beispiel: http://de.selfhtml.org/javascript/objekte/unabhaengig.htm#eval
+		//in Aufgabenstellung:
+		//eval() gibt wenn übergebendes Argument als Rechenoperation interpretiert werden kann, dessen Ergebnis zurück
+		//Beispiel: http://de.selfhtml.org/javascript/objekte/unabhaengig.htm#eval
 			this.xt = eval(this.xt) || function(t){return -2*t +t*t};
 			console.log("start drawing" + this.xt);
 
@@ -61,7 +61,7 @@ define(["util", "vec2", "scene", "point_dragger"],
        
        ParametricCurve.prototype.draw = function(context) {
        
- 		//FORSCHLEIFE RICHTIG??? muss noch getestet werden!
+ 		//FORSCHLEIFE muss noch getestet werden!
              	for (var x = 0; x < this.segments; x++) {
 
        		//var t = this.tmin + x/this.segments * (this.tmin + this.tmax); //in seiner formel steht t.max-t.min???
@@ -84,12 +84,10 @@ define(["util", "vec2", "scene", "point_dragger"],
                        context.stroke();
                    
               }
-                
-       	
-       	
+            
        };
-       //TO-DO!!!!!!!!!!!!!!!!!!!!!!!!!!! <-------------------------------------------------------------
-	   // test whether the mouse position is on this curve segment
+       // TO-DO!!!!!!!!!!!!!!!!!!!!!!!!!!! <-------------------------------------------------------------
+	// test whether the mouse position is on this curve segment
        ParametricCurve.prototype.isHit = function(context , mousePos) {
 	   
 			for (var i = 1; i < this.nodes.length - 1; i++) {
@@ -102,6 +100,7 @@ define(["util", "vec2", "scene", "point_dragger"],
        	return false;
        };
        
+       // returns an empty list of draggers
        ParametricCurve.prototype.createDraggers = function() {
        
        	var draggers = [];
