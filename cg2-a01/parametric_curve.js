@@ -24,17 +24,12 @@ define(["util", "vec2", "scene", "point_dragger"],
 	   
 	   
        
-             	// given function x(t)     
-      		//this.xt = xt || function(t){return -2*t +t*t};
-		//in Aufgabenstellung:
-		//eval() gibt wenn übergebendes Argument als Rechenoperation interpretiert werden kann, dessen Ergebnis zurück
-		//Beispiel: http://de.selfhtml.org/javascript/objekte/unabhaengig.htm#eval
-			this.xt = eval(this.xt) || function(t){return -2*t +t*t};
+           // given function x(t)     
+			this.xt = this.xt || function(t){return -2*t +t*t};
 			console.log("start drawing" + this.xt);
 
       		// given function y(t)  
-      		//this.yt = yt || function (t) {return t};
-			this.yt = eval(this.yt) || function (t) {return t};			//Wo finden das Abfangen der Fehleingabe statt? http://www.peterkropff.de/site/javascript/fehlerbehandlung.htm
+			this.yt = this.yt || function (t) {return t};			//Wo finden das Abfangen der Fehleingabe statt? http://www.peterkropff.de/site/javascript/fehlerbehandlung.htm
 																		//try {} catch(e) {if()  alert();}
       		
       		// given interval 
@@ -67,7 +62,7 @@ define(["util", "vec2", "scene", "point_dragger"],
        		//var t = this.tmin + x/this.segments * (this.tmin + this.tmax); //in seiner formel steht t.max-t.min???
 			var t = this.tmin + x/this.segments * (this.tmax - this.tmin); 
        		console.log(t);
-       		this.nodes[x] = [eval(this.xt(t)), eval(this.yt(t))];	//eval??? Wieder muss die Prüfung stattfinden?
+       		this.nodes[x] = [this.xt(t),this.yt(t)];	
        	}; 
        	//console.log(this.nodes.length);
        	
