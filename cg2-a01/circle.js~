@@ -48,7 +48,6 @@ define(["util", "vec2", "scene", "point_dragger", "radius_dragger"],
 		context.strokeStyle = this.lineStyle.color;
 		
 		context.closePath();
-		//fehlt nicht noch context.closePath(); ???
 		
 		// actually start drawing
 		context.stroke(); 
@@ -58,8 +57,6 @@ define(["util", "vec2", "scene", "point_dragger", "radius_dragger"],
 	 
 	// test whether the mouse position is on this circle segment
     	Circle.prototype.isHit = function(context , mousePos) {
-
-		//siehe point_dragger.js --> isHit Methode!
 
 		//check if distance is between mouse and the center
 		var dx = mousePos[0] - this.center[0];
@@ -77,8 +74,7 @@ define(["util", "vec2", "scene", "point_dragger", "radius_dragger"],
    
    	};
 
-	//return a list of draggers to manipulate this circle
-
+	// return a list of draggers to manipulate this circle
 	Circle.prototype.createDraggers = function() {
 	    	
 		//style of the dragger-circle
@@ -100,33 +96,32 @@ define(["util", "vec2", "scene", "point_dragger", "radius_dragger"],
 
 
 		// CREATE RADIUSDRAGGER	
-		//getting the position of the radiusdragger
-           	var getRadiusPos = function(){
+		// getting the position of the radiusdragger
+           	var getRadiusPos = function() {
 		   
 				var pos = []; //var pos = new Array();
+				
 				//takes the array object for the point of the existing position of the radius
 				var posRadiuspos = _circle.center[0] + _circle.radius;
 				var poshorizontalpos = _circle.center[1];
-						//[ radiusposition , "horizontale position zum centerpoint von da aus" ]
+				
+				//[ radiusposition , "horizontale position zum centerpoint von da aus" ]
 				return [ posRadiuspos, poshorizontalpos];			
 						
-			};
+		};
 
-            //setting the position of the new Radiusdraggerposition (to change the size of the circle)
-            var setRadiusPos = function(dragEvent) {
+              // setting the position of the new Radiusdraggerposition (to change the size of the circle)
+              var setRadiusPos = function(dragEvent) {
 			// set the position for the RadiusDragger
 			// _circle.center = dragEvent.position;-->geht nicht, weil 
 			// sich die radiusposition diesmal verändern soll
             		var newRDp = dragEvent.position;  //newRadiusDrawingPosition
             		_circle.radius = newRDp[0] -  _circle.center[0];
 
-            };	
+              };	
 
-            draggers.push( new RadiusDragger(getRadiusPos, setRadiusPos, draggerStyle) );
-			//vielleicht noch einbauen wenn <0 dann ??
-			//und bei radiusDragger-klasse nichts verändert nur pointDraggerKlasse kopiert
-			//muss es dann eine extra Klasse geben???
-		
+           	draggers.push( new RadiusDragger(getRadiusPos, setRadiusPos, draggerStyle) );
+           	
 		return draggers;
         
    	};

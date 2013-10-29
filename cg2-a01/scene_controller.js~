@@ -70,8 +70,6 @@ define(["util.js", "scene.js", "circle.js", "straight_line.js"],
         this.canvas.addEventListener('mousedown', (function(ev) { ev.preventDefault(); _controller.mousedown(ev); }), false);
         this.canvas.addEventListener('mousemove', (function(ev) { ev.preventDefault(); _controller.mousemove(ev); }), false);
         this.canvas.addEventListener('mouseup',   (function(ev) { ev.preventDefault(); _controller.mouseup(ev);   }), false);
-          
-
 
     };
     
@@ -134,7 +132,7 @@ define(["util.js", "scene.js", "circle.js", "straight_line.js"],
 	//when object is selected, color and width are updated
 	$("#inputColor").val(obj.lineStyle.color);
 	$("#inputNumber").val(obj.lineStyle.width);
-
+	
 	// test if the objects has a attribute radius (otherwise it's no circle-object)
 	// show the inputRadius-div, when this attribute exists, else hide it
 	if (obj instanceof Circle) {
@@ -158,7 +156,10 @@ define(["util.js", "scene.js", "circle.js", "straight_line.js"],
 	};
        // redraw
        this.scene.draw(this.context);
-    
+       
+    	//HIER FUNKTIONIERTS NOCH NICHT RICHTIG!!!! BEI LINE WERDEN IMMER NOCH ZU VIELE 
+    	//ELEMENTE/DIVS ANGEZEIGT! SOLLTE EIGENTLICH NUR FARBE & LINIENDICKE SEIN!
+    	// -........................:::!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!:..............
     };
     
     /*
@@ -267,7 +268,7 @@ define(["util.js", "scene.js", "circle.js", "straight_line.js"],
 
             // some parameter of the object may have changed...
             this.changeCallback && this.changeCallback(this.getSelectedObject());
-
+	    	     
             // redraw the scene
             this.scene.draw(this.context);
             return;

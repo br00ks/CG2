@@ -70,8 +70,6 @@ define(["util.js", "scene.js", "circle.js", "straight_line.js"],
         this.canvas.addEventListener('mousedown', (function(ev) { ev.preventDefault(); _controller.mousedown(ev); }), false);
         this.canvas.addEventListener('mousemove', (function(ev) { ev.preventDefault(); _controller.mousemove(ev); }), false);
         this.canvas.addEventListener('mouseup',   (function(ev) { ev.preventDefault(); _controller.mouseup(ev);   }), false);
-          
-
 
     };
     
@@ -130,32 +128,7 @@ define(["util.js", "scene.js", "circle.js", "straight_line.js"],
         // if it exists, trigger onSelection callback
         this.selectCallback && this.selectCallback(obj);
 
-	//every object is selected when it's created!
-	//when object is selected, color and width are updated
-	$("#inputColor").val(obj.lineStyle.color);
-	$("#inputNumber").val(obj.lineStyle.width);
-
-	// test if the objects has a attribute radius (otherwise it's no circle-object)
-	// show the inputRadius-div, when this attribute exists, else hide it
-	if (obj instanceof Circle) {
-		$("#inputRadius_area").show();
-		$("#inputParam_Parametric").hide();
-		$("#inputRadius").val(obj.radius);
-		console.log("circle");
-		
-	// if object is a straight_line, don't show the radius and the parameters of a 
-	// parametric/bezier curve	
-	} else if (obj instanceof StraightLine) {
-		$("#inputRadius_area").hide();
-		$("#inputParam_Parametric").hide();
-		console.log("line");
-		
-	// show the parameters of a parametric / bezier curve
-	} else {
-		$("#inputParam_Parametric").show();
-		$("#inputRadius_area").hide();
-		console.log("paramcurve");
-	};
+	
        // redraw
        this.scene.draw(this.context);
        
@@ -270,7 +243,7 @@ define(["util.js", "scene.js", "circle.js", "straight_line.js"],
 
             // some parameter of the object may have changed...
             this.changeCallback && this.changeCallback(this.getSelectedObject());
-
+	    	     
             // redraw the scene
             this.scene.draw(this.context);
             return;

@@ -11,7 +11,7 @@
 
  
 /* requireJS module definition */
-define(["jquery", "straight_line", "circle.js", "parametric_curve.js"], 
+define(["jquery", "straight_line", "circle.js", "parametric_curve"], 
        (function($, StraightLine, Circle, ParametricCurve) {
 
     "use strict"; 
@@ -189,9 +189,6 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve.js"],
 		sceneController.deselect();
 		sceneController.select(selectedObject);
 
-		//and redraw the scene
-		sceneController.scene.draw(sceneController.context);
-
        });
        
        
@@ -284,10 +281,63 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve.js"],
 
 		//and redraw the scene
 		sceneController.scene.draw(sceneController.context);
-		console.log(selectedObject.checkedValue);
-       });
-    };
 
+       });
+       
+       // TO DO!!!!!!!!!! <-----------------------------------------------------------------------
+       var onObjSelection = function() {
+       
+       	// selectedObject represents the current selected object
+       	var selectedObject = sceneController.getSelectedObject();
+       	
+       	$("#inputColor").val(selectedObject.lineStyle.color);
+		$("#inputNumber").val(selectedObject.lineStyle.width);
+		
+		// test if the objects has a attribute radius (otherwise it's no circle-object)
+		// show the inputRadius-div, when this attribute exists, else hide it
+		if (selectedObject.radius != undefined) {
+			$("#inputRadius_area").show();
+			$("#inputParam_Parametric").hide();
+			$("#inputRadius").val(selectedObject.radius);
+			console.log("circle");
+			
+		// test if the object has a function xt (otherwise it's no parametric curve)
+		} else if (selectedObject.xt != undefined ){
+			$("#inputParam_Parametric").show();
+			$("#inputRadius_area").hide();
+			$("#inputMinT").val(selectedObject.tmin);
+			$("#inputMaxT").val(selectedObject.tmax);
+			$("#inputSegments").val(selectedObject.segments);
+			console.log("paramcurve");
+			
+		} else {
+			$("#inputRadius_area").hide();
+			$("#inputParam_Parametric").hide();
+			console.log("line");
+		}
+       };
+       
+       sceneController.onSelection(onObjSelection);
+       
+       // TO DOOOOOOOOOOOOOOOOO!! <-----------------------------------------------------------------
+       var setNewValues = function() {
+       	var obj = sceneController.getSelectedObject();
+       	
+       	if (obj != undefined) {
+       		
+       		if (obj.radius != undefined) {
+       			$("#inputRadius").val(obj.radius);       		
+       		}
+       		//deselect() and select() to update the radius instantly
+			
+       	}
+       	
+       
+       };
+	sceneController.onObjChange(setNewValues);
+	
+    };
+	
     // return the constructor function 
     return HtmlController;
 
