@@ -24,20 +24,15 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line"],
 	      
        
            	// given function x(t)     
-		this.xt = this.xt || function(t) {return -2*t +t*t};
-		
-		this.xtString = "-2*t + t*t";
+		this.xt = this.xt || function(t) {return 100*Math.sin(t)};//-2*t +t*t};
+		//console.log("start drawing" + this.xt);
 
       		// given function y(t)  
-		this.yt = this.yt || function (t) {return t};
-		
-		this.ytString = "t";
-		
+		this.yt = this.yt || function (t) {return 100*Math.cos(t)};//t};
       		
       		// given interval 
       		this.tmin = tmin || 1;
       		this.tmax = tmax || 20;
-      		
       		// number of segments of the parametric curve
       		this.segments = segments || 10;
       		
@@ -55,34 +50,15 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line"],
       		
               	
        };
-       
-       ParametricCurve.prototype.setXTString = function (string) {
-       	this.xtString = string;
-       };
-       
-       ParametricCurve.prototype.getXTString = function () {
-       	return this.xtString;
-       };
-      
-       ParametricCurve.prototype.setYTString = function (string) {
-       	this.ytString = string;
-       };
-       
-       ParametricCurve.prototype.getYTString = function () {
-       	return this.ytString;
-       };
-       
-       
-       
        // sets the value of the checkbox
        ParametricCurve.prototype.setCheckedValue = function (value) {
       		this.checkedValue = value;
        }
        
+       
+       //COOOOOOOMMENT
        ParametricCurve.prototype.draw = function(context) {
        
-       	this.getXTString();
-       	
  		//FORSCHLEIFE muss noch getestet werden!
              	for (var x = 0; x < this.segments; x++) {
 
@@ -116,24 +92,22 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line"],
                        // context.stroke();
                        
                    
-              }
+              };
             
        };
        
    	// test whether the mouse position is on this curve segment
        ParametricCurve.prototype.isHit = function(context , mousePos) {
-       
-       	for (var i = 0; i <= this.straightLines; i++) {
-       		var tempLine = this.straightLines[i];
-       		if (tempLine.isHit(context, mousePos)) {
+		
+       	for (var i = 0; i < this.straightLines.length; i++) {
+			
+       		if (this.straightLines[i].isHit(context, mousePos)) {
        			return true;
-       			console.log("true-HIT");
+
        		};
        	
        	};
        	return false;
-       	console.log("false-HIT");
-       	// FUNKTIONIERT NOCH NICHT! <-------------------------------------- TO DO!
        };
        
        // returns an empty list of draggers

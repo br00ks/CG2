@@ -29,7 +29,7 @@ define(["util", "vec2", "scene", "point_dragger"],
 
     var StraightLine = function(point0, point1, lineStyle) {
 
-        console.log("creating straight line from [" + 
+       // console.log("creating straight line from [" + 
                     point0[0] + "," + point0[1] + "] to [" +
                     point1[0] + "," + point1[1] + "].");
         
@@ -63,7 +63,6 @@ define(["util", "vec2", "scene", "point_dragger"],
 
     // test whether the mouse position is on this line segment
     StraightLine.prototype.isHit = function(context,pos) {
-    
         // project point on line, get parameter of that projection point
         var t = vec2.projectPointOnLine(pos, this.p0, this.p1);
                 
@@ -87,8 +86,9 @@ define(["util", "vec2", "scene", "point_dragger"],
     StraightLine.prototype.createDraggers = function() {
 
     	//radius : 4
-	//dynamically resize the radius of the draggers
-        var draggerStyle = { radius: $("#inputNumber").val()*1.001, color: this.lineStyle.color, width:0, fill:true }
+	//dynamically resize the radius of the draggers : $("#inputNumber").val()*1.001
+
+        var draggerStyle = { radius: 4 , color: this.lineStyle.color, width:0, fill:true }
         var draggers = [];
         
         // create closure and callbacks for dragger

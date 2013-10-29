@@ -25,7 +25,7 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line"],
        
            	// given function x(t)     
 		this.xt = this.xt || function(t) {return -2*t +t*t};
-		console.log("start drawing" + this.xt);
+		//console.log("start drawing" + this.xt);
 
       		// given function y(t)  
 		this.yt = this.yt || function (t) {return t};
@@ -55,6 +55,8 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line"],
       		this.checkedValue = value;
        }
        
+       
+       //COOOOOOOMMENT
        ParametricCurve.prototype.draw = function(context) {
        
  		//FORSCHLEIFE muss noch getestet werden!
@@ -93,20 +95,19 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line"],
               };
             
        };
+       
    	// test whether the mouse position is on this curve segment
        ParametricCurve.prototype.isHit = function(context , mousePos) {
-       
-       	for (var i = 0; i <= this.straightLines; i++) {
-       		var tempLine = this.straightLines[i];
-       		if (tempLine.isHit(context, mousePos)) {
+		
+       	for (var i = 0; i < this.straightLines.length; i++) {
+			
+       		if (this.straightLines[i].isHit(context, mousePos)) {
        			return true;
-       			console.log("true-HIT");
+
        		};
        	
        	};
        	return false;
-       	console.log("false-HIT");
-       	// FUNKTIONIERT NOCH NICHT! <-------------------------------------- TO DO!
        };
        
        // returns an empty list of draggers

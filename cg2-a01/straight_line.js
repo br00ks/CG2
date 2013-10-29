@@ -29,9 +29,9 @@ define(["util", "vec2", "scene", "point_dragger"],
 
     var StraightLine = function(point0, point1, lineStyle) {
 
-        console.log("creating straight line from [" + 
-                    point0[0] + "," + point0[1] + "] to [" +
-                    point1[0] + "," + point1[1] + "].");
+       // console.log("creating straight line from [" + 
+       //            point0[0] + "," + point0[1] + "] to [" +
+       //             point1[0] + "," + point1[1] + "].");
         
         // draw style for drawing the line
         this.lineStyle = lineStyle || { width: "2", color: "#0000AA" };
@@ -63,7 +63,6 @@ define(["util", "vec2", "scene", "point_dragger"],
 
     // test whether the mouse position is on this line segment
     StraightLine.prototype.isHit = function(context,pos) {
-    
         // project point on line, get parameter of that projection point
         var t = vec2.projectPointOnLine(pos, this.p0, this.p1);
                 

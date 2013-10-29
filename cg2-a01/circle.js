@@ -101,7 +101,8 @@ define(["util", "vec2", "scene", "point_dragger", "radius_dragger"],
 		   
 				var pos = []; //var pos = new Array();
 				
-				//takes the array object for the point of the existing position of the radius
+				// takes the array object for the point of the existing 
+				// position of the radius
 				var posRadiuspos = _circle.center[0] + _circle.radius;
 				var poshorizontalpos = _circle.center[1];
 				
@@ -110,7 +111,8 @@ define(["util", "vec2", "scene", "point_dragger", "radius_dragger"],
 						
 		};
 
-              // setting the position of the new Radiusdraggerposition (to change the size of the circle)
+              // setting the position of the new Radiusdraggerposition (to change 
+              // the size of the circle)
               var setRadiusPos = function(dragEvent) {
 			// set the position for the RadiusDragger
 			// _circle.center = dragEvent.position;-->geht nicht, weil 
