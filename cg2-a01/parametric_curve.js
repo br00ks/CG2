@@ -18,23 +18,33 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line"],
        "use strict";
        
        
-       //COMMENT!!!!
+	// A simple parametric curve cannot be dragged
+	// Parameters:
+	// - xt : given functionX, calculates x - coordinate
+	// - yt : given functionY, calculates y - coordinate
+	// - tmin: minimum of the domain
+	// - tmax: maximum of the domain
+	// - segments: number of parts of the curve
+	// - lineStyle: object defining width and color attributes for curve drawing
+	
 
-       var ParametricCurve =  function (xt, yt, tmin, tmax, segments, lineStyle, tickmarks) {
+       var ParametricCurve =  function (xt, yt, tmin, tmax, segments, lineStyle) {
 	      
        
            	// given function x(t)     
-		this.xt = this.xt || function(t) {return -2*t +t*t};
+		this.xt = this.xt || function(t) {return 100+(100*Math.sin(t));}
+							 //return -2*t +t*t};
 		//console.log("start drawing" + this.xt);
 
       		// given function y(t)  
-		this.yt = this.yt || function (t) {return t};
+		this.yt = this.yt || function (t) {return 100+(100*Math.cos(t));}
+								//t};
       		
       		// given interval 
-      		this.tmin = tmin || 1;
-      		this.tmax = tmax || 20;
+      		this.tmin = tmin || 0;
+      		this.tmax = tmax || 2*Math.PI;
       		// number of segments of the parametric curve
-      		this.segments = segments || 10;
+      		this.segments = segments || 6;
       		
       		// draw style for drawing the parametric curve
       		this.lineStyle = lineStyle || { width: "3", color: "#0000AA" };
@@ -51,45 +61,57 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line"],
               	
        };
        // sets the value of the checkbox
+       // true: tickmarks will be drawn
+       // false: tickmarks won't be drawn
        ParametricCurve.prototype.setCheckedValue = function (value) {
       		this.checkedValue = value;
        }
        
        
-       //COOOOOOOMMENT
+       // draw this parametric curve into a 2D rendering context
        ParametricCurve.prototype.draw = function(context) {
        
- 		//FORSCHLEIFE muss noch getestet werden!
-             	for (var x = 0; x < this.segments; x++) {
-
-       		// var t = this.tmin + x/this.segments * (this.tmin + this.tmax); 
-       		// in seiner formel steht t.max-t.min???
-       		
-			var t = this.tmin + x/this.segments * (this.tmax - this.tmin); 
-
-       		this.nodes[x] = [this.xt(t),this.yt(t)];	
-       	}; 
+       	var delta = (this.tmax - this.tmin) / this.segments;
        	
-       	//FORSCHLEIFE RICHTIG??? muss noch getestet werden!
-       	//draw 
-       	for (var i = 0; i < this.nodes.length - 1; i++) {
-       		  
-       		  var tempLine = new StraightLine([this.nodes[i][0], this.nodes[i][1]], 
-       		  					[this.nodes[i+1][0], this.nodes[i+1][1]],
-       		  					 this.lineStyle)
+		// 
+             	for (var x = 0; x <= this.segments; x++) {
+
+			var t = x * delta + this.tmin; 
+       		this.nodes[x] = [this.xt(t),this.yt(t)];	
+       		
+       	}; 
+       	console.log(this.nodes.length);
+       	
+       	  // 1. Version, aber bei isHit auf Grenzen gestossen!
+                // context.beginPath();
+                // context.moveTo(this.nodes[i][0], this.nodes[i][1]);
+                // context.lineTo(this.nodes[i+1][0], this.nodes[i+1][1]);
+                // context.lineWidth = this.lineStyle.width;
+                // context.strokeStyle = this.lineStyle.color;
+                // context.stroke();
+                
+       	//draw the lines
+       	for (var i = 1; i <= this.segments; i++) {
+       		  //console.log(this.nodes[i]);
+       		  var tempLine = new StraightLine(this.nodes[i-1], 
+       		  					this.nodes[i], this.lineStyle);
        		  					 
        		  // save the lines in an array to be able to use it for the draw-function
        		  this.straightLines[i] = tempLine;
        		  tempLine.draw(context);
        		  
+       		  // when tickmarks (checkedValue) value is true, then draw the ticks
        		  
-       		  // 1 Version, aber bei isHit auf Grenzen gestossen!
-                       // context.beginPath();
-                       // context.moveTo(this.nodes[i][0], this.nodes[i][1]);
-                       // context.lineTo(this.nodes[i+1][0], this.nodes[i+1][1]);
-                       // context.lineWidth = this.lineStyle.width;
-                       // context.strokeStyle = this.lineStyle.color;
-                       // context.stroke();
+       		  if ( this.checkedValue == true ) {
+       		  	console.log ("TRUEEEE");
+       		  	//HIER TO DO TICKS ZEICHNEN! <-----------------------------------------
+       		  	// siehe Folien seite 14&15!! 
+       		  	// Tangentenvektor berechnen.. davon normale.. dann einen punkt über
+       		  	// und einen punkt unterhalb des aktuellen punktes finden und linie 
+       		  	// zeichnen!
+       		  };
+       		  
+       		
                        
                    
               };
@@ -99,11 +121,15 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line"],
    	// test whether the mouse position is on this curve segment
        ParametricCurve.prototype.isHit = function(context , mousePos) {
 		
-       	for (var i = 0; i < this.straightLines.length; i++) {
+       	for (var i = 0; i <= this.straightLines.length; i++) {
+       	
+			var temp = this.straightLines[i];
 			
-       		if (this.straightLines[i].isHit(context, mousePos)) {
-       			return true;
+			if (this.straightLines[i] != undefined) {
+       			if (temp.isHit(context, mousePos)) {
+       				return true;
 
+       			};
        		};
        	
        	};
@@ -117,13 +143,9 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line"],
        	return draggers;
        
        };
-       
       
-       
+      
        return ParametricCurve;
-       
-       
-       
-       
+     
        
 }));

@@ -110,9 +110,9 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve"],
             	};
               //HIER EVAL?!
                                               
-              var tmin = parseInt($("inputMinT").val());
-              var tmax = parseInt($("inputMaxT").val());
-              var segments = parseInt($("inputSegments").val());
+              var tmin = parseFloat($("inputMinT").val());
+              var tmax = parseFloat($("inputMaxT").val());
+              var segments = parseFloat($("inputSegments").val());
             	var paramcurve = new ParametricCurve($("functionX").val(), $("functionY").val(), 
             						   tmin, tmax, segments, style);	
 
@@ -276,7 +276,7 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve"],
 		
 		// find out if the value of inputTicks is undefined, then it is not checked
 		// therefore set the attribute checkedValue to false, else true
-		if ( selectedObject instanceof ParametricCurve ) {
+		if ( selectedObject.xt != undefined ) {
 		
 			if ($("#inputTicks").attr("checked") == "checked") {
               		selectedObject.setCheckedValue(true);
@@ -343,14 +343,13 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve"],
        	
        	if (obj != undefined) {
        		
+       		// if selected object doesnt have a radius, we can tell that the selected 
+       		// object is a circle
        		if (obj.radius != undefined) {
        			$("#inputRadius").val(obj.radius);       		
-       		}
-       		//deselect() and select() to update the radius instantly
-			
-       	}
-       	
-       
+       		};
+		};
+       	     
        };
 	sceneController.onObjChange(setNewValues);
 	

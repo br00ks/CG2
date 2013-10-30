@@ -57,7 +57,7 @@ define(["util", "vec2", "scene", "point_dragger", "radius_dragger"],
 	 
 	// test whether the mouse position is on this circle segment
     	Circle.prototype.isHit = function(context , mousePos) {
-		console.log("hihihihtihihit");
+
 		//check if distance is between mouse and the center
 		var dx = mousePos[0] - this.center[0];
        	var dy = mousePos[1] - this.center[1];
@@ -123,7 +123,7 @@ define(["util", "vec2", "scene", "point_dragger", "radius_dragger"],
 
               };	
 
-           	draggers.push( new RadiusDragger(getRadiusPos, setRadiusPos, draggerStyle) );
+           	draggers.push( new PointDragger(getRadiusPos, setRadiusPos, draggerStyle) );
            	
 		return draggers;
         
