@@ -197,16 +197,24 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve"],
 			
 		// eval() gibt wenn übergebendes Argument als Rechenoperation 
 		// interpretiert werden kann, dessen Ergebnis zurück
-		var selectedObject = sceneController.getSelectedObject();
-		//selectedObject.xt = eval($("#functionX"));
-	
-		//Testfunktion um eval() zu testen
-		var f = function(t) {
-			return eval(t);
-			console.log(t);
-		}
-		selectedObject.xt = f(selectedObject.tmax);
 		
+		var selectedObject = sceneController.getSelectedObject();
+		selectedObject.currentXt = $("#functionX").val();
+		console.log(selectedObject.currentXt);
+		//selectedObject.xt = eval($("#functionX").val());
+	
+                        
+		//Testfunktion um eval() zu testen
+		//var f = function(t) {
+		//	return eval(t);
+		//	console.log(t);
+		//}
+
+
+		
+		//deselect() and select() to update the function instantly
+		sceneController.deselect();
+		sceneController.select(selectedObject);
 		
        });
        
@@ -214,7 +222,16 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve"],
        // and redraw the scene
        $("#functionY").change(function() {
        	console.log("changed function Y");
-       	//TO_DO!!!!!!!!!!!!!!!!!!!!! <-------------------------------------------------------------
+       	
+       	var selectedObject = sceneController.getSelectedObject();
+       	selectedObject.currentYt = $("#functionY").val();
+       	
+       	console.log(selectedObject.currentYt);      	
+       	
+       	//deselect() and select() to update the new function instantly
+		sceneController.deselect();
+		sceneController.select(selectedObject);
+
 	
        });
        
@@ -276,7 +293,7 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve"],
 		
 		// find out if the value of inputTicks is undefined, then it is not checked
 		// therefore set the attribute checkedValue to false, else true
-		if ( selectedObject instanceof ParametricCurve ) {
+		if ( selectedObject.xt != undefined ) {
 		
 			if ($("#inputTicks").attr("checked") == "checked") {
               		selectedObject.setCheckedValue(true);
@@ -320,12 +337,8 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve"],
 			$("#inputMaxT").val(selectedObject.tmax);
 			$("#inputSegments").val(selectedObject.segments);
 			
-			var returnValue1 = selectedObject.xt;
-			var returnValue2 = selectedObject.yt;
-			
-			$("#functionX").val(returnValue1);
-			$("#functionY").val(returnValue2);
-			console.log(returnValue1);
+			$("#functionX").val(selectedObject.currentXt);
+			$("#functionY").val(selectedObject.currentYt);
 			// inputValues aktualisieren!! <--------------TO Do ------------------------
 			
 		// else we can tell that the selected object is a straightline	
@@ -347,8 +360,8 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve"],
        		// object is a circle
        		if (obj.radius != undefined) {
        			$("#inputRadius").val(obj.radius);       		
-       		}
-		}
+       		};
+		};
        	     
        };
 	sceneController.onObjChange(setNewValues);

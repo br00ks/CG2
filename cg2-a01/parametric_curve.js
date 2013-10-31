@@ -32,13 +32,14 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line"],
 	      
        
            	// given function x(t)     
-		this.xt = this.xt || function(t) {return 100+(100*Math.sin(t));}
+		this.xt = this.xt || function(t) {return eval(this.currentXt);}
 							 //return -2*t +t*t};
 		//console.log("start drawing" + this.xt);
-
+		this.currentXt = "100+(100*Math.sin(t))";
       		// given function y(t)  
-		this.yt = this.yt || function (t) {return 100+(100*Math.cos(t));}
+		this.yt = this.yt || function (t) {return eval(this.currentYt);}
 								//t};
+		this.currentYt = "100+(100*Math.cos(t))";
       		
       		// given interval 
       		this.tmin = tmin || 0;
@@ -65,6 +66,14 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line"],
        // false: tickmarks won't be drawn
        ParametricCurve.prototype.setCheckedValue = function (value) {
       		this.checkedValue = value;
+       }
+       
+       ParametricCurve.prototype.setCurrentXt = function(value) {
+       	this.currentXt = value;
+       }
+       
+       ParametricCurve.prototype.setCurrentYt = function(value) {
+       	this.currentYt = value;
        }
        
        
