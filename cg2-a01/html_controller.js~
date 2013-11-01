@@ -1,7 +1,7 @@
 /*
  * JavaScript / Canvas teaching framwork 
  * (C)opyright Hartmut Schirmacher, hschirmacher.beuth-hochschule.de 
- *
+ * Karin Lampesberger & Rebecca Ritter 
  * Module: html_controller
  *
  * Defines callback functions for communicating with various 
@@ -11,8 +11,8 @@
 
  
 /* requireJS module definition */
-define(["jquery", "straight_line", "circle.js", "parametric_curve"], 
-       (function($, StraightLine, Circle, ParametricCurve) {
+define(["jquery", "straight_line", "circle.js", "parametric_curve", "bezier_curve"], 
+       (function($, StraightLine, Circle, ParametricCurve, BezierCurve) {
 
     "use strict"; 
                 
@@ -102,13 +102,12 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve"],
         }));
 
         // event handler for "new parametric curve"-button
-          $("#btnParamCurve").click(function() {
+        $("#btnParamCurve").click(function() {
           
           	var style = { 
                 width: Math.floor(Math.random()*3)+1,
                 color: randomColor()
             	};
-              //HIER EVAL?!
                                               
               var tmin = parseFloat($("inputMinT").val());
               var tmax = parseFloat($("inputMaxT").val());
@@ -122,6 +121,16 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve"],
             	sceneController.deselect();
             	sceneController.select(paramcurve); // this will also redraw
          
+       });
+       
+       $("#btnBezierCurve").click(function() {
+        
+        	var beziercurve = new BezierCurve();
+        	scene.addObjects([beziercurve]);
+        
+        	// deselect all objects, then select the newly created object
+            	sceneController.deselect();
+            	sceneController.select(paramcurve); // this will also redraw
        });
        
        // ########################### CHANGE-METHODS ##################################
@@ -200,17 +209,7 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve"],
 		
 		var selectedObject = sceneController.getSelectedObject();
 		selectedObject.currentXt = $("#functionX").val();
-		console.log(selectedObject.currentXt);
-		//selectedObject.xt = eval($("#functionX").val());
-	
-                        
-		//Testfunktion um eval() zu testen
-		//var f = function(t) {
-		//	return eval(t);
-		//	console.log(t);
-		//}
-
-
+		//console.log(selectedObject.currentXt);
 		
 		//deselect() and select() to update the function instantly
 		sceneController.deselect();
@@ -226,7 +225,7 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve"],
        	var selectedObject = sceneController.getSelectedObject();
        	selectedObject.currentYt = $("#functionY").val();
        	
-       	console.log(selectedObject.currentYt);      	
+       	//console.log(selectedObject.currentYt);      	
        	
        	//deselect() and select() to update the new function instantly
 		sceneController.deselect();
@@ -242,7 +241,7 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve"],
        	
        	//get the selected object
 		var selectedObject = sceneController.getSelectedObject();
-		selectedObject.tmin = parseInt($("#inputMinT").val());
+		selectedObject.tmin = parseFloat($("#inputMinT").val());
 		
 		//deselect() and select() to update the radius instantly
 		sceneController.deselect();
@@ -260,7 +259,7 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve"],
        	
        	//get the selected object
 		var selectedObject = sceneController.getSelectedObject();
-		selectedObject.tmax = parseInt($("#inputMaxT").val());
+		selectedObject.tmax = parseFloat($("#inputMaxT").val());
 		
 		//deselect() and select() to update the radius instantly
 		sceneController.deselect();
@@ -328,23 +327,30 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve"],
 			$("#inputRadius_area").show();
 			$("#inputParam_Parametric").hide();
 			$("#inputRadius").val(selectedObject.radius);
+			$("#inputBezierCurve").hide();
 			
 		// test if the object has a function xt (otherwise it's no parametric curve)
 		} else if (selectedObject.xt != undefined ){
 			$("#inputParam_Parametric").show();
 			$("#inputRadius_area").hide();
+			$("#inputBezierCurve").hide();
 			$("#inputMinT").val(selectedObject.tmin);
 			$("#inputMaxT").val(selectedObject.tmax);
 			$("#inputSegments").val(selectedObject.segments);
 			
 			$("#functionX").val(selectedObject.currentXt);
 			$("#functionY").val(selectedObject.currentYt);
-			// inputValues aktualisieren!! <--------------TO Do ------------------------
 			
 		// else we can tell that the selected object is a straightline	
+		} else if (selectedObject.p3 != undefined){
+			$("#inputBezierCurve").show();
+			$("#functionX").hide();
+			$("#functionY").hide();
+		
 		} else {
 			$("#inputRadius_area").hide();
 			$("#inputParam_Parametric").hide();
+			$("#inputBezierCurve").hide();
 		}
        };
        

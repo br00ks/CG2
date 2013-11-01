@@ -8,11 +8,13 @@ body {
 h3 {
     color: #000055;
     font-size:14px;
+    display: inline;
+    padding-top: 13px;
 }
 
 h4 {
     color: #000055;
-    font-size:14px;
+    font-size:12px;
     display: inline;
 }
 
@@ -49,6 +51,10 @@ input {
     width:80px;
 }
 input[type=text] {
-    width:120px;
+    width:150px;
+}
+
+.p_beziercurve {
+	width:55px;
 }
 }

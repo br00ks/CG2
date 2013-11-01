@@ -45,7 +45,7 @@
 
     <!-- this element will be used to display the parameters of the selected object -->
     <div id="param_area" >
-	<h3>Selected Object:</h3>
+	<h3>Selected Object:</h3><br><br>
         
 	<input id="inputColor" type="color" > Farbe </input>
 	<input id="inputNumber" type="number" min = "0" > Liniendicke </input>
@@ -56,12 +56,27 @@
 	</div>
 	<div id="inputParam_Parametric">
 
-		<input id="functionX" type="text"" > x(t):  </input> <br>
+		<input id="functionX" type="text" > x(t):  </input> <br>
 		<input id="functionY" type="text" > y(t):  </input> <br>
 		<input id="inputMinT" type="number" min = "0" > min t:  </input>
 		<input id="inputMaxT" type="number" min = "0" > max t:  </input>
 		<input id="inputSegments" type="number" min = "0" > segments:  </input>
 		<input id="inputTicks" type="checkbox"> tick marks:  </input>
+	</div> <br>
+	
+	<div id = "inputBezierCurve">
+		<h4> Beziercurve Control Points </h4>
+		<input id="bc_p0_x" class="p_beziercurve" type="number"> </input>
+		<input id="bc_p0_y" class="p_beziercurve" type="number"> p0 (x|y) </input>
+	
+		<input id="bc_p1_x" class="p_beziercurve" type="number"> </input>
+		<input id="bc_p1_y" class="p_beziercurve" type="number"> p1 (x|y) </input>
+	
+		<input id="bc_p2_x" class="p_beziercurve" type="number"> </input>
+		<input id="bc_p2_y" class="p_beziercurve" type="number"> p2 (x|y) </input>
+		
+		<input id="bc_p3_x" class="p_beziercurve" type="number"> </input>
+		<input id="bc_p3_y" class="p_beziercurve" type="number"> p3 (x|y) </input>
 	</div>
         <!-- add more here... -->
 

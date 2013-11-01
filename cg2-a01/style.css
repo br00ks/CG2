@@ -12,7 +12,7 @@ h3 {
 
 h4 {
     color: #000055;
-    font-size:14px;
+    font-size:12px;
     display: inline;
 }
 
@@ -50,5 +50,9 @@ input {
 }
 input[type=text] {
     width:150px;
+}
+
+.p_beziercurve {
+	width:55px;
 }
 }

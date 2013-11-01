@@ -1,6 +1,6 @@
 /* 
  * JavaScript / Canvas teaching framwork 
- * Karin Lampesberger
+ * Karin Lampesberger & Rebecca Ritter
  * Module: parametric_curve
  *
  * A parametric curve knows how to draw itself into a specified 2D context,
@@ -32,13 +32,41 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line"],
 	      
        
            	// given function x(t)     
-		this.xt = this.xt || function(t) {return this.currentXt;}
-							 //return -2*t +t*t};
-		//console.log("start drawing" + this.xt);
+		this.xt = this.xt || function(t) {
+		
+			var functionX;
+		
+			try {
+				functionX = eval(this.currentXt);
+						
+			} catch (err) {
+			
+				console.log ("Ungültige Eingabe! Bitte t als Variable verwenden!");
+			};
+		
+			return functionX;
+		
+			};
+		
 		this.currentXt = "100+(100*Math.sin(t))";
+		
       		// given function y(t)  
-		this.yt = this.yt || function (t) {return this.currentYt;}
-								//t};
+		this.yt = this.yt || function (t) {
+			
+			var functionY;
+		
+			try {
+				functionY = eval(this.currentYt);
+						
+			} catch (err) {
+			
+				console.log ("Ungültige Eingabe! Bitte t als Variable verwenden!");
+			};
+		
+			return functionY;
+		
+			};
+		
 		this.currentYt = "100+(100*Math.cos(t))";
       		
       		// given interval 
@@ -68,10 +96,11 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line"],
       		this.checkedValue = value;
        }
        
+       // sets the current function Xt as a String
        ParametricCurve.prototype.setCurrentXt = function(value) {
        	this.currentXt = value;
        }
-       
+       // sets the current function Yt as a String
        ParametricCurve.prototype.setCurrentYt = function(value) {
        	this.currentYt = value;
        }
@@ -113,11 +142,11 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line"],
        		  
        		  if ( this.checkedValue == true ) {
        		  	console.log ("TRUEEEE");
-       		  	//HIER TO DO TICKS ZEICHNEN! <-----------------------------------------
+       		  	// HIER TO DO TICKS ZEICHNEN! <-----------------------------------------
        		  	// siehe Folien seite 14&15!! 
        		  	// Tangentenvektor berechnen.. davon normale.. dann einen punkt über
        		  	// und einen punkt unterhalb des aktuellen punktes finden und linie 
-       		  	// zeichnen!
+       		  	// zeichnen!	
        		  };
        		  
        		
@@ -127,7 +156,7 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line"],
             
        };
        
-   	// test whether the mouse position is on this curve segment
+   	// tests whether the mouse position is on this curve segment
        ParametricCurve.prototype.isHit = function(context , mousePos) {
 		
        	for (var i = 0; i <= this.straightLines.length; i++) {
