@@ -8,8 +8,6 @@ body {
 h3 {
     color: #000055;
     font-size:14px;
-    display: inline;
-    padding-top: 13px;
 }
 
 h4 {

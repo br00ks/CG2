@@ -41,7 +41,7 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line", "parametric_c
        	this.segments = segments || 10;
        	this.lineStyle = lineStyle || { width: "3", color: "#0000AA" };
       
-      		this.bezier_curve =  new ParametricCurve(this.xt, this.yt, tmin, tmax, segments, lineStyle);
+      		this.bezier_curve =  new ParametricCurve(this.xt, this.yt, this.tmin, this.tmax, this.segments, this.lineStyle);
        
        };
        

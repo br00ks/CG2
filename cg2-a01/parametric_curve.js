@@ -166,7 +166,7 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line"],
 			if (this.straightLines[i] != undefined) {
        			if (temp.isHit(context, mousePos)) {
        				return true;
-
+	
        			};
        		};
        	

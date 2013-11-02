@@ -342,10 +342,10 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve", "bezier_curv
 			$("#functionY").val(selectedObject.currentYt);
 			
 		// else we can tell that the selected object is a straightline	
-		} else if (selectedObject.p3 != undefined){
-			$("#inputBezierCurve").show();
-			$("#functionX").hide();
-			$("#functionY").hide();
+		//} else if (selectedObject.p3 != undefined){
+		//	$("#inputBezierCurve").show();
+		//	$("#functionX").hide();
+		//	$("#functionY").hide();
 		
 		} else {
 			$("#inputRadius_area").hide();
