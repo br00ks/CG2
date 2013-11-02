@@ -68,7 +68,7 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line"],
 			};
 		
 		this.currentYt = "100+(100*Math.cos(t))";
-      		this.
+
       		// given interval 
       		this.tmin = tmin || 0;
       		this.tmax = tmax || 2*Math.PI;
