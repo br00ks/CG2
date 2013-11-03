@@ -340,37 +340,55 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve", "bezier_curv
        var updateBezierCurve = function() {
        
        	var selectedObject = sceneController.getSelectedObject();
-       	scene.removeObjects([selectedObject]);
-       	sceneController.deselect();
+       	       	
+       	selectedObject.p0 = [$("#bc_p0_x").val(), $("#bc_p0_y").val()];
+       	selectedObject.p1 = [$("#bc_p1_x").val(), $("#bc_p1_y").val()];
+       	selectedObject.p2 = [$("#bc_p2_x").val(), $("#bc_p2_y").val()];
+       	selectedObject.p3 = [$("#bc_p3_x").val(), $("#bc_p3_y").val()];
        	
-       	var p0 = [$("#bc_p0_x").val(), $("#bc_p0_y").val()];
-       	var p1 = [$("#bc_p1_x").val(), $("#bc_p1_y").val()];
-       	var p2 = [$("#bc_p2_x").val(), $("#bc_p2_y").val()];
-       	var p3 = [$("#bc_p3_x").val(), $("#bc_p3_y").val()];
+       	selectedObject.bezier_curve.currentXt = "(Math.pow((1 - t), 3) *"+ selectedObject.p0[0] +") + (3 * Math.pow((1 - t), 2)* t *" + selectedObject.p1[0] +") + (3 * (1 - t) * Math.pow(t, 2) *"+ selectedObject.p2[0] +") + (Math.pow(t, 3) *"+ selectedObject.p3[0] +")";
        	
-       	var currentXt = "";
-       	
-       	var currentYt = "";
+       	selectedObject.bezier_curve.currentYt = "(Math.pow((1 - t), 3) *"+ selectedObject.p0[1] +") + (3 * Math.pow((1 - t), 2)* t *"+ selectedObject.p1[1] +") + (3 * (1 - t) * Math.pow(t, 2) *"+ selectedObject.p2[1] +") + (Math.pow(t, 3) *"+ selectedObject.p3[1] +")";
        				
        	var tmin = $("#inputMinT").val();
        	var tmax = $("#inputMaxT").val();
        	var segments = $("#inputSegments").val();
        	var lineStyle = { width: $("#inputNumber").val(), color: $("#inputColor").val() };
-        	var beziercurve = new BezierCurve(p0, p1, p2, p3, currentXt, currentYt, 
-        						tmin, tmax, segments, lineStyle);
-
-
-        	
-
-       	scene.addObjects([beziercurve]);
-		//deselect() and select() to update the radius instantly
-		sceneController.deselect();
-		sceneController.select(beziercurve);
        	
        
-       
+        	
+		//deselect() and select() to update the radius instantly
+		sceneController.deselect();
+		sceneController.select(selectedObject);
+       	       
        };
             
+//       // update x-coordinate of p0 when it's changed
+//       $("#bc_p0_x").change(function() {	updateBezierCurve(); });
+//      
+//       // update y-coordinate of p0 when it's changed
+//       $("#bc_p0_y").change(function() { updateBezierCurve(); });
+//       
+//        // update x-coordinate of p1 when it's changed
+//       $("#bc_p1_x").change(function() { updateBezierCurve(); });
+//        
+//       // update y-coordinate of p1 when it's changed
+//       $("#bc_p1_y").change(function() { updateBezierCurve(); });
+//       
+//        // update x-coordinate of p2 when it's changed
+//       $("#bc_p2_x").change(function() { updateBezierCurve(); });
+//       
+//        
+//       // update y-coordinate of p2 when it's changed
+//       $("#bc_p2_y").change(function() { updateBezierCurve(); });
+//       
+//        // update x-coordinate of p3 when it's changed
+//       $("#bc_p3_x").change(function() { updateBezierCurve(); });
+//       
+//	 // update y-coordinate of p3 when it's changed
+//       $("#bc_p3_y").change(function() { updateBezierCurve(); });
+      
+      
       
        // if an object is selected some input-divs are hidden, and some are shown
        // the color and width are shown in all objects
@@ -459,8 +477,10 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve", "bezier_curv
        			
        			$("#bc_p3_x").val(obj.p3[0]);   
        			$("#bc_p3_y").val(obj.p3[1]);
+       			updateBezierCurve();
 
        		}
+
        		
 		};
        	     
@@ -468,64 +488,7 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve", "bezier_curv
 	sceneController.onObjChange(setNewValues);
 	
 	
-	  // update x-coordinate of p0 when it's changed
-       $("#bc_p0_x").change(function() {
-       
-       	updateBezierCurve();
-              
-       });
-       
-        
-       // update y-coordinate of p0 when it's changed
-       $("#bc_p0_y").change(function() {
-       
-       	updateBezierCurve();
-              
-       });
-       
-        // update x-coordinate of p1 when it's changed
-       $("#bc_p1_x").change(function() {
-       
-       	updateBezierCurve();
-              
-       });
-       
-        
-       // update y-coordinate of p1 when it's changed
-       $("#bc_p1_y").change(function() {
-       
-       	updateBezierCurve();
-              
-       });
-       
-        // update x-coordinate of p2 when it's changed
-       $("#bc_p2_x").change(function() {
-       
-       	updateBezierCurve();
-              
-       });
-       
-        
-       // update y-coordinate of p2 when it's changed
-       $("#bc_p2_y").change(function() {
-       
-       	updateBezierCurve();
-              
-       });
-       
-        // update x-coordinate of p3 when it's changed
-       $("#bc_p3_x").change(function() {
-       
-       	updateBezierCurve();
-              
-       });
-       
-	 // update y-coordinate of p3 when it's changed
-       $("#bc_p3_y").change(function() {
-       
-       	updateBezierCurve();
-              
-       });
+	
     };
 	
     // return the constructor function 

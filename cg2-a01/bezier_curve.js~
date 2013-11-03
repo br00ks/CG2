@@ -42,6 +42,7 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line", "parametric_c
       					 tmin, tmax, segments, lineStyle);
       		
   	};
+  	var BezierCurve = new ParametricCurve();
   	
        // sets the value of the checkbox
        // true: tickmarks will be drawn
@@ -89,22 +90,22 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line", "parametric_c
 		};
 		
 		//set the new position of p0
-		var setP0 = function() {
+		var setP0 = function(dragEvent) {
 			beziercurve.p0 = dragEvent.position;
 		};
 		
 		//set the new position of p1
-		var setP1 = function() {
+		var setP1 = function(dragEvent) {
 			beziercurve.p1 = dragEvent.position;
 		};
 		
 		//set the new position of p2
-		var setP2 = function() {
+		var setP2 = function(dragEvent) {
 			beziercurve.p2 = dragEvent.position;
 		};
 		
 		//set the new position of p3
-		var setP3 = function() {
+		var setP3 = function(dragEvent) {
 			beziercurve.p3 = dragEvent.position;
 		};
 		
