@@ -16,46 +16,104 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line", "parametric_c
        (function(Util,vec2,Scene,PointDragger, StraightLine, ParametricCurve) {
        
        "use strict";
-       
-       
-       var BezierCurve =  function (p0, p1, p2, p3, segments, lineStyle) {
+              
+       var BezierCurve =  function (p0, p1, p2, p3, currentXt, currentYt, tmin, 
+       				  tmax, segments, lineStyle) {
        	this.p0 = p0 || [50, 50];
        	this.p1 = p1 || [100, 50];
-       	this.p1 = p2 || [25, 150];
+       	this.p2 = p2 || [25, 150];
        	this.p3 = p3 || [150, 50];
        	
-       	this.xt = function(t) {
-       		return (Math.pow((1 - t), 3) * this.p0[0]) + (3 * Math.pow((1 - t), 2) 
-       			* t * this.p1[0]) + (3 * (1 - t) * Math.pow(t, 2) * this.p2[0]) 
-       			+ (Math.pow(t, 3) * this.p3[0]);
-       	};
+       	var bcurve = this;
+       	var currentXt = "(Math.pow((1 - t), 3) *"+ bcurve.p0[0] +") + (3 * Math.pow((1 - t), 2)* t *" + bcurve.p1[0] +") + (3 * (1 - t) * Math.pow(t, 2) *"+ bcurve.p2[0] +") + (Math.pow(t, 3) *"+ bcurve.p3[0] +")";
        	
-       	this.yt = function(t) {
-       		return (Math.pow((1 - t), 3) * this.p0[1]) + (3 * Math.pow((1 - t), 2) 
-       			* t * this.p1[1]) + (3 * (1 - t) * Math.pow(t, 2) * this.p2[1]) 
-       			+ (Math.pow(t, 3) * this.p3[1]);
-       	};
+       	var currentYt = "(Math.pow((1 - t), 3) *"+ bcurve.p0[1] +") + (3 * Math.pow((1 - t), 2)* t *"+ bcurve.p1[1] +") + (3 * (1 - t) * Math.pow(t, 2) *"+ bcurve.p2[1] +") + (Math.pow(t, 3) *"+ bcurve.p3[1] +")";
+       				
        	
-       	this.tmin = 0;
-       	this.tmax = 1;
+       	this.currentXt = currentXt;
+       	this.currentYt = currentYt;
+       	
+       	this.tmin = tmin || 0;
+       	this.tmax = tmax || 1;
        	this.segments = segments || 10;
        	this.lineStyle = lineStyle || { width: "3", color: "#0000AA" };
-      
-      		//this.bezier_curve =  new ParametricCurve(this.xt, this.yt, this.tmin, this.tmax, this.segments, this.lineStyle);
-       
-       };
-       
-       
+            
+      		this.bezier_curve =  new ParametricCurve(currentXt,currentYt, 
+      					 tmin, tmax, segments, lineStyle);
+      		
+  	};
+  	
+       // sets the value of the checkbox
+       // true: tickmarks will be drawn
+       // false: tickmarks won't be drawn
+       BezierCurve.prototype.setCheckedValue = function (value) {
+      		this.bezier_curve.checkedValue = value;
+       }
+              
        BezierCurve.prototype.draw = function(context) {
-       
+       	this.bezier_curve.draw(context);
        };
        
        BezierCurve.prototype.isHit = function(context, mousePos) {
+       	return this.bezier_curve.isHit(context, mousePos);
        
        };
        
        BezierCurve.prototype.createDraggers = function() {
-       
+		var draggers = [];
+		
+		//style of the dragger-circle
+		var draggerStyle = { radius:3, color: this.lineStyle.color, width:0, fill:true };
+		
+		// create closure and callbacks for dragger
+		var beziercurve = this; 
+		
+		//get p0 of the beziercurve
+		var getP0 = function() {
+			return beziercurve.p0;
+		};
+		
+		//get p1 of the beziercurve
+		var getP1 = function() {
+			return beziercurve.p1;
+		};
+		
+		//get p2 of the beziercurve
+		var getP2 = function() {
+			return beziercurve.p2;
+		};
+		
+		//get p3 of the beziercurve
+		var getP3 = function() {
+			return beziercurve.p3;
+		};
+		
+		//set the new position of p0
+		var setP0 = function(dragEvent) {
+			beziercurve.p0 = dragEvent.position;
+		};
+		
+		//set the new position of p1
+		var setP1 = function(dragEvent) {
+			beziercurve.p1 = dragEvent.position;
+		};
+		
+		//set the new position of p2
+		var setP2 = function(dragEvent) {
+			beziercurve.p2 = dragEvent.position;
+		};
+		
+		//set the new position of p3
+		var setP3 = function(dragEvent) {
+			beziercurve.p3 = dragEvent.position;
+		};
+		
+		draggers.push(new PointDragger(getP0, setP0, draggerStyle));
+		draggers.push(new PointDragger(getP1, setP1, draggerStyle));
+		draggers.push(new PointDragger(getP2, setP2, draggerStyle));
+		draggers.push(new PointDragger(getP3, setP3, draggerStyle));
+		
+       	return draggers;
        };
        	
        

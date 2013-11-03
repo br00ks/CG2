@@ -55,9 +55,10 @@
 		<input id="inputRadius" type="number" min="0" > Radius </input>
 	</div>
 	<div id="inputParam_Parametric">
-
-		<input id="functionX" type="text" > x(t):  </input> <br>
-		<input id="functionY" type="text" > y(t):  </input> <br>
+		<div id="inputFunctions">
+			<input id="functionX" type="text" value="100+(100*Math.sin(t))" > x(t):  </input> <br>
+			<input id="functionY" type="text" value="100+(100*Math.cos(t))"> y(t):  </input> <br>
+		</div>
 		<input id="inputMinT" type="number" min = "0" > min t:  </input>
 		<input id="inputMaxT" type="number" min = "0" > max t:  </input>
 		<input id="inputSegments" type="number" min = "0" > segments:  </input>

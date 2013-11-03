@@ -45,7 +45,7 @@
 
     <!-- this element will be used to display the parameters of the selected object -->
     <div id="param_area" >
-	<h3>Selected Object:</h3><br><br>
+	<h3>Selected Object:</h3>
         
 	<input id="inputColor" type="color" > Farbe </input>
 	<input id="inputNumber" type="number" min = "0" > Liniendicke </input>
@@ -56,8 +56,8 @@
 	</div>
 	<div id="inputParam_Parametric">
 
-		<input id="functionX" type="text" > x(t):  </input> <br>
-		<input id="functionY" type="text" > y(t):  </input> <br>
+		<input id="functionX" type="text" value="100+(100*Math.sin(t))" > x(t):  </input> <br>
+		<input id="functionY" type="text" value="100+(100*Math.cos(t))"> y(t):  </input> <br>
 		<input id="inputMinT" type="number" min = "0" > min t:  </input>
 		<input id="inputMaxT" type="number" min = "0" > max t:  </input>
 		<input id="inputSegments" type="number" min = "0" > segments:  </input>
