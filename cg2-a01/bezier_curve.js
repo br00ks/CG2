@@ -12,8 +12,8 @@
  
   
 /* requireJS module definition */
-define(["util", "vec2", "scene", "point_dragger", "straight_line", "parametric_curve"], 
-       (function(Util,vec2,Scene,PointDragger, StraightLine, ParametricCurve) {
+define(["util", "vec2", "scene", "point_dragger", "straight_line", "parametric_curve", "control_polygon_dragger"], 
+       (function(Util,vec2,Scene,PointDragger, StraightLine, ParametricCurve, ControlPolygonDragger) {
        
        "use strict";
               
@@ -24,7 +24,7 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line", "parametric_c
        	this.p2 = p2 || [25, 150];
        	this.p3 = p3 || [150, 50];
        	
-       	var bcurve = this;
+       	var bcurve = this;	
        	var currentXt = "(Math.pow((1 - t), 3) *"+ bcurve.p0[0] +") + (3 * Math.pow((1 - t), 2)* t *" + bcurve.p1[0] +") + (3 * (1 - t) * Math.pow(t, 2) *"+ bcurve.p2[0] +") + (Math.pow(t, 3) *"+ bcurve.p3[0] +")";
        	
        	var currentYt = "(Math.pow((1 - t), 3) *"+ bcurve.p0[1] +") + (3 * Math.pow((1 - t), 2)* t *"+ bcurve.p1[1] +") + (3 * (1 - t) * Math.pow(t, 2) *"+ bcurve.p2[1] +") + (Math.pow(t, 3) *"+ bcurve.p3[1] +")";
@@ -97,7 +97,7 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line", "parametric_c
 		var setP1 = function(dragEvent) {
 			beziercurve.p1 = dragEvent.position;
 		};
-		
+
 		//set the new position of p2
 		var setP2 = function(dragEvent) {
 			beziercurve.p2 = dragEvent.position;
@@ -112,6 +112,8 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line", "parametric_c
 		draggers.push(new PointDragger(getP1, setP1, draggerStyle));
 		draggers.push(new PointDragger(getP2, setP2, draggerStyle));
 		draggers.push(new PointDragger(getP3, setP3, draggerStyle));
+		draggers.push(new ControlPolygonDragger(getP0, getP1, getP2, getP3,
+							     beziercurve.lineStyle.color));
 		
        	return draggers;
        };

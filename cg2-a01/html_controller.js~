@@ -377,7 +377,6 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve", "bezier_curv
        
         // update x-coordinate of p2 when it's changed
        $("#bc_p2_x").change(function() { updateBezierCurve(); });
-       
         
        // update y-coordinate of p2 when it's changed
        $("#bc_p2_y").change(function() { updateBezierCurve(); });

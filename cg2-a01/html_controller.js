@@ -363,30 +363,29 @@ define(["jquery", "straight_line", "circle.js", "parametric_curve", "bezier_curv
        	       
        };
             
-//       // update x-coordinate of p0 when it's changed
-//       $("#bc_p0_x").change(function() {	updateBezierCurve(); });
-//      
-//       // update y-coordinate of p0 when it's changed
-//       $("#bc_p0_y").change(function() { updateBezierCurve(); });
-//       
-//        // update x-coordinate of p1 when it's changed
-//       $("#bc_p1_x").change(function() { updateBezierCurve(); });
-//        
-//       // update y-coordinate of p1 when it's changed
-//       $("#bc_p1_y").change(function() { updateBezierCurve(); });
-//       
-//        // update x-coordinate of p2 when it's changed
-//       $("#bc_p2_x").change(function() { updateBezierCurve(); });
-//       
-//        
-//       // update y-coordinate of p2 when it's changed
-//       $("#bc_p2_y").change(function() { updateBezierCurve(); });
-//       
-//        // update x-coordinate of p3 when it's changed
-//       $("#bc_p3_x").change(function() { updateBezierCurve(); });
-//       
-//	 // update y-coordinate of p3 when it's changed
-//       $("#bc_p3_y").change(function() { updateBezierCurve(); });
+       // update x-coordinate of p0 when it's changed
+       $("#bc_p0_x").change(function() {	updateBezierCurve(); });
+      
+       // update y-coordinate of p0 when it's changed
+       $("#bc_p0_y").change(function() { updateBezierCurve(); });
+       
+        // update x-coordinate of p1 when it's changed
+       $("#bc_p1_x").change(function() { updateBezierCurve(); });
+        
+       // update y-coordinate of p1 when it's changed
+       $("#bc_p1_y").change(function() { updateBezierCurve(); });
+       
+        // update x-coordinate of p2 when it's changed
+       $("#bc_p2_x").change(function() { updateBezierCurve(); });
+        
+       // update y-coordinate of p2 when it's changed
+       $("#bc_p2_y").change(function() { updateBezierCurve(); });
+       
+        // update x-coordinate of p3 when it's changed
+       $("#bc_p3_x").change(function() { updateBezierCurve(); });
+       
+	 // update y-coordinate of p3 when it's changed
+       $("#bc_p3_y").change(function() { updateBezierCurve(); });
       
       
       

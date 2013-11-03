@@ -6,7 +6,7 @@
  *
  * A PointDragger is a drawable object than can react to 
  * events from a SceneController. It will typically control
- * the position of one vertex/point of a scene obejct.
+ * the position of one vertex/point of a scene object.
  *
  */
 
@@ -59,6 +59,7 @@ define(["util", "scene"],
         this.isDragger = true; 
                                         
     };
+
 
     /*
      * draw the dragger as a small circle
