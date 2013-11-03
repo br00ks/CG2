@@ -28,19 +28,23 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line"],
 	// - lineStyle: object defining width and color attributes for curve drawing
 	
 
-       var ParametricCurve =  function (xt, yt, tmin, tmax, segments, lineStyle) {
+       var ParametricCurve =  function (currentXt, currentYt, tmin, tmax, segments, lineStyle) {
 	      
        
+       	this.currentXt = currentXt || "100+(100*Math.sin(t))";
+       	this.currentYt = currentYt || "100+(100*Math.cos(t))";
+       	
+       	var curve = this;
            	// given function x(t)     
 		this.xt = this.xt || function(t) {
 		
 			var functionX;
 		
 			try {
-				functionX = eval(this.currentXt);
+				functionX = eval(curve.currentXt);
 						
 			} catch (err) {
-			
+		
 				console.log ("Ungültige Eingabe! Bitte t als Variable verwenden!");
 			};
 		
@@ -48,15 +52,15 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line"],
 		
 			};
 		
-		this.currentXt = "100+(100*Math.sin(t))";
+		
 		
       		// given function y(t)  
-		this.yt = this.yt || function (t) {
+		this.yt = this.yt || function (t) { 
 			
 			var functionY;
 		
 			try {
-				functionY = eval(this.currentYt);
+				functionY = eval(curve.currentYt);
 						
 			} catch (err) {
 			
@@ -67,7 +71,7 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line"],
 		
 			};
 		
-		this.currentYt = "100+(100*Math.cos(t))";
+
 
       		// given interval 
       		this.tmin = tmin || 0;
@@ -86,7 +90,7 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line"],
       		
       		// ticks are deactivated by default
       		this.checkedValue = false;
-      		
+
               	
        };
        // sets the value of the checkbox
@@ -118,7 +122,7 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line"],
        		this.nodes[x] = [this.xt(t),this.yt(t)];	
        		
        	}; 
-       	console.log(this.nodes.length);
+       	//console.log(this.nodes.length);
        	
        	  // 1. Version, aber bei isHit auf Grenzen gestossen!
                 // context.beginPath();
