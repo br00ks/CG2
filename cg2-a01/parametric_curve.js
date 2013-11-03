@@ -131,8 +131,7 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line"],
        	//draw the lines
        	for (var i = 1; i <= this.segments; i++) {
        		  //console.log(this.nodes[i]);
-       		  var tempLine = new StraightLine(this.nodes[i-1], 
-       		  					this.nodes[i], this.lineStyle);
+       		  var tempLine = new StraightLine(this.nodes[i-1], this.nodes[i], this.lineStyle);
        		  					 
        		  // save the lines in an array to be able to use it for the draw-function
        		  this.straightLines[i] = tempLine;
@@ -147,6 +146,55 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line"],
        		  	// Tangentenvektor berechnen.. davon normale.. dann einen punkt über
        		  	// und einen punkt unterhalb des aktuellen punktes finden und linie 
        		  	// zeichnen!	
+				
+				// draw
+                   /* context.beginPath();
+                    context.arc(this.nodes[i][0], this.nodes[i][1], 3, 0.0, Math.PI * 2, true);
+                    context.fill();
+                    context.closePath();
+                    context.stroke(); */
+				
+						//Punkt wo die Tangente gezeichnet werden soll
+                        var temp = 	this.nodes[i];
+							console.log (temp);
+										
+						//Tangente anlegen
+						var tangente = null;
+						 var laenge = 3;
+						 
+						 //beginning to draw the tickmarks mit for-Schleife über die Segmente gehen
+						 context.beginPath();
+						 
+						 for (var i = 1; i <= this.segments; i++) {
+							
+						//temp = [this.nodes[i][0], this.nodes[i][1]];
+						
+						//var tangenteX = 0.5 * (this.nodes[i+1][0] - this.nodes[i-1][0]); //siehe Formel Folie
+						var tangenteX = 0.5 * (this.nodes[i+1][0] - this.nodes[i-1][0]);
+						var tangenteY = 0.5 * (this.nodes[i+1][1] - this.nodes[i-1][1]);
+						tangente = [tangenteX, tangenteY];
+						console.log (tangente);
+						
+						var tangentenNormale =  [-tangente[1], tangente[0]];
+						
+						//var tangente_betrag = Math.sqrt(tangentenNormale[0] * tangentenNormale[0] + tangentenNormale[1] * tangentenNormale[1] );
+                        //var tangente_normalized = [tangentenNormale[0] / tangente_betrag, tangentenNormale[1] / tangente_betrag];
+						
+						 context.moveTo(temp[0] + laenge * tangente_normalized[0], temp[1] + laenge * tangente_normalized[1]);
+						context.lineTo(temp[0] + -laenge * tangente_normalized[0], temp[1] + -laenge * tangente_normalized[1]);
+						
+						//draw tickmarks
+						//context.moveTo(temp[0], temp[1]);
+						//context.lineTo(temp[0], temp[1]);
+				
+						} context.closePath();
+						
+                        
+              
+			  
+                        
+				
+				
        		  };
        		  
        		
