@@ -112,7 +112,7 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line"],
        
        // draw this parametric curve into a 2D rendering context
        ParametricCurve.prototype.draw = function(context) {
-       
+	   
        	var delta = (this.tmax - this.tmin) / this.segments;
        	
 		// 
@@ -143,7 +143,8 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line"],
        		  
        		  // when tickmarks (checkedValue) value is true, then draw the ticks
        		  
-       		  if ( this.checkedValue == true ) {
+       		  //if ( this.checkedValue == true ) {
+			  if (this.checkedValue) {
        		  	console.log ("TRUEEEE");
        		  	// HIER TO DO TICKS ZEICHNEN! <-----------------------------------------
        		  	// siehe Folien seite 14&15!! 
@@ -157,56 +158,36 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line"],
                     context.fill();
                     context.closePath();
                     context.stroke(); */
-				
-						//Punkt wo die Tangente gezeichnet werden soll
-                        var temp = 	this.nodes[i];
-							console.log (temp);
-										
-						//Tangente anlegen
-						var tangente = null;
-						 var laenge = 3;
-						 
-						 //beginning to draw the tickmarks mit for-Schleife über die Segmente gehen
-						 context.beginPath();
-						 
-						 for (var i = 1; i <= this.segments; i++) {
-							
-						//temp = [this.nodes[i][0], this.nodes[i][1]];
-						
-						//var tangenteX = 0.5 * (this.nodes[i+1][0] - this.nodes[i-1][0]); //siehe Formel Folie
-						var tangenteX = 0.5 * (this.nodes[i+1][0] - this.nodes[i-1][0]);
-						var tangenteY = 0.5 * (this.nodes[i+1][1] - this.nodes[i-1][1]);
-						tangente = [tangenteX, tangenteY];
-						console.log (tangente);
-						
-						var tangentenNormale =  [-tangente[1], tangente[0]];
-						
-						//var tangente_betrag = Math.sqrt(tangentenNormale[0] * tangentenNormale[0] + tangentenNormale[1] * tangentenNormale[1] );
-                        //var tangente_normalized = [tangentenNormale[0] / tangente_betrag, tangentenNormale[1] / tangente_betrag];
-						
-						 context.moveTo(temp[0] + laenge * tangente_normalized[0], temp[1] + laenge * tangente_normalized[1]);
-						context.lineTo(temp[0] + -laenge * tangente_normalized[0], temp[1] + -laenge * tangente_normalized[1]);
-						
-						//draw tickmarks
-						//context.moveTo(temp[0], temp[1]);
-						//context.lineTo(temp[0], temp[1]);
-				
-						} context.closePath();
-						
+			
+                        context.beginPath();
                         
-              
-			  
-                        
-				
-				
-       		  };
-       		  
-       		
-                       
-                   
+                        // Segmente durchlaufen
+                        for(i = 1; i < this.segments; i++) {
+
+                                var tangenteX = 0.5 * (this.nodes[i+1][0] - this.nodes[i-1][0]);
+                                var tangenteY = 0.5 * (this.nodes[i+1][1] - this.nodes[i-1][1]);
+                                
+								// Tangente vom Punkt p
+                                var tangente = [tangenteX, tangenteY];
+								// Normale von der Tangente
+                                var normale = [-tangente[1], tangente[0]];                           
+								
+								//Normale normalisiert			//Länge des Normalenvektors, Skalarprodukt der beiden Vektoren(siehe vec2)
+                                var normalized = vec2.divide(normale, (vec2.length(normale)));
+								
+								// Punkt an dem die Tangete gezeichnet werden soll
+                                var getPoint = [this.nodes[i][0], this.nodes[i][1]];
+                                
+                                // draw the tickmark
+                                context.moveTo(getPoint[0] + 5 * normalized[0], getPoint[1] + 5 * normalized[1]);
+								context.lineTo(getPoint[0] - 5 * normalized[0], getPoint[1] - 5 * normalized[1]);      
+                        }
+						context.closePath();
+						context.stroke();
               };
             
        };
+	   };
        
    	// tests whether the mouse position is on this curve segment
        ParametricCurve.prototype.isHit = function(context , mousePos) {
