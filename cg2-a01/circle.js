@@ -12,8 +12,8 @@
 
 
 /* requireJS module definition */
-define(["util", "vec2", "scene", "point_dragger", "radius_dragger"], 
-       (function(Util,vec2,Scene,PointDragger, RadiusDragger) {
+define(["util", "vec2", "scene", "point_dragger"], 
+       (function(Util,vec2,Scene,PointDragger) {
 	
 	 "use strict";
 
@@ -33,6 +33,7 @@ define(["util", "vec2", "scene", "point_dragger", "radius_dragger"],
 	
 
 	};
+	
 	//draw this circle into a 2D rendering context
 	Circle.prototype.draw = function(context) {
 		
@@ -69,7 +70,8 @@ define(["util", "vec2", "scene", "point_dragger", "radius_dragger"],
 		var minHit = this.radius - tolerance;
 		//the maximum hitpoint
 		var maxHit = this.radius + tolerance;
-	
+		
+		// --> PointDragger isHit
 		return (dx*dx + dy*dy) <= (maxHit*maxHit) && (dx*dx + dy*dy) >= (minHit * minHit);
    
    	};
@@ -123,7 +125,7 @@ define(["util", "vec2", "scene", "point_dragger", "radius_dragger"],
 
               };	
 
-           	draggers.push( new RadiusDragger(getRadiusPos, setRadiusPos, draggerStyle) );
+           	draggers.push( new PointDragger(getRadiusPos, setRadiusPos, draggerStyle) );
            	
 		return draggers;
         

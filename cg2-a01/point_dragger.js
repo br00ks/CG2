@@ -18,7 +18,7 @@ define(["util", "scene"],
     "use strict";
 
     /*
-     * A dragger is a visible handle to move a 2D point around
+     * A dragger is a visible hand to move a 2D point around
      * using the 2D rendering features of the HTML5 canvas element. 
      * Parameters:
      *

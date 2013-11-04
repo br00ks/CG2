@@ -16,20 +16,37 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line", "parametric_c
        (function(Util,vec2,Scene,PointDragger, StraightLine, ParametricCurve, ControlPolygonDragger) {
        
        "use strict";
+       
+       
+       // A simple bezier curve can be dragged
+	// Parameters:
+	// - p0 : given point
+	// - p1 : given point
+	// - p2 : given point
+	// - p3 : given point
+	// - currentXt : given string (defines function X of the bezier curve)
+	// - currentYt : given string (defines function Y of the bezier curve)
+	// - tmin: minimum of the domain
+	// - tmax: maximum of the domain
+	// - segments: number of parts of the curve
+	// - lineStyle: object defining width and color attributes for curve drawing
               
-       var BezierCurve =  function (p0, p1, p2, p3, currentXt, currentYt, tmin, 
-       				  tmax, segments, lineStyle) {
+       var BezierCurve =  function (p0, p1, p2, p3, tmin, tmax, segments, lineStyle) {
+       	// given points
        	this.p0 = p0 || [50, 50];
        	this.p1 = p1 || [100, 50];
        	this.p2 = p2 || [25, 150];
        	this.p3 = p3 || [150, 50];
        	
+       	// for currentXt and currentYt
        	var bcurve = this;	
-       	var currentXt = "(Math.pow((1 - t), 3) *"+ bcurve.p0[0] +") + (3 * Math.pow((1 - t), 2)* t *" + bcurve.p1[0] +") + (3 * (1 - t) * Math.pow(t, 2) *"+ bcurve.p2[0] +") + (Math.pow(t, 3) *"+ bcurve.p3[0] +")";
        	
-       	var currentYt = "(Math.pow((1 - t), 3) *"+ bcurve.p0[1] +") + (3 * Math.pow((1 - t), 2)* t *"+ bcurve.p1[1] +") + (3 * (1 - t) * Math.pow(t, 2) *"+ bcurve.p2[1] +") + (Math.pow(t, 3) *"+ bcurve.p3[1] +")";
-       				
+       	var currentXt = "(Math.pow((1 - t), 3) *"+ bcurve.p0[0] +") + (3 * Math.pow((1 - t), 2)* t *" + bcurve.p1[0] +") + (3 * (1 - t) * Math.pow(t, 2) *"
+       			    + bcurve.p2[0] +") + (Math.pow(t, 3) *"+ bcurve.p3[0] +")";
        	
+       	var currentYt = "(Math.pow((1 - t), 3) *"+ bcurve.p0[1] +") + (3 * Math.pow((1 - t), 2)* t *"+ bcurve.p1[1] +") + (3 * (1 - t) * Math.pow(t, 2) *"
+       			    + bcurve.p2[1] +") + (Math.pow(t, 3) *"+ bcurve.p3[1] +")";
+       	       	
        	this.currentXt = currentXt;
        	this.currentYt = currentYt;
        	
@@ -38,6 +55,8 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line", "parametric_c
        	this.segments = segments || 10;
        	this.lineStyle = lineStyle || { width: "3", color: "#0000AA" };
             
+            	// a bezier curve-object holds a parametriccurve-object and
+            	// draw & isHit function are delegated to this
       		this.bezier_curve =  new ParametricCurve(currentXt,currentYt, 
       					 tmin, tmax, segments, lineStyle);
       		
@@ -49,17 +68,24 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line", "parametric_c
        BezierCurve.prototype.setCheckedValue = function (value) {
       		this.bezier_curve.checkedValue = value;
        }
-              
+       
+       // draw this bezier curve into a 2D rendering context   
+       // by delegating to the parametriccurve-object    
        BezierCurve.prototype.draw = function(context) {
        	this.bezier_curve.draw(context);
        };
        
+       // tests whether the mouse position is on this curve segment
+       // by delegating to the parametriccurve-object    
        BezierCurve.prototype.isHit = function(context, mousePos) {
        	return this.bezier_curve.isHit(context, mousePos);
        
        };
        
+       // return a list of draggers to manipulate this bezier curve
        BezierCurve.prototype.createDraggers = function() {
+       
+       	//list of draggers
 		var draggers = [];
 		
 		//style of the dragger-circle
@@ -108,11 +134,15 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line", "parametric_c
 			beziercurve.p3 = dragEvent.position;
 		};
 		
+		// push the pointdraggers to the list
 		draggers.push(new PointDragger(getP0, setP0, draggerStyle));
 		draggers.push(new PointDragger(getP1, setP1, draggerStyle));
 		draggers.push(new PointDragger(getP2, setP2, draggerStyle));
 		draggers.push(new PointDragger(getP3, setP3, draggerStyle));
-		draggers.push(new ControlPolygonDragger(getP0, getP1, getP2, getP3, beziercurve.lineStyle.color));
+		
+		// push a ControlPolygonDragger to the list 
+		draggers.push(new ControlPolygonDragger(getP0, getP1, getP2, getP3,
+							     beziercurve.lineStyle.color));
 		
        	return draggers;
        };

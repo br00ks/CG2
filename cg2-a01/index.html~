@@ -55,10 +55,11 @@
 		<input id="inputRadius" type="number" min="0" > Radius </input>
 	</div>
 	<div id="inputParam_Parametric">
-
-		<input id="functionX" type="text" value="100+(100*Math.sin(t))" > x(t):  </input> <br>
-		<input id="functionY" type="text" value="100+(100*Math.cos(t))"> y(t):  </input> <br>
-		<input id="inputMinT" type="number" min = "0" > min t:  </input>
+		<div id="inputFunctions">
+			<input id="functionX" type="text" value="100+(100*Math.sin(t))" > x(t):  </input> <br>
+			<input id="functionY" type="text" value="100+(100*Math.cos(t))"> y(t):  </input> <br>
+		</div>
+		<input id="inputMinT" type="number"  > min t:  </input>
 		<input id="inputMaxT" type="number" min = "0" > max t:  </input>
 		<input id="inputSegments" type="number" min = "0" > segments:  </input>
 		<input id="inputTicks" type="checkbox"> tick marks:  </input>
@@ -67,7 +68,7 @@
 	<div id = "inputBezierCurve">
 		<h4> Beziercurve Control Points </h4>
 		<input id="bc_p0_x" class="p_beziercurve" type="number"> </input>
-		<input id="bc_p0_y" class="p_beziercurve" type="number"> p0 (x|y) </input>
+		<input id="bc_p0_y" class="p_beziercurve" type="number"> p0 (x|y	) </input>
 	
 		<input id="bc_p1_x" class="p_beziercurve" type="number"> </input>
 		<input id="bc_p1_y" class="p_beziercurve" type="number"> p1 (x|y) </input>

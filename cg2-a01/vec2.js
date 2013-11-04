@@ -37,7 +37,7 @@ define([],
         return [ v[0]*s, v[1]*s ];
     };
 	
-	   // multiply vector by scalar, return new vector
+    // divide vector by scalar, return new vector
     vec2.divide = function(v,s) {
         return [ v[0]/s, v[1]/s ];
     };

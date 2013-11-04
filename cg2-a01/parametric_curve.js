@@ -29,12 +29,13 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line"],
 	
 
        var ParametricCurve =  function (currentXt, currentYt, tmin, tmax, segments, lineStyle) {
-	      
-       
-       	this.currentXt = currentXt || "100+(100*Math.sin(t))";
+	
+		this.currentXt = currentXt || "100+(100*Math.sin(t))";
        	this.currentYt = currentYt || "100+(100*Math.cos(t))";
        	
+       	// for closure
        	var curve = this;
+       	
            	// given function x(t)     
 		this.xt = this.xt || function(t) {
 		
@@ -50,10 +51,8 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line"],
 		
 			return functionX;
 		
-			};
-		
-		
-		
+		};
+			
       		// given function y(t)  
 		this.yt = this.yt || function (t) { 
 			
@@ -69,13 +68,12 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line"],
 		
 			return functionY;
 		
-			};
+		};
 		
-
-
       		// given interval 
       		this.tmin = tmin || 0;
       		this.tmax = tmax || 2*Math.PI;
+      		
       		// number of segments of the parametric curve
       		this.segments = segments || 6;
       		
@@ -112,82 +110,78 @@ define(["util", "vec2", "scene", "point_dragger", "straight_line"],
        
        // draw this parametric curve into a 2D rendering context
        ParametricCurve.prototype.draw = function(context) {
-	   
+	   	
+	   	//defines the value to the x will be multiplied with
        	var delta = (this.tmax - this.tmin) / this.segments;
        	
-		// 
+		// calculate all the nodes and save them in an array
              	for (var x = 0; x <= this.segments; x++) {
 
 			var t = x * delta + this.tmin; 
+			
        		this.nodes[x] = [this.xt(t),this.yt(t)];	
        		
        	}; 
-       	//console.log(this.nodes.length);
        	
-       	  // 1. Version, aber bei isHit auf Grenzen gestossen!
-                // context.beginPath();
-                // context.moveTo(this.nodes[i][0], this.nodes[i][1]);
-                // context.lineTo(this.nodes[i+1][0], this.nodes[i+1][1]);
-                // context.lineWidth = this.lineStyle.width;
-                // context.strokeStyle = this.lineStyle.color;
-                // context.stroke();
+				  // 1. Version, aber bei isHit auf Grenzen gestossen!
+				  // context.beginPath();
+				  // context.moveTo(this.nodes[i][0], this.nodes[i][1]);
+				  // context.lineTo(this.nodes[i+1][0], this.nodes[i+1][1]);
+				  // context.lineWidth = this.lineStyle.width;
+				  // context.strokeStyle = this.lineStyle.color;
+				  // context.stroke();
                 
-       	//draw the lines
-       	for (var i = 1; i <= this.segments; i++) {
-       		  //console.log(this.nodes[i]);
+       	//draw the lines and ticks
+       	for (var i = 1; i <=	 this.segments ; i++) {
+       	
+       		  //line to be drawn
        		  var tempLine = new StraightLine(this.nodes[i-1], this.nodes[i], this.lineStyle);
        		  					 
-       		  // save the lines in an array to be able to use it for the draw-function
+       		  // save the lines in an array to be able to use it for the itHit-function
        		  this.straightLines[i] = tempLine;
+       		  
+       		  // draw the line
        		  tempLine.draw(context);
        		  
        		  // when tickmarks (checkedValue) value is true, then draw the ticks
-       		  
-       		  //if ( this.checkedValue == true ) {
-			  if (this.checkedValue) {
-       		  	console.log ("TRUEEEE");
+       		  if (this.checkedValue) {
+       		  	
        		  	// HIER TO DO TICKS ZEICHNEN! <-----------------------------------------
        		  	// siehe Folien seite 14&15!! 
        		  	// Tangentenvektor berechnen.. davon normale.. dann einen punkt über
        		  	// und einen punkt unterhalb des aktuellen punktes finden und linie 
        		  	// zeichnen!	
 				
-				// draw
-                   /* context.beginPath();
-                    context.arc(this.nodes[i][0], this.nodes[i][1], 3, 0.0, Math.PI * 2, true);
-                    context.fill();
-                    context.closePath();
-                    context.stroke(); */
-			
-                        context.beginPath();
-                        
-                        // Segmente durchlaufen
-                        for(i = 1; i < this.segments; i++) {
-
-                                var tangenteX = 0.5 * (this.nodes[i+1][0] - this.nodes[i-1][0]);
-                                var tangenteY = 0.5 * (this.nodes[i+1][1] - this.nodes[i-1][1]);
-                                
-								// Tangente vom Punkt p
-                                var tangente = [tangenteX, tangenteY];
-								// Normale von der Tangente
-                                var normale = [-tangente[1], tangente[0]];                           
+                        	context.beginPath();
+                        	try {
+		                     var tangenteX = 0.5 * (this.nodes[i+1][0] - this.nodes[i-1][0]);
+		                     var tangenteY = 0.5 * (this.nodes[i+1][1] - this.nodes[i-1][1]);
+		                     
+					// Tangente vom Punkt p
+		                     var tangente = [tangenteX, tangenteY];
+					// Normale von der Tangente
+		                     var normale = [-tangente[1], tangente[0]];                           
 								
-								//Normale normalisiert			//Länge des Normalenvektors, Skalarprodukt der beiden Vektoren(siehe vec2)
-                                var normalized = vec2.divide(normale, (vec2.length(normale)));
+					//Normale normalisiert			//Länge des Normalenvektors, Skalarprodukt der beiden Vektoren(siehe vec2)
+		            		var normalized = vec2.divide(normale, (vec2.length(normale)));
 								
-								// Punkt an dem die Tangete gezeichnet werden soll
-                                var getPoint = [this.nodes[i][0], this.nodes[i][1]];
-                                
-                                // draw the tickmark
-                                context.moveTo(getPoint[0] + 5 * normalized[0], getPoint[1] + 5 * normalized[1]);
-								context.lineTo(getPoint[0] - 5 * normalized[0], getPoint[1] - 5 * normalized[1]);      
-                        }
-						context.closePath();
-						context.stroke();
-              };
-            
-       };
-	   };
+					// Punkt an dem die Tangete gezeichnet werden soll
+		                     var getPoint = [this.nodes[i][0], this.nodes[i][1]];
+		                     
+                            } catch(err) {
+					//hier evtl. noch fehlermeldung                            
+                            };
+                            
+                            //draw the tickmark
+                            context.moveTo(getPoint[0] + 5 * normalized[0], getPoint[1] + 5 * normalized[1]);
+				context.lineTo(getPoint[0] - 5 * normalized[0], getPoint[1] - 5 * normalized[1]);      
+                     
+						
+             		};
+            		context.closePath();
+			context.stroke();
+       	};
+	 };
        
    	// tests whether the mouse position is on this curve segment
        ParametricCurve.prototype.isHit = function(context , mousePos) {

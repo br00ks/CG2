@@ -14,8 +14,19 @@
 define(["util", "scene", "straight_line"], 
        (function(Util,Scene, StraightLine) {
        
-       // TO DO - COMMENT!!!!!!!!!!!!!!!!!!!!!
-       var ControlPolygonDragger = function(getPos0, getPos1, getPos2, getPos3) {
+
+       // A ControlPolygonDragger is a visible border to move a curve
+       // Parameters:
+       // - getPos0
+       //   callback function that will return the position of p0
+       // - getPos1
+       //   callback function that will return the position of p1
+       // - getPos2
+       //   callback function that will return the position of p2
+       // - getPos3
+       //   callback function that will return the position of p3
+       
+       var ControlPolygonDragger = function(getPos0, getPos1, getPos2, getPos3, color) {
        
        	// remember the callbacks
               this.getPos0 = getPos0;
@@ -23,21 +34,19 @@ define(["util", "scene", "straight_line"],
               this.getPos2 = getPos2;
               this.getPos3 = getPos3;
                 
-              // default draw style
+              // draw style
               this.drawStyle = {
                       width : 1,
-                      color : "#AA0000",
+                      color : color,
                       fill : false
               };
 
               // attribute queried by SceneController to recognize draggers
               this.isDragger = true;
-       
-       
+
        };
-       
-       
-       // draw the controlpolygondragger as straightlines
+
+       // draw the ControlPolygonDragger as straightlines
        ControlPolygonDragger.prototype.draw = function (context) {
        
        	// draw actual line
@@ -54,39 +63,19 @@ define(["util", "scene", "straight_line"],
         	context.lineTo(this.getPos3()[0],this.getPos3()[1]);
         	
         	// set drawing style
-       	 context.lineWidth = this.drawStyle.width;
+       	context.lineWidth = this.drawStyle.width;
         	context.strokeStyle = this.drawStyle.color;
         
        	// actually start drawing
        	context.stroke(); 
- 
-       
+     
        };
-       
-       
-       
+         
        // test whether the specified mouse position hits this dragger
        ControlPolygonDragger.prototype.isHit = function(context, mousePos) {
        	return false;
        };
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
+   
        
 	return ControlPolygonDragger;       
 })); // define
