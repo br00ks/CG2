@@ -9,7 +9,7 @@
 /* requireJS module definition */
 define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "models/cube",
         "models/parametric"], 
-       (function(glmatrix, Program, shaders, Band, Triangle, Cube, ParametricSurface ) {
+       (function(glmatrix, Program, shaders, Band, Triangle, Cube, ParametricSurface) {
 
     "use strict";
     
@@ -42,15 +42,61 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
                      0.3 * Math.sin(u) * Math.sin(v),
                      0.9 * Math.cos(u) ];
         };
+
+        // create a torus surface to be drawn in this scene
+        var positionFunc_torus = function(u,v) {
+            return [ (1 + 0.3 * Math.cos(v)) * Math.cos(u),
+                     (1 + 0.3 * Math.cos(v)) * Math.sin(u),
+                     0.3 * Math.sin(v) ];
+        };
+
+        // create a hyperboloid surface to be drawn in this scene
+        var positionFunc_hyperboloid = function(u,v) {
+
+            //COMMENT
+            var cosh = function (aValue) {
+                var term1 = Math.pow(Math.E, aValue);
+                var term2 = Math.pow(Math.E, -aValue);
+
+                return ((term1+term2)/2)
+            };
+
+            //COMMENT
+            var sinh = function (aValue) {
+                var term1 = Math.pow(Math.E, aValue);
+                var term2 = Math.pow(Math.E, -aValue);
+
+                return ((term1-term2)/2)
+            };
+
+            return [ 0.1 * cosh(v) * Math.cos(u),
+                     0.1 * cosh(v) * Math.sin(u),
+                     0.3 * sinh(v) ];
+        };
+
+
+        //COMMENT
+        var positionFunc_sine_surface = function(u,v) {
+            return [ Math.sin(u),
+                     Math.sin(v),
+                     Math.sin(u+v) ];
+        };
         var config = {
             "uMin": -Math.PI, 
             "uMax":  Math.PI, 
             "vMin": -Math.PI, 
             "vMax":  Math.PI, 
-            "uSegments": 40,
-            "vSegments": 20
+            "uSegments": 260,
+            "vSegments": 130
         };
         this.ellipsoid = new ParametricSurface(gl, positionFunc, config);
+
+        this.torus = new ParametricSurface(gl, positionFunc_torus, config);
+
+        this.hyperboloid = new ParametricSurface(gl, positionFunc_hyperboloid, config);
+
+        this.sine_surface = new ParametricSurface(gl, positionFunc_sine_surface, config);
+
 
         // initial position of the camera
         this.cameraTransformation = mat4.lookAt([0,0.5,3], [0,0,0], [0,1,0]);
@@ -65,7 +111,10 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
                              "Show Triangle": false,
                              "Show Cube": false,
                              "Show Band": true,
-                             "Show Ellipsoid": false
+                             "Show Ellipsoid": false,
+                             "Show Torus": false,
+                             "Show Hyperboloid": false,
+                             "Show Sine Surface": false
                              };                       
     };
 
@@ -109,6 +158,17 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         }
         if(this.drawOptions["Show Ellipsoid"]) {    
             this.ellipsoid.draw(gl, this.programs.red);
+        }
+        if(this.drawOptions["Show Torus"]) {    
+            this.torus.draw(gl, this.programs.red);
+        }
+
+        if(this.drawOptions["Show Hyperboloid"]) {    
+            this.hyperboloid.draw(gl, this.programs.red);
+        }
+
+        if(this.drawOptions["Show Sine Surface"]) {    
+            this.sine_surface.draw(gl, this.programs.red);
         }
     };
 

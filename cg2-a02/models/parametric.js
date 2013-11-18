@@ -46,7 +46,7 @@ define(["vbo"],
             for (var j=0; j <= vsegments; j++) {
 
                 vmin_temp += (vmax - vmin) / vsegments;
-                // X and Z coordinates are on a circle around the origin
+                //COMMENT!!!
                 var x = this.posFunc(umin_temp, vmin_temp)[0];
                 var y = this.posFunc(umin_temp, vmin_temp)[1];
                 var z = this.posFunc(umin_temp, vmin_temp)[2];
@@ -77,52 +77,9 @@ define(["vbo"],
        
         
     };
-
-
-    // TORUS-Objekt erstellen
-        //radiusD = Radius des Durchmesseres vom centerpoint zum Ringaussenpunkt
-        //radiusR = Radius des Durchmessers des Ringes
-
-    var Torus = function(gl, radiusR, radiusD, config) {
-        //var Torus = function(gl, posFunc, config) {
-        config = config || {};
-        var torus = {}; //um diesen Torus später der parametrischen Fläche hinzufügen zu können??
-        
-        var radiusR = config.radiusR || 3.0;
-        var radiusD = config.radiusD || 1.0;
-
-
-        var umin = 0;
-        var umax = 2 * Math.PI;
-        var vmin = 0;
-        var vmax = 2 * Math.PI;
-        var segments     = config.segments || 20;
-
-        var coords = [];
-        for(var i=0; i<=segments; i++) {
-
-        //Quelle Formeln:http://www.3d-meier.de/tut3/Seite58.html
-        var x = (radiusR + radiusD * Math.cos(vmax)) * Math.cos(umax);            //welches v und welches u muss noch definiert werden
-        var y = (radiusR + radiusD * Math.cos(vmax)) * Math.sin(umax);
-        var z = radiusD * Math.sin(vmax);
-
-        coords.push(x,y,z);
-        };  
-        
-        // create vertex buffer object (VBO) for the coordinates
-        this.coordsBuffer = new vbo.Attribute(gl, { "numComponents": 3,
-                                                    "dataType": gl.FLOAT,
-                                                    "data": coords 
-                                                  } );
-
-        return new ParametricSurface(gl, torus, config);
-
-
-
-    }
         
     // this module only returns the Band constructor function    
-    return Torus;
+    return ParametricSurface;
     //return ParametricSurface;
 
 })); // define
