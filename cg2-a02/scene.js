@@ -53,7 +53,7 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         // create a hyperboloid surface to be drawn in this scene
         var positionFunc_hyperboloid = function(u,v) {
 
-            //COMMENT
+            //COMMENT Quelle: http://www.ssicom.org/js/x910511.htm
             var cosh = function (aValue) {
                 var term1 = Math.pow(Math.E, aValue);
                 var term2 = Math.pow(Math.E, -aValue);
@@ -61,7 +61,7 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
                 return ((term1+term2)/2)
             };
 
-            //COMMENT
+            //COMMENT Quelle: http://www.ssicom.org/js/x911035.htm
             var sinh = function (aValue) {
                 var term1 = Math.pow(Math.E, aValue);
                 var term2 = Math.pow(Math.E, -aValue);
@@ -75,11 +75,18 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         };
 
 
-        //COMMENT
+        //create a Sine Surface to be drawn in this scene
         var positionFunc_sine_surface = function(u,v) {
             return [ Math.sin(u),
                      Math.sin(v),
                      Math.sin(u+v) ];
+        };
+
+        //create a Pseudosphere surface to be drawn in this scene
+        var positionFunc_pseudosphere = function(u,v) {
+            return [ Math.cos(u) * Math.sin(v),
+                     Math.sin(u) * Math.sin(v),
+                     Math.cos(v) + Math.log(Math.tan(v/2)) ];
         };
         var config = {
             "uMin": -Math.PI, 
@@ -96,6 +103,8 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         this.hyperboloid = new ParametricSurface(gl, positionFunc_hyperboloid, config);
 
         this.sine_surface = new ParametricSurface(gl, positionFunc_sine_surface, config);
+
+        this.pseudosphere = new ParametricSurface(gl, positionFunc_pseudosphere, config);
 
 
         // initial position of the camera
@@ -114,7 +123,8 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
                              "Show Ellipsoid": false,
                              "Show Torus": false,
                              "Show Hyperboloid": false,
-                             "Show Sine Surface": false
+                             "Show Sine Surface": false,
+                             "Show Pseudosphere": false
                              };                       
     };
 
@@ -169,6 +179,9 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
 
         if(this.drawOptions["Show Sine Surface"]) {    
             this.sine_surface.draw(gl, this.programs.red);
+        }
+        if(this.drawOptions["Show Pseudosphere"]) {    
+            this.pseudosphere.draw(gl, this.programs.red);
         }
     };
 

@@ -24,6 +24,7 @@ define(["vbo"],
     var ParametricSurface = function(gl, posFunc, config) {
             
         //window.console.log("ParametricSurface() constructor not implemented yet.")
+            //Werte analog zur Scene.js
         var umin = config.uMin || -Math.PI;
         var umax = config.uMax ||  Math.PI;
         var vmin = config.vMin || -Math.PI;
@@ -40,14 +41,15 @@ define(["vbo"],
         var umin_temp = 0;
         var vmin_temp = 0;
 
-        for (var i=0; i <= usegments; i++) { // hier evtl usegments & vsegments noch vertauschen???
+        //2 for-Schleifen wegen beiden u,v
+        for (var i=0; i <= usegments; i++) { // hier evtl usegments & vsegments noch vertauschen??? 
             umin_temp += (umax - umin) / usegments;
-            vmin_temp = vmin;
+            vmin_temp = vmin;   //nach ersten Durchgang wieder zurücksetzen, um nicht über das Array hinaus zu laufen
             for (var j=0; j <= vsegments; j++) {
 
                 vmin_temp += (vmax - vmin) / vsegments;
                 //COMMENT!!!
-                var x = this.posFunc(umin_temp, vmin_temp)[0];
+                var x = this.posFunc(umin_temp, vmin_temp)[0]; //an der Stelle 0 der posFunc in der Scene.js: 0.5 * Math.sin(u) * Math.cos(v), usw.
                 var y = this.posFunc(umin_temp, vmin_temp)[1];
                 var z = this.posFunc(umin_temp, vmin_temp)[2];
                 coords.push(x,y,z);
@@ -80,7 +82,6 @@ define(["vbo"],
         
     // this module only returns the Band constructor function    
     return ParametricSurface;
-    //return ParametricSurface;
 
 })); // define
 
