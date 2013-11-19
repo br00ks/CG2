@@ -31,7 +31,7 @@ define(["vbo"],
     var Triangle = function(gl) {
     
         // generate vertex coordinates and store in an array
-        var coords = [ -0.5, -0.5,  0,  // coordinates ofs A
+        var coords = [ -0.5, -0.5,  0,  // coordinates of A
                         0.5, -0.5,  0,  // coordinates of B
                           0,  0.5,  0   // coordinates of C
                      ];
@@ -52,7 +52,7 @@ define(["vbo"],
         this.coordsBuffer.bind(gl, program, "vertexPosition");
         
         // connect the vertices with triangles
-        gl.drawArrays(gl.POINTS, 0, this.coordsBuffer.numVertices()); 
+        gl.drawArrays(gl.TRIANGLES, 0, this.coordsBuffer.numVertices()); 
          
     };
         
