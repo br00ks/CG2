@@ -95,6 +95,16 @@ define(["vbo"],
                                                     "dataType": gl.FLOAT,
                                                     "data": coords 
                                                   } );
+        var lines = [0,1,     1,2,    2,0,       0,2,    2,3,    3,0,
+                     4,5,     5,6,    6,4,       4,6,    6,7,    7,4,
+                     8,9,     9,10,  10,8,       8,10,  10,11,  11,8,
+                     12,13,  13,14,  14,12,     12,14,  14,15,  15,12
+                     16,17,  17,18,  18,16,     16,18,  18,19,  19,16,
+                     20,21,  21,22,  22,20,     20,22,  22,23,  23,20
+        ];
+
+         // create index buffer object (VBO) for the coordinates
+        this.lineBuffer = new vbo.Indices(gl, { "indices": lines } );
 
         
     };
@@ -104,9 +114,13 @@ define(["vbo"],
     
         // bind the attribute buffers
         this.coordsBuffer.bind(gl, program, "vertexPosition");
+        this.lineBuffer.bind(gl);
                 
         // draw the vertices as points
-        gl.drawArrays(gl.POINTS, 0, this.coordsBuffer.numVertices()); 
+        //gl.drawArrays(gl.POINTS, 0, this.coordsBuffer.numVertices()); 
+
+        //draw the lines 
+        gl.drawElements(gl.LINES, this.lineBuffer.numIndices(), gl.UNSIGNED_SHORT, 0);
          
     };
         

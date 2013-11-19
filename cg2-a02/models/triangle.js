@@ -35,11 +35,23 @@ define(["vbo"],
                         0.5, -0.5,  0,  // coordinates of B
                           0,  0.5,  0   // coordinates of C
                      ];
+        // generate color coordinates and store in an array
+            //neue 4x4 Matrix für den colorBuffer wird benötigt wegen RGBA
+        var colors = [  1,  0,  0, 1, // color of A
+                        0,  1,  0, 1, // color of B
+                        0,  0,  1, 1, // color of C
+                        0,  0,  0, 1  // color of 
+                     ];
 
         // create vertex buffer object (VBO) for the coordinates
         this.coordsBuffer = new vbo.Attribute(gl, { "numComponents": 3,
                                                     "dataType": gl.FLOAT,
                                                     "data": coords 
+                                                  } );
+        //neuen Buffer erzeugen
+        this.colorBuffer = new vbo.Attribute(gl, {"numComponents": 4,
+                                                    "dataType": gl.FLOAT,
+                                                    "data": colors 
                                                   } );
                     
     };
@@ -50,6 +62,7 @@ define(["vbo"],
         // bind the attribute buffers
         program.use();
         this.coordsBuffer.bind(gl, program, "vertexPosition");
+        this.colorBuffer.bind(gl, program, "vertexColor");
         
         // connect the vertices with triangles
         gl.drawArrays(gl.TRIANGLES, 0, this.coordsBuffer.numVertices()); 
