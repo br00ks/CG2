@@ -2,8 +2,9 @@
   *
  * Module scene: Computergrafik 2, Aufgabe 2
  * (C)opyright Hartmut Schirmacher, hschirmacher.beuth-hochschule.de 
- *
+ * d
  */
+
 
 
 /* requireJS module definition */
