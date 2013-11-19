@@ -31,7 +31,7 @@ define(["vbo"],
     var Triangle = function(gl) {
     
         // generate vertex coordinates and store in an array
-        var coords = [ -0.5, -0.5,  0,  // coordinates of A
+        var coords = [ -0.5, -0.5,  0,  // coordinates ofs A
                         0.5, -0.5,  0,  // coordinates of B
                           0,  0.5,  0   // coordinates of C
                      ];
