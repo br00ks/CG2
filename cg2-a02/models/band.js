@@ -54,25 +54,31 @@ define(["vbo"],
             coords.push(x,y1,z);
             
         };  
-
+        // create list of indices 
         var triangles = [0,1,2,2,1,3];
-        var k = 0;
 
+        var k = 0;
+        // we need to run through the segments
+        // every 6 steps the value of k is calculated
         for (var m=0; m <= segments; m++) {
-            for (var j=0; j<6; j++) {
-                var temp = triangles[k+j]+2;
+
+            // [0,1,2,2,1,3] length = 6
+            // the new 6 elements of the triangle-list depend
+            // on the last 6 elements
+            // the new element's value depends on the value of 
+            // the element[-6] + 2
+            for (var j=0; j<=5; j++) {
+                var temp_index = k+j;
+                var temp = triangles[temp_index]+2;
                 triangles.push(temp);
-            }
-            k++;
+            };
+            k = k+6;
 
         };
 
-        for (var x = 0; x <= triangles.length; x++) {
-            console.log(triangles[x]);
-        }
-        console.log("Laenge:"+triangles.length);
-
-        
+         // create index buffer object (VBO) for the coordinates
+        this.triangleBuffer = new vbo.Indices(gl, { "indices": triangles } );
+               
         // create vertex buffer object (VBO) for the coordinates
         this.coordsBuffer = new vbo.Attribute(gl, { "numComponents": 3,
                                                     "dataType": gl.FLOAT,
@@ -87,13 +93,17 @@ define(["vbo"],
         // bind the attribute buffers
         program.use();
         this.coordsBuffer.bind(gl, program, "vertexPosition");
- 
-        // draw the vertices as points
-        if(this.drawStyle == "points") {
-            gl.drawArrays(gl.POINTS, 0, this.coordsBuffer.numVertices()); 
-        } else {
-            window.console.log("Band: draw style " + this.drawStyle + " not implemented.");
-        }
+        this.triangleBuffer.bind(gl);
+
+        gl.drawElements(gl.TRIANGLES, this.triangleBuffer.numIndices(), gl.UNSIGNED_SHORT, 0);
+
+        // // draw the vertices as points
+        // if(this.drawStyle == "points") {
+        //    // gl.drawArrays(gl.POINTS, 0, this.coordsBuffer.numVertices()); 
+
+        // } else {
+        //     window.console.log("Band: draw style " + this.drawStyle + " not implemented.");
+        // }
          
     };
         
