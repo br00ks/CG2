@@ -95,16 +95,50 @@ define(["vbo"],
                                                     "dataType": gl.FLOAT,
                                                     "data": coords 
                                                   } );
-        var lines = [0,1,     1,2,    2,0,       0,2,    2,3,    3,0,
+        /*var lines = [0,1,     1,2,    2,0,       0,2,    2,3,    3,0,
                      4,5,     5,6,    6,4,       4,6,    6,7,    7,4,
                      8,9,     9,10,  10,8,       8,10,  10,11,  11,8,
                      12,13,  13,14,  14,12,     12,14,  14,15,  15,12,
                      16,17,  17,18,  18,16,     16,18,  18,19,  19,16,
                      20,21,  21,22,  22,20,     20,22,  22,23,  23,20
+        ];*/
+        var triangles = [ 0,1,2,    0,2,3,
+                          4,5,6,    4,6,7,
+                          8,9,10,   8,10,11,
+                         12,13,14, 12,14,15,
+                         16,17,18, 16,18,19,
+                         20,21,22, 20,22,23
         ];
 
          // create index buffer object (VBO) for the coordinates
-        this.lineBuffer = new vbo.Indices(gl, { "indices": lines } );
+        this.triangleBuffer = new vbo.Indices(gl, { "indices": triangles } );
+
+        //COLORS
+        // generate color coordinates and store in an array
+            //neue 4x4 Matrix für den colorBuffer wird benötigt wegen RGBA
+        var colors = [ 1,0,0,1,  1,0,0,1, //front
+                       1,0,0,1,  1,0,0,1, //front
+
+                       1,0,0,1,  1,0,0,1, //back
+                       1,0,0,1,  1,0,0,1, //back
+
+                       0,1,0,1,  0,1,0,1, //left
+                       0,1,0,1,  0,1,0,1, //left
+
+                       0,1,0,1,  0,1,0,1, //right
+                       0,1,0,1,  0,1,0,1, //right
+
+                       0,0,1,1,  0,0,1,1, //top
+                       0,0,1,1,  0,0,1,1, //top
+
+                       0,0,1,1,  0,0,1,1,  //bottom
+                       0,0,1,1,  0,0,1,1  //bottom
+                     ];
+        //neuen Buffer erzeugen
+        this.colorBuffer = new vbo.Attribute(gl, {"numComponents": 4,
+                                                    "dataType": gl.FLOAT,
+                                                    "data": colors 
+                                                  } );
 
         
     };
@@ -114,13 +148,15 @@ define(["vbo"],
     
         // bind the attribute buffers
         this.coordsBuffer.bind(gl, program, "vertexPosition");
-        this.lineBuffer.bind(gl);
+        this.triangleBuffer.bind(gl);
+        //Colorbuffer binden wie in triangle
+        this.colorBuffer.bind(gl, program, "vertexColor");
                 
         // draw the vertices as points
         //gl.drawArrays(gl.POINTS, 0, this.coordsBuffer.numVertices()); 
 
         //draw the lines 
-        gl.drawElements(gl.LINES, this.lineBuffer.numIndices(), gl.UNSIGNED_SHORT, 0);
+        gl.drawElements(gl.TRIANGLES, this.triangleBuffer.numIndices(), gl.UNSIGNED_SHORT, 0);
          
     };
         
