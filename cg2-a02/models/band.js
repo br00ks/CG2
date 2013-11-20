@@ -53,17 +53,9 @@ define(["vbo"],
             coords.push(x,y0,z);
             coords.push(x,y1,z);
             
-        };  
+        };
         // create list of indices 
         var triangles = [0,1,2,2,1,3];
-        var lines = [1,0,0,3,1,2];
-        var indices;
-
-        if (this.drawstyle == triangles) {
-            indices = triangles;
-        } else {
-            indices = lines;
-        }
 
         var k = 0;
         // we need to run through the segments
@@ -79,17 +71,44 @@ define(["vbo"],
             // the element[-6] + 2
             for (var j=0; j < 6; j++) {
                 var temp_index = k+j;
-                var temp = indices[temp_index]+2;
-                indices.push(temp);
+                var temp = triangles[temp_index]+2;
+                triangles.push(temp);
             };
             k = k+6;
 
         };
+        console.log(triangles);
 
+        // create list of indices 
+        var lines = [1,0,0,2,1,3];
+        
+        var r = 0;
+        // we need to run through the segments
+        // every 6 steps the value of r is calculated
+        // we already have one segments given, therefore 
+        // the step is repeated until s < segments -1 
+        for (var s=0; s < segments-1; s++) {
+
+            // [0,1,2,2,1,3] length = 6
+            // the new 6 elements of the triangle-list depend
+            // on the last 6 elements
+            // the new element's value depends on the value of 
+            // the element[-6] + 2
+            for (var t=0; t < 6; t++) {
+                var temp_index = r+t;
+                var temp = lines[temp_index]+2;
+                lines.push(temp);
+            };
+            r = r+6;
+
+        };
 
         // create index buffer object (VBO) for the coordinates
-        this.triangleBuffer = new vbo.Indices(gl, { "indices": indices } );
-        this.lineBuffer = new vbo.Indices(gl,  { "indices": indices } );
+        this.triangleBuffer = new vbo.Indices(gl, { "indices": triangles } );
+
+        // create index buffer object (VBO) for the coordinates
+        this.lineBuffer = new vbo.Indices(gl, { "indices": lines } );
+               
         // create vertex buffer object (VBO) for the coordinates
         this.coordsBuffer = new vbo.Attribute(gl, { "numComponents": 3,
                                                     "dataType": gl.FLOAT,
@@ -106,6 +125,7 @@ define(["vbo"],
         ];
 
         for (var i=0; i < segments-1; i++) {
+            
 
         }
 
@@ -126,17 +146,26 @@ define(["vbo"],
         this.coordsBuffer.bind(gl, program, "vertexPosition");
         this.triangleBuffer.bind(gl);
         this.colorBuffer.bind(gl, program, "unicolor");
+        
+        if (this.drawStyle == "triangles") {
+            this.triangleBuffer.bind(gl);
+        } else {
+            this.lineBuffer.bind(gl);
 
+        }
+
+       
 
         // draw the vertices as points
         if (this.drawStyle == "points") {
             gl.drawArrays(gl.POINTS, 0, this.coordsBuffer.numVertices()); 
 
-        } else if(this.drawStyle == "triangles") {
-            gl.drawElements(gl.TRIANGLES, this.triangleBuffer.numIndices(), gl.UNSIGNED_SHORT, 0);
-        
-        } else if(this.drawStyle == "lines") {
-            gl.drawElements(gl.LINES, this.lineBuffer.numIndices(), gl.UNSIGNED_SHORT, 0);
+        } else if (this.drawStyle == "triangles") {
+             gl.drawElements(gl.TRIANGLES, this.triangleBuffer.numIndices(), gl.UNSIGNED_SHORT, 0);
+       
+        } else if (this.drawStyle == "lines") {
+             gl.drawElements(gl.LINES, this.lineBuffer.numIndices(), gl.UNSIGNED_SHORT, 0);
+
 
         } else {
             window.console.log("Band: draw style " + this.drawStyle + " not implemented.");
