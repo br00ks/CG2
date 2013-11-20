@@ -54,6 +54,24 @@ define(["vbo"],
             coords.push(x,y1,z);
             
         };  
+
+        var triangles = [0,1,2,2,1,3];
+        var k = 0;
+
+        for (var m=0; m <= segments; m++) {
+            for (var j=0; j<6; j++) {
+                var temp = triangles[k+j]+2;
+                triangles.push(temp);
+            }
+            k++;
+
+        };
+
+        for (var x = 0; x <= triangles.length; x++) {
+            console.log(triangles[x]);
+        }
+        console.log("Laenge:"+triangles.length);
+
         
         // create vertex buffer object (VBO) for the coordinates
         this.coordsBuffer = new vbo.Attribute(gl, { "numComponents": 3,
