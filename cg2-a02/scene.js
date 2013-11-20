@@ -29,6 +29,10 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         this.programs.vertexColor = new Program(gl, 
                                                 shaders.getVertexShader("vertex_color"), 
                                                 shaders.getFragmentShader("vertex_color") );   
+        //unicolor für Wireframe-objekt für Band.js 
+        this.programs.uni = new Program(gl, 
+                                             shaders.getVertexShader("uniColor"), 
+                                             shaders.getFragmentShader("uniColor") );
 
 
         
@@ -174,7 +178,7 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             this.band2.draw(gl, this.programs.red);
         }
         if(this.drawOptions["Show Ellipsoid"]) {    
-            this.ellipsoid.draw(gl, this.programs.red);
+            this.ellipsoid.draw(gl, this.programs.uniColor);        //uniColor nachher auf Show Band Wireframe setzen
         }
         if(this.drawOptions["Show Torus"]) {    
             this.torus.draw(gl, this.programs.red);

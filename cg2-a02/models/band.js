@@ -88,6 +88,17 @@ define(["vbo"],
                                                     "data": coords 
                                                   } );
 
+        //COLORS
+        // generate color coordinates and store in an array
+            //neue 4x4 Matrix für den colorBuffer wird benötigt wegen RGBA
+        var colors = [ 0,0,0,0
+                     ];
+        //neuen Buffer erzeugen
+        this.colorBuffer = new vbo.Attribute(gl, {"numComponents": 4,
+                                                    "dataType": gl.FLOAT,
+                                                    "data": colors 
+                                                  } );
+
     };
 
     // draw method: activate buffers and issue WebGL draw() method
@@ -97,6 +108,7 @@ define(["vbo"],
         program.use();
         this.coordsBuffer.bind(gl, program, "vertexPosition");
         this.triangleBuffer.bind(gl);
+        this.colorBuffer.bind(gl, program, "uniColor");
 
 
         // draw the vertices as points
