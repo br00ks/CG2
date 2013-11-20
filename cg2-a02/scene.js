@@ -37,6 +37,8 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         this.cube      = new Cube(gl); 
         this.band1      = new Band(gl, {height: 0.4, drawStyle: "points"});
         this.band2      = new Band(gl, {height: 0.4, drawStyle: "triangles"});
+        this.band3      = new Band(gl, {height: 0.4, drawStyle: "lines"});
+
 
 
         // create a parametric surface to be drawn in this scene
@@ -122,8 +124,9 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         this.drawOptions = { "Perspective Projection": false, 
                              "Show Triangle": false,
                              "Show Cube": false,
-                             "Show Band points": true,
-                             "Show Band triangles": false,
+                             "Show Band": true,
+                             "Show Solid Band": false,
+                             "Show Wireframe Band": false,
                              "Show Ellipsoid": false,
                              "Show Torus": false,
                              "Show Hyperboloid": false,
@@ -167,11 +170,14 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         if(this.drawOptions["Show Cube"]) {    
             this.cube.draw(gl, this.programs.vertexColor);
         }
-        if(this.drawOptions["Show Band points"]) {    
+        if(this.drawOptions["Show Band"]) {    
             this.band1.draw(gl, this.programs.red);
         }
-        if(this.drawOptions["Show Band triangles"]) {    
+        if(this.drawOptions["Show Solid Band"]) {    
             this.band2.draw(gl, this.programs.red);
+        }
+        if(this.drawOptions["Show Wireframe Band"]) {    
+            this.band3.draw(gl, this.programs.red);
         }
         if(this.drawOptions["Show Ellipsoid"]) {    
             this.ellipsoid.draw(gl, this.programs.red);

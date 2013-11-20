@@ -56,6 +56,14 @@ define(["vbo"],
         };  
         // create list of indices 
         var triangles = [0,1,2,2,1,3];
+        var lines = [1,0,0,3,1,2];
+        var indices;
+
+        if (this.drawstyle == triangles) {
+            indices = triangles;
+        } else {
+            indices = lines;
+        }
 
         var k = 0;
         // we need to run through the segments
@@ -71,17 +79,17 @@ define(["vbo"],
             // the element[-6] + 2
             for (var j=0; j < 6; j++) {
                 var temp_index = k+j;
-                var temp = triangles[temp_index]+2;
-                triangles.push(temp);
+                var temp = indices[temp_index]+2;
+                indices.push(temp);
             };
             k = k+6;
 
         };
-        console.log(triangles);
+
 
         // create index buffer object (VBO) for the coordinates
-        this.triangleBuffer = new vbo.Indices(gl, { "indices": triangles } );
-               
+        this.triangleBuffer = new vbo.Indices(gl, { "indices": indices } );
+        this.lineBuffer = new vbo.Indices(gl,  { "indices": indices } );
         // create vertex buffer object (VBO) for the coordinates
         this.coordsBuffer = new vbo.Attribute(gl, { "numComponents": 3,
                                                     "dataType": gl.FLOAT,
@@ -105,6 +113,9 @@ define(["vbo"],
 
         } else if(this.drawStyle == "triangles") {
             gl.drawElements(gl.TRIANGLES, this.triangleBuffer.numIndices(), gl.UNSIGNED_SHORT, 0);
+        
+        } else if(this.drawStyle == "lines") {
+            gl.drawElements(gl.LINES, this.lineBuffer.numIndices(), gl.UNSIGNED_SHORT, 0);
 
         } else {
             window.console.log("Band: draw style " + this.drawStyle + " not implemented.");
