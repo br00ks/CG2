@@ -118,14 +118,10 @@ define(["vbo"],
         //COLORS
         // generate color coordinates and store in an array
             //neue 4x4 Matrix für den colorBuffer wird benötigt wegen RGBA
-        var colors = [ 0,0,0,0,
-                       0,0,0,0,
-                       0,0,0,0,
-                       0,0,0,0
-        ];
+        var colors = [ ];
 
-        for (var i=0; i < segments-1; i++) {
-
+        for (var i=0; i < segments; i++) {
+            colors.push(0,0,0,0);
 
         }
 
