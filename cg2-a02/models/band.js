@@ -6,7 +6,7 @@
  *
  * The Band is made of two circles using the specified radius.
  * One circle is at y = height/2 and the other is at y = -height/2.
- *
+ *d
  */
 
 
@@ -125,7 +125,7 @@ define(["vbo"],
         ];
 
         for (var i=0; i < segments-1; i++) {
-            
+
 
         }
 
