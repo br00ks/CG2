@@ -115,7 +115,7 @@ define(["vbo"],
 
         //COLORS
         // generate color coordinates and store in an array
-            //neue 4x4 Matrix für den colorBuffer wird benötigt wegen RGBA
+        // neue 4x4 Matrix für den colorBuffer wird benötigt wegen RGBA
         var colors = [ 1,0,0,1,  1,0,0,1, //front
                        1,0,0,1,  1,0,0,1, //front
 
