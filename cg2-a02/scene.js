@@ -180,8 +180,13 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         if(this.drawOptions["Show Solid Band"]) {    
             this.band2.draw(gl, this.programs.red);
         }
-        if(this.drawOptions["Show Wireframe Band"]) {    
-            this.band3.draw(gl, this.programs.unicolor);
+        if(this.drawOptions["Show Wireframe Band"]) {
+            var color_black = [ 0.0, 0.0, 0.0, 1.0,
+                                0.0, 0.0, 0.0, 1.0,
+                                0.0, 0.0, 0.0, 1.0,
+                                0.0, 0.0, 0.0, 1.0];
+
+            this.band3.draw(gl, this.programs.uni);
         }
         if(this.drawOptions["Show Ellipsoid"]) {    
             this.ellipsoid.draw(gl, this.programs.red);       

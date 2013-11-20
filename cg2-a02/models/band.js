@@ -6,7 +6,7 @@
  *
  * The Band is made of two circles using the specified radius.
  * One circle is at y = height/2 and the other is at y = -height/2.
- *d
+ *
  */
 
 
@@ -115,23 +115,6 @@ define(["vbo"],
                                                     "data": coords 
                                                   } );
 
-        //COLORS
-        // generate color coordinates and store in an array
-            //neue 4x4 Matrix für den colorBuffer wird benötigt wegen RGBA
-        var colors = [ ];
-
-        for (var i=0; i < segments; i++) {
-            colors.push(0,0,0,0);
-
-        }
-
-
-        //neuen Buffer erzeugen
-        this.colorBuffer = new vbo.Attribute(gl, {"numComponents": 4,
-                                                    "dataType": gl.FLOAT,
-                                                    "data": colors 
-                                                  } );
-
     };
 
     // draw method: activate buffers and issue WebGL draw() method
@@ -141,7 +124,6 @@ define(["vbo"],
         program.use();
         this.coordsBuffer.bind(gl, program, "vertexPosition");
         this.triangleBuffer.bind(gl);
-        this.colorBuffer.bind(gl, program, "unicolor");
         
         if (this.drawStyle == "triangles") {
             this.triangleBuffer.bind(gl);
