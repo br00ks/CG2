@@ -60,14 +60,16 @@ define(["vbo"],
         var k = 0;
         // we need to run through the segments
         // every 6 steps the value of k is calculated
-        for (var m=0; m <= segments; m++) {
+        // we already have one segments given, therefore 
+        // the step is repeated until m < segments -1 
+        for (var m=0; m < segments-1; m++) {
 
             // [0,1,2,2,1,3] length = 6
             // the new 6 elements of the triangle-list depend
             // on the last 6 elements
             // the new element's value depends on the value of 
             // the element[-6] + 2
-            for (var j=0; j<=5; j++) {
+            for (var j=0; j < 6; j++) {
                 var temp_index = k+j;
                 var temp = triangles[temp_index]+2;
                 triangles.push(temp);
@@ -75,8 +77,9 @@ define(["vbo"],
             k = k+6;
 
         };
+        console.log(triangles);
 
-         // create index buffer object (VBO) for the coordinates
+        // create index buffer object (VBO) for the coordinates
         this.triangleBuffer = new vbo.Indices(gl, { "indices": triangles } );
                
         // create vertex buffer object (VBO) for the coordinates
@@ -95,15 +98,17 @@ define(["vbo"],
         this.coordsBuffer.bind(gl, program, "vertexPosition");
         this.triangleBuffer.bind(gl);
 
-        gl.drawElements(gl.TRIANGLES, this.triangleBuffer.numIndices(), gl.UNSIGNED_SHORT, 0);
 
-        // // draw the vertices as points
-        // if(this.drawStyle == "points") {
-        //    // gl.drawArrays(gl.POINTS, 0, this.coordsBuffer.numVertices()); 
+        // draw the vertices as points
+        if (this.drawStyle == "points") {
+            gl.drawArrays(gl.POINTS, 0, this.coordsBuffer.numVertices()); 
 
-        // } else {
-        //     window.console.log("Band: draw style " + this.drawStyle + " not implemented.");
-        // }
+        } else if(this.drawStyle == "triangles") {
+            gl.drawElements(gl.TRIANGLES, this.triangleBuffer.numIndices(), gl.UNSIGNED_SHORT, 0);
+
+        } else {
+            window.console.log("Band: draw style " + this.drawStyle + " not implemented.");
+        }
          
     };
         
