@@ -18,7 +18,7 @@
  
  void main() {
 
- 	gl_PointSize = 4.0;
+ 	gl_PointSize = 1.5;
  	gl_Position = projectionMatrix * modelViewMatrix * 
  				  vec4(vertexPosition,1.5);
 

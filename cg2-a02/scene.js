@@ -102,8 +102,8 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             "uMax":  Math.PI, 
             "vMin": -Math.PI, 
             "vMax":  Math.PI, 
-            "uSegments": 260,
-            "vSegments": 130
+            "uSegments": 50,
+            "vSegments": 25
         };
         this.ellipsoid = new ParametricSurface(gl, positionFunc, config);
 
@@ -159,6 +159,10 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             this.programs[p].setUniform("modelViewMatrix", "mat4", this.transformation);
         }
         
+        //set the uniform color to black
+        this.programs.uni.setUniform("uniColor","vec4", [0.0,0.0,0.0,1.0]);
+        
+
         // clear color and depth buffers
         gl.clearColor(0.7, 0.7, 0.7, 1.0); 
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); 
@@ -181,11 +185,6 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             this.band2.draw(gl, this.programs.red);
         }
         if(this.drawOptions["Show Wireframe Band"]) {
-            var color_black = [ 0.0, 0.0, 0.0, 1.0,
-                                0.0, 0.0, 0.0, 1.0,
-                                0.0, 0.0, 0.0, 1.0,
-                                0.0, 0.0, 0.0, 1.0];
-
             this.band3.draw(gl, this.programs.uni);
         }
         if(this.drawOptions["Show Ellipsoid"]) {    
