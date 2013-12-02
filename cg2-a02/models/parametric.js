@@ -42,10 +42,10 @@ define(["vbo"],
         var vmin_temp = 0;
 
         //2 for-Schleifen wegen beiden u,v
-        for (var i=0; i <= usegments; i++) { // hier evtl usegments & vsegments noch vertauschen??? 
-            umin_temp += (umax - umin) / usegments;
+        for (var i=0; i < usegments; i++) { // hier evtl usegments & vsegments noch vertauschen??? 
+           
             vmin_temp = vmin;   //nach ersten Durchgang wieder zurücksetzen, um nicht über das Array hinaus zu laufen
-            for (var j=0; j <= vsegments; j++) {
+            for (var j=0; j < vsegments; j++) {
 
                 vmin_temp += (vmax - vmin) / vsegments;
                 //COMMENT!!!
@@ -58,6 +58,25 @@ define(["vbo"],
 
 
         };
+        console.log(coords.length);
+
+        var triangles = [];
+
+        for (var u = 0; u < usegments; u++) {
+
+            for (var v = 0; v < vsegments; v++) {
+
+                triangles.push(v);
+                triangles.push(v+1);
+                triangles.push(v+usegments);
+
+            };
+        }
+
+        
+
+        this.triangleBuffer = new vbo.Indices(gl, { "indices": triangles } );
+        // 
 
         this.coordsBuffer = new vbo.Attribute(gl, { "numComponents": 3,
                                                     "dataType": gl.FLOAT,
@@ -73,9 +92,9 @@ define(["vbo"],
         // bind the attribute buffers
         program.use();
         this.coordsBuffer.bind(gl, program, "vertexPosition");
- 
+        this.triangleBuffer.bind(gl);
         // draw the vertices as points
-        gl.drawArrays(gl.POINTS, 0, this.coordsBuffer.numVertices()); 
+        gl.drawArrays(gl.TRIANGLES, 0, this.coordsBuffer.numVertices()); 
        
         
     };

@@ -77,7 +77,6 @@ define(["vbo"],
             k = k+6;
 
         };
-        console.log(triangles);
 
         // create list of indices 
         var lines = [1,0,0,2,1,3];
