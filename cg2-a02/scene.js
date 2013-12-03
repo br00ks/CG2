@@ -9,8 +9,8 @@
 
 /* requireJS module definition */
 define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "models/cube",
-        "models/parametric"], 
-       (function(glmatrix, Program, shaders, Band, Triangle, Cube, ParametricSurface) {
+        "models/parametric", "models/robot"], 
+       (function(glmatrix, Program, shaders, Band, Triangle, Cube, ParametricSurface, Robot) {
 
     "use strict";
     
@@ -120,6 +120,8 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         this.pseudosphere = new ParametricSurface(gl, positionFunc_pseudosphere, {drawStyle: "triangles"});
         this.pseudosphere2 = new ParametricSurface(gl, positionFunc_pseudosphere, {drawStyle: "lines"});
 
+        this.robot = new Robot(gl, {height: 0.4, drawStyle: "triangles"});
+
 
         // initial position of the camera
         this.cameraTransformation = mat4.lookAt([0,0.5,3], [0,0,0], [0,1,0]);
@@ -140,7 +142,8 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
                              "Show Torus": false,
                              "Show Hyperboloid": false,
                              "Show Sine Surface": false,
-                             "Show Pseudosphere": false
+                             "Show Pseudosphere": false,
+                             "Show Robot": false
                              };                       
     };
 
@@ -220,6 +223,9 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         if(this.drawOptions["Show Pseudosphere"]) {    
             this.pseudosphere.draw(gl, this.programs.red);
             this.pseudosphere2.draw(gl, this.programs.uni);
+        }
+        if(this.drawOptions["Show Robot"]) {    
+            this.robot.draw(gl, this.programs.red);
         }
     };
 
