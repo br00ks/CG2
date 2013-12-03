@@ -97,23 +97,28 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
                      Math.sin(u) * Math.sin(v),
                      Math.cos(v) + Math.log(Math.tan(v/2)) ];
         };
-        var config = {
+        var config = {  
             "uMin": -Math.PI, 
             "uMax":  Math.PI, 
             "vMin": -Math.PI, 
             "vMax":  Math.PI, 
-            "uSegments": 50,
-            "vSegments": 25
+            "uSegments": 40,
+            "vSegments": 20,
         };
-        this.ellipsoid = new ParametricSurface(gl, positionFunc, config);
+        this.ellipsoid = new ParametricSurface(gl, positionFunc, {drawStyle: "triangles"});
+        this.ellipsoid2 = new ParametricSurface(gl, positionFunc, {drawStyle: "lines"});
 
-        this.torus = new ParametricSurface(gl, positionFunc_torus, config);
+        this.torus = new ParametricSurface(gl, positionFunc_torus, {drawStyle: "triangles"});
+        this.torus2 = new ParametricSurface(gl, positionFunc_torus, {drawStyle: "lines"});
 
-        this.hyperboloid = new ParametricSurface(gl, positionFunc_hyperboloid, config);
+        this.hyperboloid = new ParametricSurface(gl, positionFunc_hyperboloid, {drawStyle: "triangles"});
+        this.hyperboloid2 = new ParametricSurface(gl, positionFunc_hyperboloid, {drawStyle: "lines"});
 
-        this.sine_surface = new ParametricSurface(gl, positionFunc_sine_surface, config);
+        this.sine_surface = new ParametricSurface(gl, positionFunc_sine_surface, {drawStyle: "triangles"});
+        this.sine_surface2 = new ParametricSurface(gl, positionFunc_sine_surface, {drawStyle: "lines"});
 
-        this.pseudosphere = new ParametricSurface(gl, positionFunc_pseudosphere, config);
+        this.pseudosphere = new ParametricSurface(gl, positionFunc_pseudosphere, {drawStyle: "triangles"});
+        this.pseudosphere2 = new ParametricSurface(gl, positionFunc_pseudosphere, {drawStyle: "lines"});
 
 
         // initial position of the camera
@@ -162,6 +167,10 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         //set the uniform color to black
         this.programs.uni.setUniform("uniColor","vec4", [0.0,0.0,0.0,1.0]);
         
+        // set offset to avoid z-fighting
+        gl.enable(gl.POLYGON_OFFSET_FILL);
+        gl.polygonOffset(1.0, 1.0);
+
 
         // clear color and depth buffers
         gl.clearColor(0.7, 0.7, 0.7, 1.0); 
@@ -188,21 +197,29 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             this.band3.draw(gl, this.programs.uni);
         }
         if(this.drawOptions["Show Ellipsoid"]) {    
-            this.ellipsoid.draw(gl, this.programs.red);       
+            this.ellipsoid.draw(gl, this.programs.red);
+            this.ellipsoid2.draw(gl, this.programs.uni);       
+       
         }
         if(this.drawOptions["Show Torus"]) {    
             this.torus.draw(gl, this.programs.red);
+            this.torus2.draw(gl, this.programs.uni);
         }
 
         if(this.drawOptions["Show Hyperboloid"]) {    
             this.hyperboloid.draw(gl, this.programs.red);
+            this.hyperboloid2.draw(gl, this.programs.uni);
+
         }
 
         if(this.drawOptions["Show Sine Surface"]) {    
             this.sine_surface.draw(gl, this.programs.red);
+            this.sine_surface2.draw(gl, this.programs.uni);
+
         }
         if(this.drawOptions["Show Pseudosphere"]) {    
             this.pseudosphere.draw(gl, this.programs.red);
+            this.pseudosphere2.draw(gl, this.programs.uni);
         }
     };
 

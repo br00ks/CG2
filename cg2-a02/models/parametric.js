@@ -29,8 +29,9 @@ define(["vbo"],
         var umax = config.uMax ||  Math.PI;
         var vmin = config.vMin || -Math.PI;
         var vmax = config.vMax ||  Math.PI;
-        var usegments = config.uSegments || 40;
-        var vsegments = config.vSegments || 20;
+        var usegments = config.uSegments || 150;
+        var vsegments = config.vSegments || 75;
+        this.drawStyle   = config.drawStyle || "points";
         this.posFunc = posFunc;
 
         console.log("Creating a ParametricSurface with umin="+umin+", umax="+umax+", vmin="+vmin+", vmax="+vmax ); 
@@ -42,11 +43,10 @@ define(["vbo"],
         var vmin_temp = 0;
 
         //2 for-Schleifen wegen beiden u,v
-        for (var i=0; i < usegments; i++) { // hier evtl usegments & vsegments noch vertauschen??? 
-           
+        for (var i=0; i <= usegments; i++) { // hier evtl usegments & vsegments noch vertauschen??? 
+            umin_temp += (umax - umin) / usegments;
             vmin_temp = vmin;   //nach ersten Durchgang wieder zurücksetzen, um nicht über das Array hinaus zu laufen
-            for (var j=0; j < vsegments; j++) {
-
+            for (var j=0; j <= vsegments; j++) {
                 vmin_temp += (vmax - vmin) / vsegments;
                 //COMMENT!!!
                 var x = this.posFunc(umin_temp, vmin_temp)[0]; //an der Stelle 0 der posFunc in der Scene.js: 0.5 * Math.sin(u) * Math.cos(v), usw.
@@ -58,31 +58,54 @@ define(["vbo"],
 
 
         };
-        console.log(coords.length);
 
+        // parametric surface out of triangles
         var triangles = [];
-
         for (var u = 0; u < usegments; u++) {
 
             for (var v = 0; v < vsegments; v++) {
 
-                triangles.push(v);
-                triangles.push(v+1);
-                triangles.push(v+usegments);
+                var idx = u * (vsegments +1) + v;
+
+                triangles.push(idx);
+                triangles.push(idx+1);
+                triangles.push(idx+vsegments+1);
+                triangles.push(idx+1);
+                triangles.push(idx+vsegments+1);
+                triangles.push(idx+vsegments+2);
+          
+            };
+        };
+        
+        var lines = [];
+
+        for (var u_lines = 0; u_lines < usegments; u_lines++) {
+
+            for (var v_lines = 0; v_lines < vsegments; v_lines++) {
+
+                var idx = u_lines * (vsegments +1) + v_lines;
+                lines.push(idx);
+                lines.push(idx+1);
+
+                lines.push(idx);
+                lines.push(idx+vsegments+1);
+
+                lines.push(idx+1);
+                lines.push(idx+vsegments+2);
 
             };
-        }
 
-        
+        };
 
         this.triangleBuffer = new vbo.Indices(gl, { "indices": triangles } );
-        // 
+        
 
         this.coordsBuffer = new vbo.Attribute(gl, { "numComponents": 3,
                                                     "dataType": gl.FLOAT,
                                                     "data": coords 
                                                   } );
 
+        this.lineBuffer = new vbo.Indices(gl, { "indices": lines } );
        
     };  
 
@@ -92,10 +115,31 @@ define(["vbo"],
         // bind the attribute buffers
         program.use();
         this.coordsBuffer.bind(gl, program, "vertexPosition");
-        this.triangleBuffer.bind(gl);
-        // draw the vertices as points
-        gl.drawArrays(gl.TRIANGLES, 0, this.coordsBuffer.numVertices()); 
+
+        if (this.drawStyle == "triangles") {
+            this.triangleBuffer.bind(gl);
+        } else {
+            this.lineBuffer.bind(gl);
+
+        }
+
        
+
+        // draw the vertices as points
+        if (this.drawStyle == "points") {
+            gl.drawArrays(gl.POINTS, 0, this.coordsBuffer.numVertices()); 
+
+        } else if (this.drawStyle == "triangles") {
+             gl.drawElements(gl.TRIANGLES, this.triangleBuffer.numIndices(), gl.UNSIGNED_SHORT, 0);
+       
+        } else if (this.drawStyle == "lines") {
+             gl.drawElements(gl.LINES, this.lineBuffer.numIndices(), gl.UNSIGNED_SHORT, 0);
+
+
+        } else {
+            window.console.log("Band: draw style " + this.drawStyle + " not implemented.");
+        }
+         
         
     };
         
