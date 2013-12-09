@@ -11,8 +11,8 @@
 
 
 /* requireJS module definition */
-define(["vbo", "models/cube", "scene_node", "gl-matrix"], 
-       (function(vbo, Cube, SceneNode, glmatrix) {
+define(["vbo", "models/cube","models/band", "scene_node", "gl-matrix"], 
+       (function(vbo, Cube, Band, SceneNode, glmatrix ) {
        
     "use strict";
     
@@ -27,31 +27,55 @@ define(["vbo", "models/cube", "scene_node", "gl-matrix"],
         
         //Komponente zum Bau des Roboters
         var cube = new Cube(gl);
+        var band = new Band(gl, {height: 0.2, drawStyle: "triangles"});
 
         //Dimension der in der Zeichnung benannten Teile
-        var headSize = [0.3, 0.35, 0.3];
-        var torsoSize = [0.6, 1.0, 0.4];
+        var headSize = [0.25, 0.3, 0.25];
+        var torsoSize = [0.6, 0.9, 0.4];
+        var neckSize = [0.2, 0.05, 0.2];
+        var diademSize = [0.1, 0.2, 0.1];
 
         //Skelett fuer Torso und Kopf
         this.head = new SceneNode("head");
-        mat4.translate(this.head.transform(), [0, (torsoSize[1]/2+headSize[1]/2), 0]);
+        mat4.translate(this.head.transform(), [0, (neckSize[1]/2+headSize[1]/2), 0]);
         this.torso = new SceneNode("torso");
-        this.torso.add(this.head);
+
+        this.neck = new SceneNode("neck");
+        mat4.translate(this.neck.transform(), [0, (torsoSize[1]/2+neckSize[1]/2), 0]);
+        mat4.rotate(this.neck.transform(), 0.6*Math.PI, [0,1,0]); //COLORS!
+
+        this.diadem = new SceneNode("diadem");
+        mat4.translate(this.diadem.transform(), [0 , (headSize[1]/2 + diademSize[1]/2), 0]);
+        
+        this.torso.add(this.neck);
+        this.neck.add(this.head);
+        this.head.add(this.diadem);
 
         //Skins
         var torsoSkin = new SceneNode("torso skin");
         torsoSkin.add(cube, programs.vertexColor);
         mat4.scale(torsoSkin.transform(), torsoSize);
 
+        var neckSkin = new SceneNode("neck skin");
+        neckSkin.add(cube, programs.vertexColor);
+        mat4.scale(neckSkin.transform(), neckSize);
+        mat4.rotate(neckSkin.transform(), 0.6*Math.PI, [0,1,0]); //COLORS!
+
         var headSkin = new SceneNode("head skin");
-        headSkin.add(cube, programs.vertexColor);
-        mat4.rotate(headSkin.transform(), 0.6*Math.PI, [0,1,0]); //COLORS!
+        headSkin.add(cube,programs.vertexColor);
         mat4.scale(headSkin.transform(), headSize);
+        mat4.rotate(headSkin.transform(), 0.6*Math.PI, [0,1,0]); //COLORS!
+
+
+        var diademSkin = new SceneNode("diadem skin");
+        diademSkin.add(band, programs.vertexColor);
+        mat4.scale(diademSkin.transform(), diademSize);
 
         //Verbindung Skelett + Haut
         this.torso.add(torsoSkin);
         this.head.add(headSkin);
-
+        this.neck.add(neckSkin);
+        this.diadem.add(diademSkin);
 
     };
 
