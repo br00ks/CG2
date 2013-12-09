@@ -11,8 +11,8 @@
 
 
 /* requireJS module definition */
-define(["vbo"], 
-       (function(vbo) {
+define(["vbo", "models/cube", "scene_node", "gl-matrix"], 
+       (function(vbo, Cube, SceneNode, glmatrix) {
        
     "use strict";
     
@@ -21,32 +21,44 @@ define(["vbo"],
      * config: configuration object with the following attributes:
      *         
      */ 
-    var Robot = function(gl, config) {
+    var Robot = function(gl, programs, config) {
     
-        // read the configuration parameters
-        config = config || {};
-        var radius       = config.radius   || 1.0;
-        var height       = config.height   || 0.1;
-        var segments     = config.segments || 20;
-        this.drawStyle   = config.drawStyle || "points";
+        window.console.log("Creating a Robot"); 
         
-        window.console.log("Creating a Robot with radius="+radius+", height="+height+", segments="+segments ); 
-    
+        //Komponente zum Bau des Roboters
+        var cube = new Cube(gl);
+
+        //Dimension der in der Zeichnung benannten Teile
+        var headSize = [0.3, 0.35, 0.3];
+        var torsoSize = [0.6, 1.0, 0.4];
+
+        //Skelett fuer Torso und Kopf
+        this.head = new SceneNode("head");
+        mat4.translate(this.head.transform(), [0, (torsoSize[1]/2+headSize[1]/2), 0]);
+        this.torso = new SceneNode("torso");
+        this.torso.add(this.head);
+
+        //Skins
+        var torsoSkin = new SceneNode("torso skin");
+        torsoSkin.add(cube, programs.vertexColor);
+        mat4.scale(torsoSkin.transform(), torsoSize);
+
+        var headSkin = new SceneNode("head skin");
+        headSkin.add(cube, programs.vertexColor);
+        mat4.rotate(headSkin.transform(), 0.6*Math.PI, [0,1,0]); //COLORS!
+        mat4.scale(headSkin.transform(), headSize);
+
+        //Verbindung Skelett + Haut
+        this.torso.add(torsoSkin);
+        this.head.add(headSkin);
 
 
     };
 
     // draw method: activate buffers and issue WebGL draw() method
-    Robot.prototype.draw = function(gl,program) {
-    
-        // bind the attribute buffers
-        //program.use();
-        //this.coordsBuffer.bind(gl, program, "vertexPosition");
-        //this.triangleBuffer.bind(gl);
-
-        // draw the vertices as triangles
-        //gl.drawElements(gl.TRIANGLES, this.triangleBuffer.numIndices(), gl.UNSIGNED_SHORT, 0);
-         
+    Robot.prototype.draw = function(gl,program,transformation) {
+        this.torso.draw(gl, program, transformation);
+  
     };
         
     // this module only returns the Robot constructor function    
