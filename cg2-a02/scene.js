@@ -38,17 +38,26 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
                                         shaders.getVertexShader("unicolor"), 
                                         shaders.getFragmentShader("unicolor") );
 
-         this.programs.gold = new Program(gl, 
+        this.programs.gold = new Program(gl, 
+                                        shaders.getVertexShader("unicolor"), 
+                                        shaders.getFragmentShader("unicolor") );
+
+        this.programs.grey = new Program(gl, 
                                         shaders.getVertexShader("unicolor"), 
                                         shaders.getFragmentShader("unicolor") );
 
         //set the uniform color to black
         this.programs.uni.use();
         this.programs.uni.setUniform("uniColor","vec4", [0.0, 0.0, 0.0, 1.0]);
+
         this.programs.pink.use();
         this.programs.pink.setUniform("uniColor","vec4", [0.6, 0.0, 0.5, 0.8]);
+
         this.programs.gold.use();
         this.programs.gold.setUniform("uniColor","vec4", [0.9, 0.7, 0.0, 1.0]);
+
+        this.programs.grey.use();
+        this.programs.grey.setUniform("uniColor","vec4", [0.5, 0.5, 0.5, 1.0]);
 
 
 

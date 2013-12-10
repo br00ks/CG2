@@ -31,13 +31,19 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         var band_triangles = new Band(gl, {height: 1.0, drawStyle: "triangles"} );
         var band_lines = new Band(gl, {height: 1.0, drawStyle: "lines"} );
         var triangle = new Triangle(gl);
+        var pseudosphere_triangles = models.pseudosphere;
+        var pseudosphere_lines = models.pseudosphere2;
+        var ellip
+
 
         //Dimension der in der Zeichnung benannten Teile
         var headSize = [0.25, 0.3, 0.25];
-        var torsoSize = [0.4, 1.0, 0.6];
+        var torsoSize = [0.4, 0.7, 0.3];
         var neckSize = [0.1, 0.08, 0.1];
-        var diademSize = [0.18, 0.04, 0.18];
-        var shoulderSize = [0.5, 0.25, 0.5];
+        var diademSize = [0.18, 0.1, 0.18];
+        var shoulderSize = [0.1, 0.1, 0.1];
+
+        var upperArmSize = [0.07, 0.06, 0.07];
 
         // ########## SKELETONS ###########
 
@@ -56,27 +62,39 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         this.diadem = new SceneNode("diadem");
         mat4.translate(this.diadem.transform(), [0 , ((headSize[1])/2 + diademSize[1]/2), 0]);
         
-        //skeleton shoulder
-        this.shoulder = new SceneNode("shoulder");
-       // mat4.translate(this.shoulder.transform(), [torsoSize[0]/2 + shoulderSize[1]/2, torsoSize[1]/2.0 - shoulderSize[0]/2.0, 0]);
+        //skeleton shoulder right
+        this.shoulder_right = new SceneNode("shoulder right");
+        mat4.translate(this.shoulder_right.transform(), [torsoSize[0]/2 + shoulderSize[1]/2, torsoSize[1]/2.0 - shoulderSize[0]/2.0, 0]);
 
+        //skeleton shoulder left
+        this.shoulder_left = new SceneNode("shoulder left");
+        mat4.translate(this.shoulder_left.transform(), [-torsoSize[0]/2 - shoulderSize[1]/2, torsoSize[1]/2.0 -shoulderSize[0]/2.0, 0]);
+
+        //skeleton upper arm right
+        this.upperarm_right = new SceneNode("upperarm right");
+        mat4.translate(this.upperarm_right.transform(), [-shoulderSize[0] - upperArmSize[1], shoulderSize[1]/2 - upperArmSize[0], 0]);
+
+        // node-structure
         this.torso.add(this.neck);
         this.neck.add(this.head);
         this.head.add(this.diadem);
 
-        this.torso.add(this.shoulder);
+        this.torso.add(this.shoulder_right);
+        this.torso.add(this.shoulder_left);
+
+        this.shoulder_right.add(this.upperarm_right);
+
 
         // ########## SKINS ###########
         //skin torso
         var torsoSkin = new SceneNode("torso skin");
         torsoSkin.add(cube, programs.vertexColor);
         mat4.scale(torsoSkin.transform(), torsoSize);
-        mat4.scale(torsoSkin.transform(), [1.0,0.5,1.0]);
 
         //skin neck
         var neckSkin = new SceneNode("neck skin");
         neckSkin.add(band_triangles, programs.pink);
-        mat4.rotate(this.neck.transform(), 0.6*Math.PI, [0,1,0]); 
+       // mat4.rotate(this.neck.transform(), 0.6*Math.PI, [0,1,0]); 
 
         mat4.scale(neckSkin.transform(), neckSize);
         mat4.rotate(neckSkin.transform(), 0.6*Math.PI, [0,1,0]); 
@@ -85,9 +103,9 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         var headSkin = new SceneNode("head skin");
         headSkin.add(cube, programs.vertexColor);
         mat4.scale(headSkin.transform(), headSize);
-        mat4.rotate(headSkin.transform(), 0.6*Math.PI, [0,1,0]); 
+       // mat4.rotate(headSkin.transform(), 0.6*Math.PI, [0,1,0]); 
 
-        //skin diadem surface
+        //skin diadem solid surface
         var diademSkin = new SceneNode("diadem skin");
         diademSkin.add(band_triangles, programs.gold);
         mat4.scale(diademSkin.transform(), diademSize);
@@ -96,12 +114,32 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         var diademWire = new SceneNode("diadem wire");
         diademWire.add(band_lines, programs.uni);
         mat4.scale(diademWire.transform(), diademSize);
+ 
+        //skin shoulders solid surface
+        var shoulderSkin = new SceneNode("shoulder skin solid");
+        shoulderSkin.add(band_triangles, programs.grey);
 
-        //skin shoulder
-        var shoulderSkin = new SceneNode("shoulder skin");
-        shoulderSkin.add(band_triangles, programs.uni);
-        //mat4.rotate(this.shoulder.transform(), 0.5*Math.PI, [0,0,1]);
-        mat4.scale(shoulderSkin.transform(), torsoSize);
+        // skin shoulders wireframe
+        var shoulderSkinWire = new SceneNode("shoulder skin wire");
+        shoulderSkinWire.add(band_lines, programs.uni);
+
+        mat4.rotate(this.shoulder_right.transform(), 0.5*Math.PI, [0,0,1]);
+        mat4.rotate(this.shoulder_left.transform(), 0.5*Math.PI, [0,0,1]);
+        mat4.scale(shoulderSkin.transform(), shoulderSize);
+        mat4.scale(shoulderSkinWire.transform(), shoulderSize);
+
+        // skin upperarms solid surface
+        var upperArmSkin = new SceneNode("upperarm skin solid");
+        upperArmSkin.add(models.pseudosphere, programs.uni);
+
+        //skin upperarms wireframe
+        var upperArmSkinWire = new SceneNode("upperarm skin wire");
+        upperArmSkinWire.add(models.pseudosphere2, programs.pink);
+
+        mat4.rotate(this.upperarm_right.transform(), 0.5*Math.PI, [0,1,0]);
+        mat4.scale(upperArmSkin.transform(), upperArmSize);
+        mat4.scale(upperArmSkinWire.transform(), upperArmSize);
+
 
 
         // ############ CONNECTION skeleton + body #############
@@ -112,7 +150,13 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         this.diadem.add(diademSkin);
         this.diadem.add(diademWire);
 
-        this.shoulder.add(shoulderSkin);
+        this.shoulder_right.add(shoulderSkin);
+        this.shoulder_left.add(shoulderSkin);
+        this.shoulder_right.add(shoulderSkinWire);
+        this.shoulder_left.add(shoulderSkinWire);
+
+        this.upperarm_right.add(upperArmSkin);
+        this.upperarm_right.add(upperArmSkinWire);
 
     };
 
