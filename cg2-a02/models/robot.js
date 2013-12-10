@@ -81,11 +81,11 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
 
         //skeleton upper arm left
         this.upperarm_left = new SceneNode("upperarm left");
-        mat4.translate(this.upperarm_left.transform(), [-shoulderSize[0] - upperArmSize[1], shoulderSize[1]/2 - upperArmSize[0], 0]);
+        mat4.translate(this.upperarm_left.transform(), [-shoulderSize[0]- upperArmSize[1], upperArmSize[0] - shoulderSize[1]/2, 0]);
 
         //skeleton elbow right
         this.elbow_right = new SceneNode("elbow right");
-        mat4.translate(this.elbow_right.transform(), [-upperArmSize[0]/2 - elbowSize[1]/2, upperArmSize[1]/2.0 - elbowSize[0]/2, 0]);
+        mat4.translate(this.elbow_right.transform(), [0, 0,-3*upperArmSize[1]]); // HIER ONCH FEHLER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
         // node-structure
         this.torso.add(this.neck);
@@ -110,7 +110,6 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         //skin neck
         var neckSkin = new SceneNode("neck skin");
         neckSkin.add(band_triangles, programs.pink);
-       // mat4.rotate(this.neck.transform(), 0.6*Math.PI, [0,1,0]); 
 
         mat4.scale(neckSkin.transform(), neckSize);
         mat4.rotate(neckSkin.transform(), 0.6*Math.PI, [0,1,0]); 
@@ -169,7 +168,7 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         var elbowSkinWire = new SceneNode("shoulder skin wire");
         elbowSkinWire.add(band_lines, programs.uni);
 
-        mat4.rotate(this.elbow_right.transform(), 0.5*Math.PI, [0,0,0]);
+        //mat4.rotate(this.elbow_right.transform(), 0.5*Math.PI, [0,0,1]);
         //mat4.rotate(this.shoulder_left.transform(), 0.5*Math.PI, [0,0,1]);
         mat4.scale(elbowSkin.transform(), elbowSize);
         mat4.scale(elbowSkinWire.transform(), elbowSize);
@@ -189,6 +188,7 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
 
         this.shoulder_right.add(shoulderSkin);
         this.shoulder_left.add(shoulderSkin);
+
         this.shoulder_right.add(shoulderSkinWire);
         this.shoulder_left.add(shoulderSkinWire);
 
