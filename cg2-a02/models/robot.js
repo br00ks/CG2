@@ -42,10 +42,11 @@ define(["vbo", "models/cube","models/band", "scene_node", "gl-matrix"],
 
         this.neck = new SceneNode("neck");
         mat4.translate(this.neck.transform(), [0, (torsoSize[1]/2+neckSize[1]/2), 0]);
-        mat4.rotate(this.neck.transform(), 0.6*Math.PI, [0,1,0]); //COLORS!
+        mat4.rotate(this.neck.transform(), 0.5*Math.PI, [0,0,1]); //COLORS!
 
         this.diadem = new SceneNode("diadem");
         mat4.translate(this.diadem.transform(), [0 , (headSize[1]/2 + diademSize[1]/2), 0]);
+       // mat4.rotate(this.diadem.transform(), 0.6*Math.PI, [0,1,0]); //COLORS!
         
         this.torso.add(this.neck);
         this.neck.add(this.head);
@@ -68,8 +69,10 @@ define(["vbo", "models/cube","models/band", "scene_node", "gl-matrix"],
 
 
         var diademSkin = new SceneNode("diadem skin");
-        diademSkin.add(band, programs.vertexColor);
+        diademSkin.add(cube, programs.vertexColor);
         mat4.scale(diademSkin.transform(), diademSize);
+       // mat4.rotate(diademSkin.transform(), 0.6*Math.PI, [0,1,0]); //COLORS!
+
 
         //Verbindung Skelett + Haut
         this.torso.add(torsoSkin);
