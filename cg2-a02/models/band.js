@@ -29,9 +29,9 @@ define(["vbo"],
     
         // read the configuration parameters
         config = config || {};
-        var radius       = config.radius   || 1.0;
+        var radius       = config.radius   || 0.5;
         var height       = config.height   || 0.1;
-        var segments     = config.segments || 20;
+        var segments     = config.segments || 50;
         this.drawStyle   = config.drawStyle || "points";
         
         window.console.log("Creating a Band with radius="+radius+", height="+height+", segments="+segments ); 

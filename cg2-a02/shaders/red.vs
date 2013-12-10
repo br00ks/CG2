@@ -20,7 +20,7 @@
 
  	gl_PointSize = 4.0;
  	gl_Position = projectionMatrix * modelViewMatrix * 
- 				  vec4(vertexPosition,1.5);
+ 				  vec4(vertexPosition,1.0);
 
  } 
  

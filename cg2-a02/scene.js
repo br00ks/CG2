@@ -34,14 +34,32 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
                                         shaders.getVertexShader("unicolor"), 
                                         shaders.getFragmentShader("unicolor") );
 
+        this.programs.pink = new Program(gl, 
+                                        shaders.getVertexShader("unicolor"), 
+                                        shaders.getFragmentShader("unicolor") );
 
+         this.programs.gold = new Program(gl, 
+                                        shaders.getVertexShader("unicolor"), 
+                                        shaders.getFragmentShader("unicolor") );
+
+        //set the uniform color to black
+        this.programs.uni.use();
+        this.programs.uni.setUniform("uniColor","vec4", [0.0, 0.0, 0.0, 1.0]);
+        this.programs.pink.use();
+        this.programs.pink.setUniform("uniColor","vec4", [0.6, 0.0, 0.5, 0.8]);
+        this.programs.gold.use();
+        this.programs.gold.setUniform("uniColor","vec4", [0.9, 0.7, 0.0, 1.0]);
+
+
+
+        this.models = {};
         
         // create some objects to be drawn in this scene
-        this.triangle  = new Triangle(gl);
-        this.cube      = new Cube(gl); 
-        this.band1      = new Band(gl, {height: 0.4, drawStyle: "points"});
-        this.band2      = new Band(gl, {height: 0.4, drawStyle: "triangles"});
-        this.band3      = new Band(gl, {height: 0.4, drawStyle: "lines"});
+        this.models.triangle  = new Triangle(gl);
+        this.models.cube      = new Cube(gl); 
+        this.models.band1      = new Band(gl, {height: 0.4, drawStyle: "points"});
+        this.models.band2      = new Band(gl, {height: 0.4, drawStyle: "triangles"});
+        this.models.band3      = new Band(gl, {height: 0.4, drawStyle: "lines"});
 
 
 
@@ -105,23 +123,22 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             "uSegments": 40,
             "vSegments": 20,
         };
-        this.ellipsoid = new ParametricSurface(gl, positionFunc, {drawStyle: "triangles"});
-        this.ellipsoid2 = new ParametricSurface(gl, positionFunc, {drawStyle: "lines"});
+        this.models.ellipsoid = new ParametricSurface(gl, positionFunc, {drawStyle: "triangles"});
+        this.models.ellipsoid2 = new ParametricSurface(gl, positionFunc, {drawStyle: "lines"});
 
-        this.torus = new ParametricSurface(gl, positionFunc_torus, {drawStyle: "triangles"});
-        this.torus2 = new ParametricSurface(gl, positionFunc_torus, {drawStyle: "lines"});
+        this.models.torus = new ParametricSurface(gl, positionFunc_torus, {drawStyle: "triangles"});
+        this.models.torus2 = new ParametricSurface(gl, positionFunc_torus, {drawStyle: "lines"});
 
-        this.hyperboloid = new ParametricSurface(gl, positionFunc_hyperboloid, {drawStyle: "triangles"});
-        this.hyperboloid2 = new ParametricSurface(gl, positionFunc_hyperboloid, {drawStyle: "lines"});
+        this.models.hyperboloid = new ParametricSurface(gl, positionFunc_hyperboloid, {drawStyle: "triangles"});
+        this.models.hyperboloid2 = new ParametricSurface(gl, positionFunc_hyperboloid, {drawStyle: "lines"});
 
-        this.sine_surface = new ParametricSurface(gl, positionFunc_sine_surface, {drawStyle: "triangles"});
-        this.sine_surface2 = new ParametricSurface(gl, positionFunc_sine_surface, {drawStyle: "lines"});
+        this.models.sine_surface = new ParametricSurface(gl, positionFunc_sine_surface, {drawStyle: "triangles"});
+        this.models.sine_surface2 = new ParametricSurface(gl, positionFunc_sine_surface, {drawStyle: "lines"});
 
-        this.pseudosphere = new ParametricSurface(gl, positionFunc_pseudosphere, {drawStyle: "triangles"});
-        this.pseudosphere2 = new ParametricSurface(gl, positionFunc_pseudosphere, {drawStyle: "lines"});
+        this.models.pseudosphere = new ParametricSurface(gl, positionFunc_pseudosphere, {drawStyle: "triangles"});
+        this.models.pseudosphere2 = new ParametricSurface(gl, positionFunc_pseudosphere, {drawStyle: "lines"});
 
-        this.robot = new Robot(gl, {height: 0.4, drawStyle: "triangles"});
-        // !!!!!!!!!! HIER FEHLEN NOCH DIE PROGRAMS!!!!!!!!!!!!!!!
+        this.robot = new Robot(gl, this.programs, {height: 0.4, drawStyle: "triangles"}, this.models);
 
         // initial position of the camera
         this.cameraTransformation = mat4.lookAt([0,0.5,3], [0,0,0], [0,1,0]);
@@ -167,8 +184,7 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             this.programs[p].setUniform("modelViewMatrix", "mat4", this.transformation);
         }
         
-        //set the uniform color to black
-        this.programs.uni.setUniform("uniColor","vec4", [0.0,0.0,0.0,1.0]);
+        
         
         // set offset to avoid z-fighting
         gl.enable(gl.POLYGON_OFFSET_FILL);
@@ -185,47 +201,47 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
                 
         // draw the scene objects
         if(this.drawOptions["Show Triangle"]) {    
-            this.triangle.draw(gl, this.programs.vertexColor);
+            this.models.triangle.draw(gl, this.programs.vertexColor);
         }
         if(this.drawOptions["Show Cube"]) {    
-            this.cube.draw(gl, this.programs.vertexColor);
+            this.models.cube.draw(gl, this.programs.red);
         }
         if(this.drawOptions["Show Band"]) {    
-            this.band1.draw(gl, this.programs.red);
+            this.models.band1.draw(gl, this.programs.red);
         }
         if(this.drawOptions["Show Solid Band"]) {    
-            this.band2.draw(gl, this.programs.red);
+            this.models.band2.draw(gl, this.programs.red);
         }
         if(this.drawOptions["Show Wireframe Band"]) {
-            this.band3.draw(gl, this.programs.uni);
+            this.models.band3.draw(gl, this.programs.uni);
         }
         if(this.drawOptions["Show Ellipsoid"]) {    
-            this.ellipsoid.draw(gl, this.programs.red);
-            this.ellipsoid2.draw(gl, this.programs.uni);       
+            this.models.ellipsoid.draw(gl, this.programs.red);
+            this.models.ellipsoid2.draw(gl, this.programs.uni);       
        
         }
         if(this.drawOptions["Show Torus"]) {    
-            this.torus.draw(gl, this.programs.red);
-            this.torus2.draw(gl, this.programs.uni);
+            this.models.torus.draw(gl, this.programs.red);
+            this.models.torus2.draw(gl, this.programs.uni);
         }
 
         if(this.drawOptions["Show Hyperboloid"]) {    
-            this.hyperboloid.draw(gl, this.programs.red);
-            this.hyperboloid2.draw(gl, this.programs.uni);
+            this.models.hyperboloid.draw(gl, this.programs.red);
+            this.models.hyperboloid2.draw(gl, this.programs.uni);
 
         }
 
         if(this.drawOptions["Show Sine Surface"]) {    
-            this.sine_surface.draw(gl, this.programs.red);
-            this.sine_surface2.draw(gl, this.programs.uni);
+            this.models.sine_surface.draw(gl, this.programs.red);
+            this.models.sine_surface2.draw(gl, this.programs.uni);
 
         }
         if(this.drawOptions["Show Pseudosphere"]) {    
-            this.pseudosphere.draw(gl, this.programs.red);
-            this.pseudosphere2.draw(gl, this.programs.uni);
+            this.models.pseudosphere.draw(gl, this.programs.red);
+            this.models.pseudosphere2.draw(gl, this.programs.uni);
         }
         if(this.drawOptions["Show Robot"]) {    
-            this.robot.draw(gl, this.programs.vertexColor, this.transformation);
+            this.robot.draw(gl, null, this.transformation);
         }
     };
 
