@@ -29,13 +29,12 @@ define(["vbo"],
         var umax = config.uMax ||  Math.PI;
         var vmin = config.vMin || -Math.PI;
         var vmax = config.vMax ||  Math.PI;
-        var usegments = config.uSegments || 150;
-        var vsegments = config.vSegments || 75;
+        var usegments = config.uSegments || 20;
+        var vsegments = config.vSegments || 10;
         this.drawStyle   = config.drawStyle || "points";
         this.posFunc = posFunc;
 
         console.log("Creating a ParametricSurface with umin="+umin+", umax="+umax+", vmin="+vmin+", vmax="+vmax ); 
-    
         // generate vertex coordinates and store in an array
         var coords = [];
 
@@ -81,19 +80,28 @@ define(["vbo"],
 
         for (var u_lines = 0; u_lines < usegments; u_lines++) {
 
+            var idx;
+
             for (var v_lines = 0; v_lines < vsegments; v_lines++) {
 
-                var idx = u_lines * (vsegments +1) + v_lines;
+                idx = u_lines * (vsegments +1) + v_lines;
                 lines.push(idx);
                 lines.push(idx+1);
 
                 lines.push(idx);
                 lines.push(idx+vsegments+1);
 
-                lines.push(idx+1);
-                lines.push(idx+vsegments+2);
+                // last row
+                if (u_lines + 1 == usegments) {
+                    lines.push(idx + vsegments + 1);
+                    lines.push(idx + vsegments + 2);
+                   }
+                }
+            // verbinde den letzten punkt aus der aktuellen zeile mit dem letzten punkt aus der naechsten zeile
+            lines.push(idx+1);
+            lines.push(idx+vsegments+2);
+            
 
-            };
 
         };
 

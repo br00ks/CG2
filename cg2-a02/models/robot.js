@@ -33,7 +33,6 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         var triangle = new Triangle(gl);
         var pseudosphere_triangles = models.pseudosphere;
         var pseudosphere_lines = models.pseudosphere2;
-        var ellip
 
 
         //Dimension der in der Zeichnung benannten Teile
@@ -43,10 +42,11 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         var diademSize = [0.18, 0.1, 0.18];
         var shoulderSize = [0.1, 0.1, 0.1];
 
-        var upperArmSize = [0.07, 0.06, 0.07];
+        var upperarmSize = [0.1, 0.1, 0.2];
 
         var elbowSize = [0.1, 0.1, 0.1];
 
+        var forearmSize = [0.1, 0.1, 0.2];
         // ########## SKELETONS ###########
 
         //skeleton torso
@@ -77,17 +77,31 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
 
         //skeleton upper arm right
         this.upperarm_right = new SceneNode("upperarm right");
-        mat4.translate(this.upperarm_right.transform(), [-shoulderSize[0] - upperArmSize[1], shoulderSize[1]/2 - upperArmSize[0], 0]);
+        mat4.translate(this.upperarm_right.transform(), [-upperarmSize[0]/2 - shoulderSize[1], -shoulderSize[0]/2, 0]);
 
         //skeleton upper arm left
         this.upperarm_left = new SceneNode("upperarm left");
-        mat4.translate(this.upperarm_left.transform(), [-shoulderSize[0]- upperArmSize[1], upperArmSize[0] - shoulderSize[1]/2, 0]);
+        mat4.translate(this.upperarm_left.transform(), [-upperarmSize[0]/2 - shoulderSize[1], shoulderSize[0]/2, 0]);
 
         //skeleton elbow right
         this.elbow_right = new SceneNode("elbow right");
-        mat4.translate(this.elbow_right.transform(), [0, 0,-3*upperArmSize[1]]); // HIER ONCH FEHLER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        mat4.translate(this.elbow_right.transform(), [0, 0,-upperarmSize[0]-elbowSize[0]/2]);
 
-        // node-structure
+        //skeleton elbow left
+        this.elbow_left = new SceneNode("elbow left");
+        mat4.translate(this.elbow_left.transform(), [0, 0,-upperarmSize[0]-elbowSize[0]/2]);
+
+        // skeleton forearm right
+        this.forearm_right = new SceneNode("forearm right");
+        mat4.translate(this.forearm_right.transform(), [0,0,-elbowSize[0]/2-forearmSize[0]/2]);
+
+        // skeleton forearm left
+        this.forearm_left = new SceneNode("forearm right");
+        mat4.translate(this.forearm_left.transform(), [0,0,-elbowSize[0]/2-forearmSize[0]/2]);
+
+
+
+        // ########### node-structure ###############
         this.torso.add(this.neck);
         this.neck.add(this.head);
         this.head.add(this.diadem);
@@ -99,7 +113,10 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         this.shoulder_left.add(this.upperarm_left);
 
         this.upperarm_right.add(this.elbow_right);
+        this.upperarm_left.add(this.elbow_left);
 
+        this.elbow_right.add(this.forearm_right);
+        this.elbow_left.add(this.forearm_left);
 
         // ########## SKINS ###########
         //skin torso
@@ -133,7 +150,7 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         diademWire.add(band_lines, programs.uni);
         mat4.scale(diademWire.transform(), diademSize);
  
-        //skin shoulders solid surface
+        // skin shoulders solid surface
         var shoulderSkin = new SceneNode("shoulder skin solid");
         shoulderSkin.add(band_triangles, programs.grey);
 
@@ -148,19 +165,18 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
 
         // skin upperarms solid surface
         var upperArmSkin = new SceneNode("upperarm skin solid");
-        upperArmSkin.add(models.pseudosphere, programs.uni);
+        upperArmSkin.add(models.ellipsoid, programs.uni);
 
-        //skin upperarms wireframe
+        // skin upperarms wireframe
         var upperArmSkinWire = new SceneNode("upperarm skin wire");
-        upperArmSkinWire.add(models.pseudosphere2, programs.pink);
+        upperArmSkinWire.add(models.ellipsoid2, programs.pink);
 
         mat4.rotate(this.upperarm_right.transform(), 0.5*Math.PI, [0,1,0]);
         mat4.rotate(this.upperarm_left.transform(), 0.5*Math.PI, [0,1,0]);
-        mat4.scale(upperArmSkin.transform(), upperArmSize);
-        mat4.scale(upperArmSkinWire.transform(), upperArmSize);
+        mat4.scale(upperArmSkin.transform(), upperarmSize);
+        mat4.scale(upperArmSkinWire.transform(), upperarmSize);
 
-
-        //skin elbow solid surface
+        // skin elbow solid surface
         var elbowSkin = new SceneNode("elbow skin solid");
         elbowSkin.add(band_triangles, programs.grey);
 
@@ -168,15 +184,19 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         var elbowSkinWire = new SceneNode("shoulder skin wire");
         elbowSkinWire.add(band_lines, programs.uni);
 
-        //mat4.rotate(this.elbow_right.transform(), 0.5*Math.PI, [0,0,1]);
-        //mat4.rotate(this.shoulder_left.transform(), 0.5*Math.PI, [0,0,1]);
         mat4.scale(elbowSkin.transform(), elbowSize);
         mat4.scale(elbowSkinWire.transform(), elbowSize);
 
+        // skin forearm solid
+        var forearmSkin = new SceneNode("forearm skin solid");
+        forearmSkin.add(models.ellipsoid, programs.uni);
 
+        // skin forearm wireframe
+        var forearmSkinWire = new SceneNode("shoulder skin wire");
+        forearmSkinWire.add(models.ellipsoid2, programs.gold);
 
-
-
+        mat4.scale(forearmSkin.transform(), forearmSize);
+        mat4.scale(forearmSkinWire.transform(), forearmSize);
 
         // ############ CONNECTION skeleton + body #############
 
@@ -200,6 +220,16 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
 
         this.elbow_right.add(elbowSkin);
         this.elbow_right.add(elbowSkinWire);
+
+        this.elbow_left.add(elbowSkin);
+        this.elbow_left.add(elbowSkinWire);
+
+        this.forearm_right.add(forearmSkin);
+        this.forearm_right.add(forearmSkinWire);
+
+        this.forearm_left.add(forearmSkin);
+        this.forearm_left.add(forearmSkinWire);
+
 
     };
 

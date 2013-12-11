@@ -70,6 +70,14 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         this.models.band2      = new Band(gl, {height: 0.4, drawStyle: "triangles"});
         this.models.band3      = new Band(gl, {height: 0.4, drawStyle: "lines"});
 
+        // 
+        var planeFunc = function(u,v) {
+            var scale = 0.3;
+            var x = u*scale;
+            var y = 0*scale;
+            var z = v*scale;
+            return [x,y,z];
+        }
 
 
         // create a parametric surface to be drawn in this scene
@@ -147,6 +155,8 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         this.models.pseudosphere = new ParametricSurface(gl, positionFunc_pseudosphere, {drawStyle: "triangles"});
         this.models.pseudosphere2 = new ParametricSurface(gl, positionFunc_pseudosphere, {drawStyle: "lines"});
 
+        this.models.plane = new ParametricSurface(gl, planeFunc, {drawStyle: "lines"});
+
         this.robot = new Robot(gl, this.programs, {height: 0.4, drawStyle: "triangles"}, this.models);
 
         // initial position of the camera
@@ -169,6 +179,7 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
                              "Show Hyperboloid": false,
                              "Show Sine Surface": false,
                              "Show Pseudosphere": false,
+                             "Show Plane": false,
                              "Show Robot": true
                              };                       
     };
@@ -213,7 +224,7 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             this.models.triangle.draw(gl, this.programs.vertexColor);
         }
         if(this.drawOptions["Show Cube"]) {    
-            this.models.cube.draw(gl, this.programs.red);
+            this.models.cube.draw(gl, this.programs.vertexColor);
         }
         if(this.drawOptions["Show Band"]) {    
             this.models.band1.draw(gl, this.programs.red);
@@ -248,6 +259,9 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         if(this.drawOptions["Show Pseudosphere"]) {    
             this.models.pseudosphere.draw(gl, this.programs.red);
             this.models.pseudosphere2.draw(gl, this.programs.uni);
+        }
+        if (this.drawOptions["Show Plane"]) {
+            this.models.plane.draw(gl, this.programs.uni);
         }
         if(this.drawOptions["Show Robot"]) {    
             this.robot.draw(gl, null, this.transformation);
