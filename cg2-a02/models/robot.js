@@ -41,12 +41,11 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         var neckSize = [0.1, 0.08, 0.1];
         var diademSize = [0.18, 0.1, 0.18];
         var shoulderSize = [0.1, 0.1, 0.1];
-
         var upperarmSize = [0.1, 0.1, 0.2];
-
         var elbowSize = [0.1, 0.1, 0.1];
+        var forearmSize = [0.1, 0.1, 0.125];
+        var wristSize = [0.1, 0.05,0.1];
 
-        var forearmSize = [0.1, 0.1, 0.2];
         // ########## SKELETONS ###########
 
         //skeleton torso
@@ -66,7 +65,6 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         mat4.translate(this.diadem.transform(), [0 , (headSize[1]/2 + diademSize[1]/2), 0]);
        // mat4.rotate(this.diadem.transform(), 0.6*Math.PI, [0,1,0]); //COLORS!
 
-        
         //skeleton shoulder right
         this.shoulder_right = new SceneNode("shoulder right");
         mat4.translate(this.shoulder_right.transform(), [torsoSize[0]/2 + shoulderSize[1]/2, torsoSize[1]/2.0 - shoulderSize[0]/2.0, 0]);
@@ -96,9 +94,16 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         mat4.translate(this.forearm_right.transform(), [0,0,-elbowSize[0]/2-forearmSize[0]/2]);
 
         // skeleton forearm left
-        this.forearm_left = new SceneNode("forearm right");
+        this.forearm_left = new SceneNode("forearm left");
         mat4.translate(this.forearm_left.transform(), [0,0,-elbowSize[0]/2-forearmSize[0]/2]);
 
+        // skeleton wrist right
+        this.wrist_right = new SceneNode("wrist right");
+        mat4.translate(this.wrist_right.transform(), [0,0,-forearmSize[1]]);
+
+        // skeleton wrist left
+        this.wrist_left = new SceneNode("wrist left");
+        mat4.translate(this.wrist_left.transform(), [0,0,-forearmSize[1]]);
 
 
         // ########### node-structure ###############
@@ -118,6 +123,9 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         this.elbow_right.add(this.forearm_right);
         this.elbow_left.add(this.forearm_left);
 
+        this.forearm_right.add(this.wrist_right);
+        this.forearm_left.add(this.wrist_left);
+
         // ########## SKINS ###########
         //skin torso
         var torsoSkin = new SceneNode("torso skin");
@@ -127,7 +135,6 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         //skin neck
         var neckSkin = new SceneNode("neck skin");
         neckSkin.add(band_triangles, programs.pink);
-
         mat4.scale(neckSkin.transform(), neckSize);
         mat4.rotate(neckSkin.transform(), 0.6*Math.PI, [0,1,0]); 
 
@@ -157,7 +164,6 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         // skin shoulders wireframe
         var shoulderSkinWire = new SceneNode("shoulder skin wire");
         shoulderSkinWire.add(band_lines, programs.uni);
-
         mat4.rotate(this.shoulder_right.transform(), 0.5*Math.PI, [0,0,1]);
         mat4.rotate(this.shoulder_left.transform(), 0.5*Math.PI, [0,0,1]);
         mat4.scale(shoulderSkin.transform(), shoulderSize);
@@ -183,7 +189,6 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         // skin elbow wireframe
         var elbowSkinWire = new SceneNode("shoulder skin wire");
         elbowSkinWire.add(band_lines, programs.uni);
-
         mat4.scale(elbowSkin.transform(), elbowSize);
         mat4.scale(elbowSkinWire.transform(), elbowSize);
 
@@ -194,9 +199,21 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         // skin forearm wireframe
         var forearmSkinWire = new SceneNode("shoulder skin wire");
         forearmSkinWire.add(models.ellipsoid2, programs.gold);
-
         mat4.scale(forearmSkin.transform(), forearmSize);
         mat4.scale(forearmSkinWire.transform(), forearmSize);
+
+        // skin wrist solid
+        var wristSkin = new SceneNode("wrist skin solid");
+        wristSkin.add(band_triangles, programs.grey);
+
+        // skin wrist wireframe
+        var wristSkinWire = new SceneNode("wrist skin wire");
+        wristSkinWire.add(band_lines, programs.pink);
+        mat4.scale(wristSkin.transform(), wristSize);
+        mat4.scale(wristSkinWire.transform(), wristSize);
+        mat4.rotate(this.wrist_right.transform(), 0.5*Math.PI, [1,0,0]);
+        mat4.rotate(this.wrist_left.transform(), 0.5*Math.PI, [1,0,0]);
+
 
         // ############ CONNECTION skeleton + body #############
 
@@ -229,6 +246,12 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
 
         this.forearm_left.add(forearmSkin);
         this.forearm_left.add(forearmSkinWire);
+
+        this.wrist_right.add(wristSkin);
+        this.wrist_right.add(wristSkinWire);
+
+        this.wrist_left.add(wristSkin);
+        this.wrist_left.add(wristSkinWire);
 
 
     };
