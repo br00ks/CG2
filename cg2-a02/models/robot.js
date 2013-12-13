@@ -31,13 +31,11 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         var band_triangles = new Band(gl, {height: 1.0, drawStyle: "triangles"} );
         var band_lines = new Band(gl, {height: 1.0, drawStyle: "lines"} );
         var triangle = new Triangle(gl);
-        var pseudosphere_triangles = models.pseudosphere;
-        var pseudosphere_lines = models.pseudosphere2;
-
 
         //Dimension der in der Zeichnung benannten Teile
+        
         var headSize = [0.25, 0.3, 0.25];
-        var torsoSize = [0.4, 0.7, 0.3];
+        var torsoSize = [0.35, 0.5, 0.2];
         var neckSize = [0.1, 0.08, 0.1];
         var diademSize = [0.18, 0.1, 0.18];
         var shoulderSize = [0.1, 0.1, 0.1];
@@ -45,6 +43,7 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         var elbowSize = [0.1, 0.1, 0.1];
         var forearmSize = [0.1, 0.1, 0.125];
         var wristSize = [0.1, 0.05,0.1];
+        var hipjointSize = [0.2, 0.1, 0.3];
 
         // ########## SKELETONS ###########
 
@@ -63,7 +62,6 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         //skeleton diadem
         this.diadem = new SceneNode("diadem");
         mat4.translate(this.diadem.transform(), [0 , (headSize[1]/2 + diademSize[1]/2), 0]);
-       // mat4.rotate(this.diadem.transform(), 0.6*Math.PI, [0,1,0]); //COLORS!
 
         //skeleton shoulder right
         this.shoulder_right = new SceneNode("shoulder right");
@@ -106,6 +104,10 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         mat4.translate(this.wrist_left.transform(), [0,0,-forearmSize[1]]);
 
 
+        //skeleton hipjoint
+        this.hipjoint = new SceneNode("hipjoint");
+        mat4.translate(this.hipjoint.transform(), [0,-torsoSize[1]/2 - hipjointSize[1]/2,0]);
+
         // ########### node-structure ###############
         this.torso.add(this.neck);
         this.neck.add(this.head);
@@ -126,7 +128,10 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         this.forearm_right.add(this.wrist_right);
         this.forearm_left.add(this.wrist_left);
 
+        this.torso.add(this.hipjoint);
+
         // ########## SKINS ###########
+
         //skin torso
         var torsoSkin = new SceneNode("torso skin");
         torsoSkin.add(cube, programs.vertexColor);
@@ -142,117 +147,78 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         var headSkin = new SceneNode("head skin");
         headSkin.add(cube, programs.vertexColor);
         mat4.scale(headSkin.transform(), headSize);
-       // mat4.rotate(headSkin.transform(), 0.6*Math.PI, [0,1,0]); 
 
         //skin diadem solid surface
         var diademSkin = new SceneNode("diadem skin");
-        //diademSkin.add(cube, programs.vertexColor);
         diademSkin.add(band_triangles, programs.gold);
+        diademSkin.add(band_lines, programs.uni);
         mat4.scale(diademSkin.transform(), diademSize);
-       // mat4.rotate(diademSkin.transform(), 0.6*Math.PI, [0,1,0]); //COLORS!
-
-
-        //skin diadem wireframe
-        var diademWire = new SceneNode("diadem wire");
-        diademWire.add(band_lines, programs.uni);
-        mat4.scale(diademWire.transform(), diademSize);
- 
-        // skin shoulders solid surface
+      
+        // skin shoulders
         var shoulderSkin = new SceneNode("shoulder skin solid");
         shoulderSkin.add(band_triangles, programs.grey);
-
-        // skin shoulders wireframe
-        var shoulderSkinWire = new SceneNode("shoulder skin wire");
-        shoulderSkinWire.add(band_lines, programs.uni);
+        shoulderSkin.add(band_lines, programs.uni);
         mat4.rotate(this.shoulder_right.transform(), 0.5*Math.PI, [0,0,1]);
         mat4.rotate(this.shoulder_left.transform(), 0.5*Math.PI, [0,0,1]);
         mat4.scale(shoulderSkin.transform(), shoulderSize);
-        mat4.scale(shoulderSkinWire.transform(), shoulderSize);
-
-        // skin upperarms solid surface
+     
+        // skin upperarms 
         var upperArmSkin = new SceneNode("upperarm skin solid");
         upperArmSkin.add(models.ellipsoid, programs.uni);
-
-        // skin upperarms wireframe
-        var upperArmSkinWire = new SceneNode("upperarm skin wire");
-        upperArmSkinWire.add(models.ellipsoid2, programs.pink);
-
+        upperArmSkin.add(models.ellipsoid2, programs.pink);
         mat4.rotate(this.upperarm_right.transform(), 0.5*Math.PI, [0,1,0]);
         mat4.rotate(this.upperarm_left.transform(), 0.5*Math.PI, [0,1,0]);
         mat4.scale(upperArmSkin.transform(), upperarmSize);
-        mat4.scale(upperArmSkinWire.transform(), upperarmSize);
 
-        // skin elbow solid surface
+        // skin elbow
         var elbowSkin = new SceneNode("elbow skin solid");
         elbowSkin.add(band_triangles, programs.grey);
-
-        // skin elbow wireframe
-        var elbowSkinWire = new SceneNode("shoulder skin wire");
-        elbowSkinWire.add(band_lines, programs.uni);
+        elbowSkin.add(band_lines, programs.uni);
         mat4.scale(elbowSkin.transform(), elbowSize);
-        mat4.scale(elbowSkinWire.transform(), elbowSize);
-
-        // skin forearm solid
+     
+        // skin forearm
         var forearmSkin = new SceneNode("forearm skin solid");
         forearmSkin.add(models.ellipsoid, programs.uni);
-
-        // skin forearm wireframe
-        var forearmSkinWire = new SceneNode("shoulder skin wire");
-        forearmSkinWire.add(models.ellipsoid2, programs.gold);
+        forearmSkin.add(models.ellipsoid2, programs.gold);
         mat4.scale(forearmSkin.transform(), forearmSize);
-        mat4.scale(forearmSkinWire.transform(), forearmSize);
 
-        // skin wrist solid
+        // skin wrist
         var wristSkin = new SceneNode("wrist skin solid");
         wristSkin.add(band_triangles, programs.grey);
-
-        // skin wrist wireframe
-        var wristSkinWire = new SceneNode("wrist skin wire");
-        wristSkinWire.add(band_lines, programs.pink);
+        wristSkin.add(band_lines, programs.pink);
         mat4.scale(wristSkin.transform(), wristSize);
-        mat4.scale(wristSkinWire.transform(), wristSize);
         mat4.rotate(this.wrist_right.transform(), 0.5*Math.PI, [1,0,0]);
         mat4.rotate(this.wrist_left.transform(), 0.5*Math.PI, [1,0,0]);
 
+         //skin hipjoint
+        var hipjointSkin = new SceneNode("hipjoint skin");
+        hipjointSkin.add(band_triangles, programs.pink);
+        hipjointSkin.add(band_lines, programs.uni);
+        mat4.scale(hipjointSkin.transform(), hipjointSize);
+        mat4.rotate(this.hipjoint.transform(), 0.5*Math.PI, [0,1,0]);
 
         // ############ CONNECTION skeleton + body #############
-
         this.torso.add(torsoSkin);
         this.head.add(headSkin);
         this.neck.add(neckSkin);
         this.diadem.add(diademSkin);
-        this.diadem.add(diademWire);
 
         this.shoulder_right.add(shoulderSkin);
         this.shoulder_left.add(shoulderSkin);
 
-        this.shoulder_right.add(shoulderSkinWire);
-        this.shoulder_left.add(shoulderSkinWire);
-
         this.upperarm_right.add(upperArmSkin);
-        this.upperarm_right.add(upperArmSkinWire);
-
         this.upperarm_left.add(upperArmSkin);
-        this.upperarm_left.add(upperArmSkinWire);
 
         this.elbow_right.add(elbowSkin);
-        this.elbow_right.add(elbowSkinWire);
-
         this.elbow_left.add(elbowSkin);
-        this.elbow_left.add(elbowSkinWire);
 
         this.forearm_right.add(forearmSkin);
-        this.forearm_right.add(forearmSkinWire);
-
         this.forearm_left.add(forearmSkin);
-        this.forearm_left.add(forearmSkinWire);
 
         this.wrist_right.add(wristSkin);
-        this.wrist_right.add(wristSkinWire);
-
         this.wrist_left.add(wristSkin);
-        this.wrist_left.add(wristSkinWire);
 
+        this.hipjoint.add(hipjointSkin);
 
     };
 
@@ -260,6 +226,27 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
     Robot.prototype.draw = function(gl,program,transformation) {
         this.torso.draw(gl, program, transformation);
   
+    };
+    // --> scene.js rotate
+    Robot.prototype.rotate = function(joint, angle) {
+
+        angle = angle*Math.PI/180;
+
+        switch(joint) {
+            case "worldY":
+                mat4.rotate(this.world.transformation, angle, [0, 1, 0]);
+                break;
+            case "worldX":
+                mat4.rotate(this.world.transformation, angle, [1, 0, 0]);
+                break;
+            case "hipjoint":
+                mat4.rotate(this.hipjoint.transformation, angle, [1, 0, 0]);
+                break;
+
+        }
+        // redraw the scene
+        this.draw();
+
     };
         
     // this module only returns the Robot constructor function    

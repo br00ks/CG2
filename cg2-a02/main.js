@@ -49,7 +49,7 @@ define(["jquery", "gl-matrix", "webgl-debug", "animation", "scene", "html_contro
 
             // ask the scene to rotate around Y axis
             scene.rotate("worldY", angle); 
-                        
+
             // (re-) draw the scene
             scene.draw();
             
@@ -104,7 +104,8 @@ define(["jquery", "gl-matrix", "webgl-debug", "animation", "scene", "html_contro
              'x': {axis: "worldX", angle:  5.0}, 
              'X': {axis: "worldX", angle: -5.0}, 
              'y': {axis: "worldY", angle:  5.0}, 
-             'Y': {axis: "worldY", angle: -5.0}
+             'Y': {axis: "worldY", angle: -5.0}, 
+             'c': {axis: "hipjoint", angle: 5.0}
         };
 
         // create HtmlController that takes care of all interaction
