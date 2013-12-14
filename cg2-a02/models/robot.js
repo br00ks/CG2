@@ -43,12 +43,15 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         var elbowSize = [0.1, 0.1, 0.1];
         var forearmSize = [0.1, 0.1, 0.125];
         var wristSize = [0.1, 0.05,0.1];
-        var hipjointSize = [0.2, 0.1, 0.3];
+        var pelvicSize = [0.3, 0.06, 0.2];
+        var legSize = [0.1,0.1,0.3];
+        var hipjointSize = [0.3, 0.06, 0.2];
 
         // ########## SKELETONS ###########
 
         //skeleton torso
         this.torso = new SceneNode("torso");
+        mat4.translate(this.torso.transform(), [0,torsoSize[1]/2 + pelvicSize[1]/2,0]);
 
         //skeleton neck
         this.neck = new SceneNode("neck");
@@ -103,12 +106,22 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         this.wrist_left = new SceneNode("wrist left");
         mat4.translate(this.wrist_left.transform(), [0,0,-forearmSize[1]]);
 
+        //skeleton pelvic bone = beckenknochen
+        this.pelvic = new SceneNode("pelvic");
+        mat4.translate(this.pelvic.transform(), [0,+hipjointSize[1]/2 + pelvicSize[1]/2,0]);
+
 
         //skeleton hipjoint
         this.hipjoint = new SceneNode("hipjoint");
-        mat4.translate(this.hipjoint.transform(), [0,-torsoSize[1]/2 - hipjointSize[1]/2,0]);
+        mat4.translate(this.hipjoint.transform(), [0,-4*hipjointSize[1], 0]);
+
+        //skeleton leg right
+        this.leg_right = new SceneNode("leg right");
+        mat4.translate(this.leg_right.transform(), [legSize[1],-legSize[2]/2 - hipjointSize[1]/2,0]);
 
         // ########### node-structure ###############
+        this.hipjoint.add(this.pelvic);
+
         this.torso.add(this.neck);
         this.neck.add(this.head);
         this.head.add(this.diadem);
@@ -128,7 +141,9 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         this.forearm_right.add(this.wrist_right);
         this.forearm_left.add(this.wrist_left);
 
-        this.torso.add(this.hipjoint);
+        this.pelvic.add(this.torso);
+
+        this.hipjoint.add(this.leg_right);  
 
         // ########## SKINS ###########
 
@@ -190,12 +205,26 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         mat4.rotate(this.wrist_right.transform(), 0.5*Math.PI, [1,0,0]);
         mat4.rotate(this.wrist_left.transform(), 0.5*Math.PI, [1,0,0]);
 
-         //skin hipjoint
+         //skin pelvic skin
+        var pelvicSkin = new SceneNode("pelvic skin");
+        pelvicSkin.add(band_triangles, programs.pink);
+        pelvicSkin.add(band_lines, programs.uni);
+        mat4.scale(pelvicSkin.transform(), pelvicSize);
+
+        //skin hipjoint
         var hipjointSkin = new SceneNode("hipjoint skin");
-        hipjointSkin.add(band_triangles, programs.pink);
+        hipjointSkin.add(band_triangles, programs.gold);
         hipjointSkin.add(band_lines, programs.uni);
         mat4.scale(hipjointSkin.transform(), hipjointSize);
-        mat4.rotate(this.hipjoint.transform(), 0.5*Math.PI, [0,1,0]);
+
+
+        //skin legs
+        var legSkin = new SceneNode("leg skin");
+        legSkin.add(cube, programs.vertexColor);
+        legSkin.add(cube, programs.uni);
+        mat4.scale(legSkin.transform(), legSize);
+        mat4.rotate(this.leg_right.transform(), 0.5*Math.PI, [1,0,0]);
+
 
         // ############ CONNECTION skeleton + body #############
         this.torso.add(torsoSkin);
@@ -218,36 +247,17 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         this.wrist_right.add(wristSkin);
         this.wrist_left.add(wristSkin);
 
+        this.pelvic.add(pelvicSkin);
         this.hipjoint.add(hipjointSkin);
-
+        this.leg_right.add(legSkin);
     };
 
     // draw method: activate buffers and issue WebGL draw() method
     Robot.prototype.draw = function(gl,program,transformation) {
-        this.torso.draw(gl, program, transformation);
+        this.hipjoint.draw(gl, program, transformation);
   
     };
-    // --> scene.js rotate
-    Robot.prototype.rotate = function(joint, angle) {
-
-        angle = angle*Math.PI/180;
-
-        switch(joint) {
-            case "worldY":
-                mat4.rotate(this.world.transformation, angle, [0, 1, 0]);
-                break;
-            case "worldX":
-                mat4.rotate(this.world.transformation, angle, [1, 0, 0]);
-                break;
-            case "hipjoint":
-                mat4.rotate(this.hipjoint.transformation, angle, [1, 0, 0]);
-                break;
-
-        }
-        // redraw the scene
-        this.draw();
-
-    };
+   
         
     // this module only returns the Robot constructor function    
     return Robot;

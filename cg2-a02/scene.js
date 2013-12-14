@@ -132,6 +132,15 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
                      Math.sin(u) * Math.sin(v),
                      Math.cos(v) + Math.log(Math.tan(v/2)) ];
         };
+
+
+        var func_paraboloid = function(u,v) {
+            return [    0.2 * v * Math.cos(u),
+                        0.2 * v * Math.sin(u),
+                        0.1 * v*v];
+        }
+
+
         var config = {  
             "uMin": -Math.PI, 
             "uMax":  Math.PI, 
@@ -157,6 +166,9 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
 
         this.models.plane = new ParametricSurface(gl, planeFunc, {drawStyle: "lines"});
 
+        this.models.paraboloid = new ParametricSurface(gl, func_paraboloid,{drawStyle: "lines"} );
+        this.models.paraboloid2 = new ParametricSurface(gl, func_paraboloid,{drawStyle: "triangles"} );
+
         this.robot = new Robot(gl, this.programs, {height: 0.4, drawStyle: "triangles"}, this.models);
 
         // initial position of the camera
@@ -180,6 +192,7 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
                              "Show Sine Surface": false,
                              "Show Pseudosphere": false,
                              "Show Plane": false,
+                             "Show Paraboloid": false,
                              "Show Robot": true
                              };                       
     };
@@ -263,6 +276,10 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         if (this.drawOptions["Show Plane"]) {
             this.models.plane.draw(gl, this.programs.uni);
         }
+        if (this.drawOptions["Show Paraboloid"]) {
+            this.models.paraboloid.draw(gl, this.programs.uni);
+            this.models.paraboloid2 .draw(gl, this.programs.gold);
+        }
         if(this.drawOptions["Show Robot"]) {    
             this.robot.draw(gl, null, this.transformation);
         }
@@ -286,9 +303,37 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
                 mat4.rotate(this.transformation, angle, [1,0,0]);
                 break;
 
-            case "hipjoint":
-                this.robot.rotate("hipjoint", angle);
+            case "shoulder right":
+                mat4.rotate(this.robot.shoulder_right.transformation, angle, [0,1,0]);
                 break;
+
+            case "shoulder left":
+                mat4.rotate(this.robot.shoulder_left.transformation, angle, [0,1,0]);
+                break;
+
+            case "elbow right":
+                mat4.rotate(this.robot.elbow_right.transformation, angle, [0,1,0]);
+                break;
+
+            case "elbow left":
+                mat4.rotate(this.robot.elbow_left.transformation, angle, [0,1,0]);
+                break;
+            case "neck left right":
+                mat4.rotate(this.robot.neck.transformation, angle, [0,1,0]);
+                break;
+
+            case "neck up down":
+                mat4.rotate(this.robot.neck.transformation, angle, [1,0,0]);
+                break;
+
+            case "pelvic up down":
+                mat4.rotate(this.robot.pelvic.transformation, angle, [1,0,0]);
+                break;
+
+            case "pelvic left right":
+                mat4.rotate(this.robot.pelvic.transformation, angle, [0,1,0]);
+                break;
+
             default:
                 window.console.log("axis " + rotationAxis + " not implemented.");
             break;
