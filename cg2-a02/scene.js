@@ -333,8 +333,37 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             case "pelvic left right":
                 mat4.rotate(this.robot.pelvic.transformation, angle, [0,1,0]);
                 break;
+
             case "torso":
                 mat4.rotate(this.robot.torso.transformation, angle, [0,1,0]);
+                break;
+
+            case "ankle right":
+                mat4.rotate(this.robot.ankle_right.transformation, angle, [0,1,0]);
+                break;
+
+            case "ankle left":
+                mat4.rotate(this.robot.ankle_left.transformation, angle, [0,1,0]);
+                break;
+
+            case "knee right":
+                mat4.rotate(this.robot.kneejoint_right.transformation, angle, [0,1,0]);
+                break;
+
+            case "knee left":
+                mat4.rotate(this.robot.kneejoint_left.transformation, angle, [0,1,0]);
+                break;
+
+            case "hip":
+                mat4.rotate(this.robot.hip.transformation, angle, [0,1,0]);
+                break
+
+            case "hipjoint right":
+                mat4.rotate(this.robot.hipjoint_right.transformation, angle, [0,1,0]);
+                break;
+
+            case "hipjoint left":
+                mat4.rotate(this.robot.hipjoint_left.transformation, angle, [0,1,0]);
                 break;
 
             default:

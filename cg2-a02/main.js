@@ -122,7 +122,22 @@ define(["jquery", "gl-matrix", "webgl-debug", "animation", "scene", "html_contro
              'o': {axis: "pelvic left right", angle: 5.0},
              'O': {axis: "pelvic left right", angle: -5.0},
              't': {axis: "torso", angle: 5.0},
-             'T': {axis: "torso", angle: -5.0}
+             'T': {axis: "torso", angle: -5.0},
+             'f': {axis: "ankle right", angle: 5.0}, 
+             'F': {axis: "ankle right", angle: -5.0},
+             'g': {axis: "ankle left", angle: 5.0}, 
+             'G': {axis: "ankle left", angle: -5.0},
+             'k': {axis: "knee right", angle: 5.0},
+             'K': {axis: "knee right", angle: -5.0},
+             'l': {axis: "knee left", angle: 5.0},
+             'L': {axis: "knee left", angle: -5.0},
+             'h': {axis: "hip", angle: 5.0},
+             'H': {axis: "hip", angle: -5.0},
+             'q': {axis: "hipjoint right", angle: 5.0},
+             'Q': {axis: "hipjoint right", angle: -5.0},
+             'w': {axis: "hipjoint left", angle: 5.0},
+             'W': {axis: "hipjoint left", angle: -5.0}
+
         };
 
         // create HtmlController that takes care of all interaction

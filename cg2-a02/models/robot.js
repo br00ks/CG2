@@ -46,10 +46,14 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         var forearmSize = [0.1, 0.1, 0.125];
         var wristSize = [0.1, 0.05,0.1];
         var pelvicSize = [0.3, 0.06, 0.2];
-        var legSize = [0.1,0.1,0.3];
-        var hipjointSize = [0.3, 0.06, 0.2];
+        var legSize = [0.1,0.1,0.2];
+        var lowerlegSize = [0.1,0.1,0.2];
+        var hipSize = [0.3, 0.06, 0.2];
         var kneejointSize = [0.12, 0.12, 0.12];
         var handSize = [0.3, 0.06, 0.2];
+        var ankleSize = [0.1, 0.1, 0.08];
+        var footSize = [0.2,0.18,0.04];
+        var hipjointSize = [0.12, 0.12, 0.12];
 
         // ########## SKELETONS ###########
 
@@ -116,32 +120,62 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
 
         //skeleton pelvic bone = beckenknochen
         this.pelvic = new SceneNode("pelvic");
-        mat4.translate(this.pelvic.transform(), [0,+hipjointSize[1]/2 + pelvicSize[1]/2,0]);
+        mat4.translate(this.pelvic.transform(), [0,+hipSize[1]/2 + pelvicSize[1]/2,0]);
 
+        //skeleton hip
+        this.hip = new SceneNode("hip");
+        mat4.translate(this.hip.transform(), [0,-4*hipSize[1], 0]);
 
-        //skeleton hipjoint
-        this.hipjoint = new SceneNode("hipjoint");
-        mat4.translate(this.hipjoint.transform(), [0,-4*hipjointSize[1], 0]);
+        //skeleton hipjoint right
+        this.hipjoint_right = new SceneNode("hipjoint right");
+        mat4.translate(this.hipjoint_right.transform(), [hipSize[0]/4,-hipSize[1]/2 -hipjointSize[0]/2,0]);
+
+        //skeleton hipjoint left
+        this.hipjoint_left = new SceneNode("hipjoint left");
+        mat4.translate(this.hipjoint_left.transform(), [-hipSize[0]/4,-hipSize[1]/2 -hipjointSize[0]/2,0]);
 
         //skeleton leg right
         this.leg_right = new SceneNode("leg right");
-        mat4.translate(this.leg_right.transform(), [legSize[1],-legSize[2]/2 - hipjointSize[1]/2,0]);
-
-        //skeleton kneejoint_right
-        this.kneejoint_right = new SceneNode("knee joint right");
-        mat4.translate(this.kneejoint_right.transform(), [0, kneejointSize[1]/2 - legSize[1]/2, legSize[0]]);
-
-        //skeleton calf right = wade
-        this.calf_right = new SceneNode("calf right");
-        mat4.translate(this.calf_right.transform(), [0,legSize[0] - kneejointSize[1],kneejointSize[0]]);
+        mat4.translate(this.leg_right.transform(), [-hipjointSize[1]/2 - legSize[1]/2,0,0]);
 
         //skeleton leg left
         this.leg_left = new SceneNode("leg left");
-        mat4.translate(this.leg_left.transform(), [-legSize[1] , -hipjointSize[1]/2- pelvicSize[0]/2, 0]);
+        mat4.translate(this.leg_left.transform(), [-hipjointSize[1]/2 - legSize[1]/2,0,0]);
+
+        //skeleton kneejoint_right
+        this.kneejoint_right = new SceneNode("knee joint right");
+        mat4.translate(this.kneejoint_right.transform(), [0, 0,legSize[2]/2]);
+
+        //skeleton kneejoint left
+        this.kneejoint_left = new SceneNode("knee joint left");
+        mat4.translate(this.kneejoint_left.transform(), [0, 0,legSize[2]/2]);
+
+        //skeleton lower leg right
+        this.lowerleg_right = new SceneNode("lowerleg right");
+        mat4.translate(this.lowerleg_right.transform(), [0,0,kneejointSize[0]/2 +lowerlegSize[0]/2]);
+
+        //skeleton lower leg left
+        this.lowerleg_left = new SceneNode("lowerleg left");
+        mat4.translate(this.lowerleg_left.transform(), [0,0,kneejointSize[0]/2 +lowerlegSize[0]/2]);
+
+        //skeleton ankle left
+        this.ankle_left = new SceneNode("ankle left");
+        mat4.translate(this.ankle_left.transform(), [0,0,lowerlegSize[0]]);
+
+        //skeleton ankle right
+        this.ankle_right = new SceneNode("ankle right");
+        mat4.translate(this.ankle_right.transform(),  [0,0,lowerlegSize[0]]);
+
+        //skeleton foot left
+        this.foot_left = new SceneNode("foot left");
+        mat4.translate(this.foot_left.transform(),  [footSize[0]/2 - ankleSize[0]/2,0,0]);
+
+        //skeleton foot right
+        this.foot_right = new SceneNode("foot right");
+        mat4.translate(this.foot_right.transform(),  [footSize[0]/2 - ankleSize[0]/2,0,0]);
 
         // ########### node-structure ###############
-        this.hipjoint.add(this.pelvic);
-         //this.pelvic.add(this.torso);
+        this.hip.add(this.pelvic);
         this.torso.add(this.neck);
         this.neck.add(this.head);
         this.head.add(this.diadem);
@@ -165,12 +199,23 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
 
         this.pelvic.add(this.torso);
 
+        this.hip.add(this.hipjoint_right);  
+        this.hip.add(this.hipjoint_left); 
 
-        this.hipjoint.add(this.leg_right);  
-        this.hipjoint.add(this.leg_left); 
+        this.hipjoint_right.add(this.leg_right);
+        this.hipjoint_left.add(this.leg_left);
 
+        this.leg_left.add(this.kneejoint_left);
         this.leg_right.add(this.kneejoint_right); 
-        this.kneejoint_right.add(this.calf_right); 
+        
+        this.kneejoint_right.add(this.lowerleg_right); 
+        this.kneejoint_left.add(this.lowerleg_left);
+
+        this.lowerleg_right.add(this.ankle_right);
+        this.lowerleg_left.add(this.ankle_left);
+
+        this.ankle_right.add(this.foot_right);
+        this.ankle_left.add(this.foot_left);
 
         // ########## SKINS ###########
 
@@ -245,33 +290,54 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         pelvicSkin.add(band_lines, programs.uni);
         mat4.scale(pelvicSkin.transform(), pelvicSize);
 
+        //skin hip
+        var hipSkin = new SceneNode("hip skin");
+        hipSkin.add(band_triangles, programs.gold);
+        hipSkin.add(band_lines, programs.uni);
+        mat4.scale(hipSkin.transform(), hipSize);
+
         //skin hipjoint
         var hipjointSkin = new SceneNode("hipjoint skin");
-        hipjointSkin.add(band_triangles, programs.gold);
+        hipjointSkin.add(band_triangles, programs.red);
         hipjointSkin.add(band_lines, programs.uni);
         mat4.scale(hipjointSkin.transform(), hipjointSize);
-
+        mat4.rotate(this.hipjoint_right.transform(), 0.5*Math.PI, [0,0,1]);
+        mat4.rotate(this.hipjoint_left.transform(), 0.5*Math.PI, [0,0,1]);
 
         //skin legs
         var legSkin = new SceneNode("leg skin");
         legSkin.add(cube, programs.vertexColor);
-        legSkin.add(cube, programs.uni);
         mat4.scale(legSkin.transform(), legSize);
         mat4.rotate(this.leg_right.transform(), 0.5*Math.PI, [1,0,0]);
         mat4.rotate(this.leg_left.transform(), 0.5*Math.PI, [1,0,0]);
+        mat4.rotate(this.leg_right.transform(), -0.5*Math.PI, [0,1,0]);
+        mat4.rotate(this.leg_left.transform(), -0.5*Math.PI, [0,1,0]);
 
-        mat4.rotate(this.calf_right.transform(), 0.5*Math.PI, [0,0,1]);
+        //skin lower leg
+        var lowerlegSkin = new SceneNode("lower leg skin");
+        lowerlegSkin.add (cube, programs.gold );
+        mat4.scale(lowerlegSkin.transform(), lowerlegSize);
 
-
-        //kneejoint right
+        //skin kneejoint
         var kneejointSkin = new SceneNode("kneejoint skin");
         kneejointSkin.add(band_triangles, programs.grey);
         kneejointSkin.add(band_lines, programs.uni);
         mat4.scale(kneejointSkin.transform(), kneejointSize);
         mat4.rotate(this.kneejoint_right.transform(), 0.5*Math.PI, [0,0,1]);
-        //mat4.rotate(this.lkneejoint_left.transform(), 0.5*Math.PI, [1,0,0]);
+        mat4.rotate(this.kneejoint_left.transform(), 0.5*Math.PI, [0,0,1]);
 
+        //skin ankle
+        var ankleSkin = new SceneNode("ankle skin");
+        ankleSkin.add(band_triangles, programs.grey);
+        ankleSkin.add(band_lines, programs.uni);
+        mat4.scale(ankleSkin.transform(), ankleSize);
+       
 
+        //skin feet
+        var footSkin = new SceneNode("foot skin");
+        footSkin.add(models.ellipsoid, programs.uni);
+        footSkin.add(models.ellipsoid2, programs.pink);
+        mat4.scale(footSkin.transform(), footSize);
 
         // ############ CONNECTION skeleton + body #############
         this.torso.add(torsoSkin);
@@ -297,19 +363,32 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         this.hand_right.add(handSkin);
 
         this.pelvic.add(pelvicSkin);
-        this.hipjoint.add(hipjointSkin);
+        this.hip.add(hipSkin);
+
+        this.hipjoint_right.add(hipjointSkin);
+        this.hipjoint_left.add(hipjointSkin);
 
         this.leg_right.add(legSkin);
         this.leg_left.add(legSkin);
 
         this.kneejoint_right.add(kneejointSkin);
+        this.kneejoint_left.add(kneejointSkin);
 
-        this.calf_right.add(legSkin);
+        this.lowerleg_right.add(lowerlegSkin);
+        this.lowerleg_left.add(lowerlegSkin);
+
+        this.ankle_right.add(ankleSkin);
+        this.ankle_left.add(ankleSkin);
+
+        this.foot_right.add(footSkin);
+        this.foot_left.add(footSkin);
+
     };
+
 
     // draw method: activate buffers and issue WebGL draw() method
     Robot.prototype.draw = function(gl,program,transformation) {
-        this.hipjoint.draw(gl, program, transformation);
+        this.hip.draw(gl, program, transformation);
   
     };
    
