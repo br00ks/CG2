@@ -31,6 +31,8 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         var band_triangles = new Band(gl, {height: 1.0, drawStyle: "triangles"} );
         var band_lines = new Band(gl, {height: 1.0, drawStyle: "lines"} );
         var triangle = new Triangle(gl);
+        //var paraboloid_triangles = new ParametricSurface(gl, ???????,  {height: 1.0, drawStyle: "triangles"} );
+        var paraboloid_triangles = new Band(gl, {height: 1.0, drawStyle: "triangles"} );//HIER FEHLT NOCH DIE PARABOLOID-OBERFLÄCHE
 
         //Dimension der in der Zeichnung benannten Teile
         
@@ -46,6 +48,7 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         var pelvicSize = [0.3, 0.06, 0.2];
         var legSize = [0.1,0.1,0.3];
         var hipjointSize = [0.3, 0.06, 0.2];
+        var handSize = [0.3, 0.06, 0.2];
 
         // ########## SKELETONS ###########
 
@@ -102,6 +105,10 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         this.wrist_right = new SceneNode("wrist right");
         mat4.translate(this.wrist_right.transform(), [0,0,-forearmSize[1]]);
 
+        // skeleton hand right
+        this.hand_right = new SceneNode("hand right");
+        mat4.translate(this.hand_right.transform(), [0,0,-forearmSize[1]]);
+
         // skeleton wrist left
         this.wrist_left = new SceneNode("wrist left");
         mat4.translate(this.wrist_left.transform(), [0,0,-forearmSize[1]]);
@@ -119,9 +126,13 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         this.leg_right = new SceneNode("leg right");
         mat4.translate(this.leg_right.transform(), [legSize[1],-legSize[2]/2 - hipjointSize[1]/2,0]);
 
+        //skeleton leg left
+        this.leg_left = new SceneNode("leg left");
+        mat4.translate(this.leg_left.transform(), [-legSize[1] , -hipjointSize[1]/2- pelvicSize[0]/2, 0]);
+
         // ########### node-structure ###############
         this.hipjoint.add(this.pelvic);
-
+         //this.pelvic.add(this.torso);
         this.torso.add(this.neck);
         this.neck.add(this.head);
         this.head.add(this.diadem);
@@ -141,9 +152,13 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         this.forearm_right.add(this.wrist_right);
         this.forearm_left.add(this.wrist_left);
 
+        this.wrist_right.add(this.hand_right);
+
         this.pelvic.add(this.torso);
 
+
         this.hipjoint.add(this.leg_right);  
+        this.hipjoint.add(this.leg_left); 
 
         // ########## SKINS ###########
 
@@ -205,6 +220,13 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         mat4.rotate(this.wrist_right.transform(), 0.5*Math.PI, [1,0,0]);
         mat4.rotate(this.wrist_left.transform(), 0.5*Math.PI, [1,0,0]);
 
+        // skin hand
+        var handSkin = new SceneNode("hand skin solid");
+        handSkin.add(paraboloid_triangles, programs.uni);
+        //handSkin.add(band_lines, programs.pink);
+        mat4.scale(handSkin.transform(), handSize);
+        mat4.rotate(this.hand_right.transform(), 0.5*Math.PI, [1,0,0]);
+
          //skin pelvic skin
         var pelvicSkin = new SceneNode("pelvic skin");
         pelvicSkin.add(band_triangles, programs.pink);
@@ -224,6 +246,7 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         legSkin.add(cube, programs.uni);
         mat4.scale(legSkin.transform(), legSize);
         mat4.rotate(this.leg_right.transform(), 0.5*Math.PI, [1,0,0]);
+        mat4.rotate(this.leg_left.transform(), 0.5*Math.PI, [1,0,0]);
 
 
         // ############ CONNECTION skeleton + body #############
@@ -247,9 +270,12 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         this.wrist_right.add(wristSkin);
         this.wrist_left.add(wristSkin);
 
+        this.hand_right.add(handSkin);
+
         this.pelvic.add(pelvicSkin);
         this.hipjoint.add(hipjointSkin);
         this.leg_right.add(legSkin);
+        this.leg_left.add(legSkin);
     };
 
     // draw method: activate buffers and issue WebGL draw() method
