@@ -333,6 +333,9 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             case "pelvic left right":
                 mat4.rotate(this.robot.pelvic.transformation, angle, [0,1,0]);
                 break;
+            case "torso":
+                mat4.rotate(this.robot.torso.transformation, angle, [0,1,0]);
+                break;
 
             default:
                 window.console.log("axis " + rotationAxis + " not implemented.");
