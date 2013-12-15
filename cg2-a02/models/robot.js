@@ -48,6 +48,7 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         var pelvicSize = [0.3, 0.06, 0.2];
         var legSize = [0.1,0.1,0.3];
         var hipjointSize = [0.3, 0.06, 0.2];
+        var kneejointSize = [0.12, 0.12, 0.12];
         var handSize = [0.3, 0.06, 0.2];
 
         // ########## SKELETONS ###########
@@ -126,6 +127,14 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         this.leg_right = new SceneNode("leg right");
         mat4.translate(this.leg_right.transform(), [legSize[1],-legSize[2]/2 - hipjointSize[1]/2,0]);
 
+        //skeleton kneejoint_right
+        this.kneejoint_right = new SceneNode("knee joint right");
+        mat4.translate(this.kneejoint_right.transform(), [0, kneejointSize[1]/2 - legSize[1]/2, legSize[0]]);
+
+        //skeleton calf right = wade
+        this.calf_right = new SceneNode("calf right");
+        mat4.translate(this.calf_right.transform(), [0,legSize[0] - kneejointSize[1],kneejointSize[0]]);
+
         //skeleton leg left
         this.leg_left = new SceneNode("leg left");
         mat4.translate(this.leg_left.transform(), [-legSize[1] , -hipjointSize[1]/2- pelvicSize[0]/2, 0]);
@@ -159,6 +168,9 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
 
         this.hipjoint.add(this.leg_right);  
         this.hipjoint.add(this.leg_left); 
+
+        this.leg_right.add(this.kneejoint_right); 
+        this.kneejoint_right.add(this.calf_right); 
 
         // ########## SKINS ###########
 
@@ -248,6 +260,18 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         mat4.rotate(this.leg_right.transform(), 0.5*Math.PI, [1,0,0]);
         mat4.rotate(this.leg_left.transform(), 0.5*Math.PI, [1,0,0]);
 
+        mat4.rotate(this.calf_right.transform(), 0.5*Math.PI, [0,0,1]);
+
+
+        //kneejoint right
+        var kneejointSkin = new SceneNode("kneejoint skin");
+        kneejointSkin.add(band_triangles, programs.grey);
+        kneejointSkin.add(band_lines, programs.uni);
+        mat4.scale(kneejointSkin.transform(), kneejointSize);
+        mat4.rotate(this.kneejoint_right.transform(), 0.5*Math.PI, [0,0,1]);
+        //mat4.rotate(this.lkneejoint_left.transform(), 0.5*Math.PI, [1,0,0]);
+
+
 
         // ############ CONNECTION skeleton + body #############
         this.torso.add(torsoSkin);
@@ -274,8 +298,13 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
 
         this.pelvic.add(pelvicSkin);
         this.hipjoint.add(hipjointSkin);
+
         this.leg_right.add(legSkin);
         this.leg_left.add(legSkin);
+
+        this.kneejoint_right.add(kneejointSkin);
+
+        this.calf_right.add(legSkin);
     };
 
     // draw method: activate buffers and issue WebGL draw() method
