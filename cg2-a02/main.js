@@ -41,22 +41,53 @@ define(["jquery", "gl-matrix", "webgl-debug", "animation", "scene", "html_contro
      */
     var makeAnimation = function(scene) {
     
+        var time = 0;
+
         // create animation to rotate the scene
         var animation = new Animation( (function(t, deltaT) {
+
+            // miliseconds for one round
+            var round = 360/animation.customSpeed*1000;
+            console.log(round);
 
             // rotation angle, depending on animation time
             var angle = deltaT/1000 * animation.customSpeed; // in degrees
 
             // ask the scene to rotate around Y axis
-            scene.rotate("worldY", angle); 
+            scene.rotate("worldY", angle);
+            scene.rotate("neck left right", angle);
+
+            if (t < time+round/2) {
+                scene.rotate("hipjoint right", angle);
+                scene.rotate("knee right", -angle/2);
+                scene.rotate("hipjoint left", angle);
+                scene.rotate("knee left", -angle/2);
+                scene.rotate("elbow right", angle/2);
+                scene.rotate("shoulder left", -angle);
+
+            } else if (t < time+round) {
+                scene.rotate("hipjoint right", -angle);
+                scene.rotate("knee right", angle/2);
+                scene.rotate("hipjoint left", -angle);
+                scene.rotate("knee left", angle/2);
+                scene.rotate("elbow right", -angle/2);
+                scene.rotate("shoulder left", angle);
+
+    
+
+            } else {
+                time = time + round;
+            }
+
 
             // (re-) draw the scene
             scene.draw();
             
         } )); // end animation callback
-
         // set an additional attribute that can be controlled from the outside
         animation.customSpeed = 20; 
+
+        
 
         return animation;
     
@@ -83,7 +114,7 @@ define(["jquery", "gl-matrix", "webgl-debug", "animation", "scene", "html_contro
         var throwOnGLError = function(err, funcName, args) {
             throw WebGLDebugUtils.glEnumToString(err) + " was caused by call to: " + funcName;
         };
-        var gl=WebGLDebugUtils.makeDebugContext(gl, throwOnGLError);
+       // var gl=WebGLDebugUtils.makeDebugContext(gl, throwOnGLError);
         
         return gl;
     };
@@ -98,7 +129,7 @@ define(["jquery", "gl-matrix", "webgl-debug", "animation", "scene", "html_contro
         var animation = makeAnimation(scene);
         scene.draw();        
 
-        // mapping from character pressed on the keyboard to 
+        // mapping from chaacter pressed on the keyboard to 
         // rotation axis and angle
         var keyMap = {
              'x': {axis: "worldX", angle:  5.0}, 
@@ -121,8 +152,6 @@ define(["jquery", "gl-matrix", "webgl-debug", "animation", "scene", "html_contro
              'P': {axis: "pelvic up down", angle: -5.0},
              'o': {axis: "pelvic left right", angle: 5.0},
              'O': {axis: "pelvic left right", angle: -5.0},
-             't': {axis: "torso", angle: 5.0},
-             'T': {axis: "torso", angle: -5.0},
              'f': {axis: "ankle right", angle: 5.0}, 
              'F': {axis: "ankle right", angle: -5.0},
              'g': {axis: "ankle left", angle: 5.0}, 

@@ -43,8 +43,6 @@ define(["jquery"],
              'X': {axis: "worldX", angle: -5.0}, 
              'y': {axis: "worldY", angle:  5.0}, 
              'Y': {axis: "worldY", angle: -5.0},
-             'c': {axis: "shoulder right", angle: 5.0},
-             'C': {axis: "shoulder right", angle: -5.0}
         };
 
         // internal function: turn a draw option name into a valid HTML element ID
