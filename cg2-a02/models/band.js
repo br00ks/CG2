@@ -131,18 +131,17 @@ define(["vbo"],
 
         }
 
-       
-
         // draw the vertices as points
         if (this.drawStyle == "points") {
             gl.drawArrays(gl.POINTS, 0, this.coordsBuffer.numVertices()); 
 
+        // draw the vertices as triangles
         } else if (this.drawStyle == "triangles") {
              gl.drawElements(gl.TRIANGLES, this.triangleBuffer.numIndices(), gl.UNSIGNED_SHORT, 0);
        
+        // draw the vertices as lines
         } else if (this.drawStyle == "lines") {
              gl.drawElements(gl.LINES, this.lineBuffer.numIndices(), gl.UNSIGNED_SHORT, 0);
-
 
         } else {
             window.console.log("Band: draw style " + this.drawStyle + " not implemented.");

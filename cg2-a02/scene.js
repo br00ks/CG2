@@ -29,19 +29,19 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         this.programs.vertexColor = new Program(gl, 
                                                 shaders.getVertexShader("vertex_color"), 
                                                 shaders.getFragmentShader("vertex_color") );   
-        //unicolor für Wireframe-objekt für Band.js 
+        // represents color black
         this.programs.uni = new Program(gl, 
                                         shaders.getVertexShader("unicolor"), 
                                         shaders.getFragmentShader("unicolor") );
-
+        // represents color pink
         this.programs.pink = new Program(gl, 
                                         shaders.getVertexShader("unicolor"), 
                                         shaders.getFragmentShader("unicolor") );
-
+        // represents color gold
         this.programs.gold = new Program(gl, 
                                         shaders.getVertexShader("unicolor"), 
                                         shaders.getFragmentShader("unicolor") );
-
+        // represents color grey
         this.programs.grey = new Program(gl, 
                                         shaders.getVertexShader("unicolor"), 
                                         shaders.getFragmentShader("unicolor") );
@@ -50,17 +50,19 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         this.programs.uni.use();
         this.programs.uni.setUniform("uniColor","vec4", [0.0, 0.0, 0.0, 1.0]);
 
+        //set the uniform color to pink
         this.programs.pink.use();
         this.programs.pink.setUniform("uniColor","vec4", [0.6, 0.0, 0.5, 0.8]);
 
+        //set the uniform color to gold
         this.programs.gold.use();
         this.programs.gold.setUniform("uniColor","vec4", [0.9, 0.7, 0.0, 1.0]);
 
+        //set the uniform color to grey
         this.programs.grey.use();
         this.programs.grey.setUniform("uniColor","vec4", [0.5, 0.5, 0.5, 1.0]);
 
-
-
+        // contains all parametric objects
         this.models = {};
         
         // create some objects to be drawn in this scene
@@ -70,7 +72,7 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         this.models.band2      = new Band(gl, {height: 0.4, drawStyle: "triangles"});
         this.models.band3      = new Band(gl, {height: 0.4, drawStyle: "lines"});
 
-        // 
+        // function to illustrate a plane
         var planeFunc = function(u,v) {
             var scale = 0.3;
             var x = u*scale;
@@ -78,7 +80,6 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             var z = v*scale;
             return [x,y,z];
         }
-
 
         // create a parametric surface to be drawn in this scene
         var positionFunc = function(u,v) {
@@ -97,7 +98,7 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         // create a hyperboloid surface to be drawn in this scene
         var positionFunc_hyperboloid = function(u,v) {
 
-            //COMMENT Quelle: http://www.ssicom.org/js/x910511.htm
+            //Quelle: http://www.ssicom.org/js/x910511.htm
             var cosh = function (aValue) {
                 var term1 = Math.pow(Math.E, aValue);
                 var term2 = Math.pow(Math.E, -aValue);
@@ -105,7 +106,7 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
                 return ((term1+term2)/2)
             };
 
-            //COMMENT Quelle: http://www.ssicom.org/js/x911035.htm
+            // Quelle: http://www.ssicom.org/js/x911035.htm
             var sinh = function (aValue) {
                 var term1 = Math.pow(Math.E, aValue);
                 var term2 = Math.pow(Math.E, -aValue);
@@ -133,7 +134,7 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
                      Math.cos(v) + Math.log(Math.tan(v/2)) ];
         };
 
-
+        // function for a paraboloid
         var func_paraboloid = function(u,v) {
             return [    0.2 * v * Math.cos(u),
                         0.2 * v * Math.sin(u),
@@ -142,7 +143,7 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         //create a Helicoid surface to be drawn in this scene
         var func_helicoid = function(u,v) {
 
-            //COMMENT Quelle: http://www.ssicom.org/js/x910511.htm
+            //Quelle: http://www.ssicom.org/js/x910511.htm
             var cosh = function (aValue) {
                 var term1 = Math.pow(Math.E, aValue);
                 var term2 = Math.pow(Math.E, -aValue);
@@ -150,7 +151,7 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
                 return ((term1+term2)/2)
             };
 
-            //COMMENT Quelle: http://www.ssicom.org/js/x911035.htm
+            //Quelle: http://www.ssicom.org/js/x911035.htm
             var sinh = function (aValue) {
                 var term1 = Math.pow(Math.E, aValue);
                 var term2 = Math.pow(Math.E, -aValue);
@@ -164,7 +165,7 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             ];
         }
 
-
+        // standard configuration
         var config = {  
             "uMin": -Math.PI, 
             "uMax":  Math.PI, 
@@ -173,6 +174,7 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             "uSegments": 40,
             "vSegments": 20,
         };
+
         this.models.ellipsoid = new ParametricSurface(gl, positionFunc, {drawStyle: "triangles"});
         this.models.ellipsoid2 = new ParametricSurface(gl, positionFunc, {drawStyle: "lines"});
 
@@ -245,8 +247,6 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             this.programs[p].setUniform("modelViewMatrix", "mat4", this.transformation);
         }
         
-        
-        
         // set offset to avoid z-fighting
         gl.enable(gl.POLYGON_OFFSET_FILL);
         gl.polygonOffset(1.0, 1.0);
@@ -289,7 +289,6 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         if(this.drawOptions["Show Hyperboloid"]) {    
             this.models.hyperboloid.draw(gl, this.programs.red);
             this.models.hyperboloid2.draw(gl, this.programs.uni);
-
         }
 
         if(this.drawOptions["Show Sine Surface"]) {    

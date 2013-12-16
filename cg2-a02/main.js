@@ -46,7 +46,7 @@ define(["jquery", "gl-matrix", "webgl-debug", "animation", "scene", "html_contro
         // create animation to rotate the scene
         var animation = new Animation( (function(t, deltaT) {
 
-            // miliseconds for one round
+            // milliseconds for one round
             var round = 360/animation.customSpeed*1000;
             console.log(round);
 
@@ -56,6 +56,7 @@ define(["jquery", "gl-matrix", "webgl-debug", "animation", "scene", "html_contro
             // ask the scene to rotate around Y axis
             scene.rotate("worldY", angle);
             scene.rotate("neck left right", angle);
+            scene.rotate("hand left", deltaT/1000 * animation.customSpeed*10);
 
             if (t < time+round/2) {
                 scene.rotate("hipjoint right", angle);
@@ -73,12 +74,11 @@ define(["jquery", "gl-matrix", "webgl-debug", "animation", "scene", "html_contro
                 scene.rotate("elbow right", -angle/2);
                 scene.rotate("shoulder left", angle);
 
-    
 
             } else {
                 time = time + round;
             }
-
+            console.log(t);
 
             // (re-) draw the scene
             scene.draw();
@@ -86,8 +86,6 @@ define(["jquery", "gl-matrix", "webgl-debug", "animation", "scene", "html_contro
         } )); // end animation callback
         // set an additional attribute that can be controlled from the outside
         animation.customSpeed = 20; 
-
-        
 
         return animation;
     

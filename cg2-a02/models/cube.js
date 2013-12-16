@@ -149,11 +149,9 @@ define(["vbo"],
         // bind the attribute buffers
         this.coordsBuffer.bind(gl, program, "vertexPosition");
         this.triangleBuffer.bind(gl);
-        //Colorbuffer binden wie in triangle
+        // bind the color buffer
         this.colorBuffer.bind(gl, program, "vertexColor");
-                
-        // draw the vertices as points
-        //gl.drawArrays(gl.POINTS, 0, this.coordsBuffer.numVertices()); 
+
 
         //draw the lines 
         gl.drawElements(gl.TRIANGLES, this.triangleBuffer.numIndices(), gl.UNSIGNED_SHORT, 0);

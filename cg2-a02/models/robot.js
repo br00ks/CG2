@@ -32,8 +32,7 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         var band_lines = new Band(gl, {height: 1.0, drawStyle: "lines"} );
         var triangle = new Triangle(gl);
 
-        //Dimension der in der Zeichnung benannten Teile
-        
+        //sizes of the robo-parts
         var headSize = [0.25, 0.3, 0.25];
         var torsoSize = [0.35, 0.5, 0.2];
         var neckSize = [0.1, 0.08, 0.1];
@@ -49,8 +48,7 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         var hipSize = [0.3, 0.06, 0.2];
         var kneejointSize = [0.12, 0.12, 0.12];
         var handSize = [0.2,0.2,0.2];
-        //var handSize = [0.1,0.07,0.03];
-        var ankleSize = [0.1, 0.1, 0.08];
+        var ankleSize = [0.1, 0.12, 0.08];
         var footSize = [0.2,0.18,0.04];
         var hipjointSize = [0.12, 0.12, 0.12];
 
@@ -83,19 +81,19 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
 
         //skeleton upper arm right
         this.upperarm_right = new SceneNode("upperarm right");
-        mat4.translate(this.upperarm_right.transform(), [-upperarmSize[0]/2 - shoulderSize[1], -shoulderSize[0]/2, 0]);
+        mat4.translate(this.upperarm_right.transform(), [-upperarmSize[2]/2 - shoulderSize[0]/2, -shoulderSize[1]/2 , 0]);
 
         //skeleton upper arm left
         this.upperarm_left = new SceneNode("upperarm left");
-        mat4.translate(this.upperarm_left.transform(), [-upperarmSize[0]/2 - shoulderSize[1], shoulderSize[0]/2, 0]);
+        mat4.translate(this.upperarm_left.transform(), [-upperarmSize[2]/2 - shoulderSize[0]/2, shoulderSize[1]/2, 0]);
 
         //skeleton elbow right
         this.elbow_right = new SceneNode("elbow right");
-        mat4.translate(this.elbow_right.transform(), [0, 0,-upperarmSize[0]-elbowSize[0]/2]);
+        mat4.translate(this.elbow_right.transform(), [0, 0,-upperarmSize[2]+elbowSize[2]/2]);
 
         //skeleton elbow left
         this.elbow_left = new SceneNode("elbow left");
-        mat4.translate(this.elbow_left.transform(), [0, 0,-upperarmSize[0]-elbowSize[0]/2]);
+        mat4.translate(this.elbow_left.transform(), [0, 0,-upperarmSize[2]+elbowSize[2]/2]);
 
         // skeleton forearm right
         this.forearm_right = new SceneNode("forearm right");
@@ -111,11 +109,11 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
 
         // skeleton hand right
         this.hand_right = new SceneNode("hand right");
-        mat4.translate(this.hand_right.transform(), [0,wristSize[1]/2,wristSize[1]/2]);
+        mat4.translate(this.hand_right.transform(), [0,wristSize[1]/2,wristSize[1]/2 - wristSize[1]/2]);
 
         // skeleton hand left
         this.hand_left = new SceneNode("hand left");
-        mat4.translate(this.hand_left.transform(), [0,wristSize[1]/2,-wristSize[1]/2- wristSize[1]/2]);
+        mat4.translate(this.hand_left.transform(), [0,wristSize[1]/2,-wristSize[1]/2 + wristSize[1]/2 ]);
 
         // skeleton wrist left
         this.wrist_left = new SceneNode("wrist left");
@@ -139,11 +137,11 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
 
         //skeleton leg right
         this.leg_right = new SceneNode("leg right");
-        mat4.translate(this.leg_right.transform(), [-hipjointSize[1]/2 - legSize[1]/2,0,0]);
+        mat4.translate(this.leg_right.transform(), [-hipjointSize[1]/2 - legSize[1]/2, 0,0]);
 
         //skeleton leg left
         this.leg_left = new SceneNode("leg left");
-        mat4.translate(this.leg_left.transform(), [-hipjointSize[1]/2 - legSize[1]/2,0,0]);
+        mat4.translate(this.leg_left.transform(), [-hipjointSize[1]/2 - legSize[1]/2, hipjointSize[1]/2 - legSize[1]/2,0]);
 
         //skeleton kneejoint_right
         this.kneejoint_right = new SceneNode("knee joint right");
@@ -155,11 +153,11 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
 
         //skeleton lower leg right
         this.lowerleg_right = new SceneNode("lowerleg right");
-        mat4.translate(this.lowerleg_right.transform(), [0,0,kneejointSize[0]/2 +lowerlegSize[0]/2]);
+        mat4.translate(this.lowerleg_right.transform(), [0,0,kneejointSize[1]/2 +lowerlegSize[0]/2]);
 
         //skeleton lower leg left
         this.lowerleg_left = new SceneNode("lowerleg left");
-        mat4.translate(this.lowerleg_left.transform(), [0,0,kneejointSize[0]/2 +lowerlegSize[0]/2]);
+        mat4.translate(this.lowerleg_left.transform(), [0,0,kneejointSize[1]/2 +lowerlegSize[0]/2]);
 
         //skeleton ankle left
         this.ankle_left = new SceneNode("ankle left");
@@ -231,8 +229,9 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         //skin neck
         var neckSkin = new SceneNode("neck skin");
         neckSkin.add(band_triangles, programs.pink);
-        mat4.scale(neckSkin.transform(), neckSize);
         mat4.rotate(neckSkin.transform(), 0.6*Math.PI, [0,1,0]); 
+        mat4.scale(neckSkin.transform(), neckSize);
+
 
         //skin head
         var headSkin = new SceneNode("head skin");
@@ -252,6 +251,7 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         mat4.rotate(this.shoulder_right.transform(), 0.5*Math.PI, [0,0,1]);
         mat4.rotate(this.shoulder_left.transform(), 0.5*Math.PI, [0,0,1]);
         mat4.scale(shoulderSkin.transform(), shoulderSize);
+
      
         // skin upperarms 
         var upperArmSkin = new SceneNode("upperarm skin solid");
@@ -277,17 +277,17 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         var wristSkin = new SceneNode("wrist skin solid");
         wristSkin.add(band_triangles, programs.grey);
         wristSkin.add(band_lines, programs.pink);
-        mat4.scale(wristSkin.transform(), wristSize);
         mat4.rotate(this.wrist_right.transform(), 0.5*Math.PI, [1,0,0]);
         mat4.rotate(this.wrist_left.transform(), 0.5*Math.PI, [1,0,0]);
+        mat4.scale(wristSkin.transform(), wristSize);
 
         // skin hand
         var handSkin = new SceneNode("hand skin solid");
         handSkin.add(models.helicoid, programs.uni);
         handSkin.add(models.helicoid2, programs.pink);
-        mat4.scale(handSkin.transform(), handSize);
         mat4.rotate(this.hand_right.transform(), 0.5*Math.PI, [1,0,0]);
         mat4.rotate(this.hand_left.transform(), 0.5*Math.PI, [1,0,0]);
+        mat4.scale(handSkin.transform(), handSize);
 
          //skin pelvic skin
         var pelvicSkin = new SceneNode("pelvic skin");
@@ -305,18 +305,18 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         var hipjointSkin = new SceneNode("hipjoint skin");
         hipjointSkin.add(band_triangles, programs.red);
         hipjointSkin.add(band_lines, programs.uni);
-        mat4.scale(hipjointSkin.transform(), hipjointSize);
         mat4.rotate(this.hipjoint_right.transform(), 0.5*Math.PI, [0,0,1]);
         mat4.rotate(this.hipjoint_left.transform(), 0.5*Math.PI, [0,0,1]);
+        mat4.scale(hipjointSkin.transform(), hipjointSize);
 
         //skin legs
         var legSkin = new SceneNode("leg skin");
         legSkin.add(cube, programs.vertexColor);
-        mat4.scale(legSkin.transform(), legSize);
         mat4.rotate(this.leg_right.transform(), 0.5*Math.PI, [1,0,0]);
         mat4.rotate(this.leg_left.transform(), 0.5*Math.PI, [1,0,0]);
         mat4.rotate(this.leg_right.transform(), -0.5*Math.PI, [0,1,0]);
         mat4.rotate(this.leg_left.transform(), -0.5*Math.PI, [0,1,0]);
+        mat4.scale(legSkin.transform(), legSize);
 
         //skin lower leg
         var lowerlegSkin = new SceneNode("lower leg skin");
@@ -327,9 +327,9 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         var kneejointSkin = new SceneNode("kneejoint skin");
         kneejointSkin.add(band_triangles, programs.grey);
         kneejointSkin.add(band_lines, programs.uni);
-        mat4.scale(kneejointSkin.transform(), kneejointSize);
         mat4.rotate(this.kneejoint_right.transform(), 0.5*Math.PI, [0,0,1]);
         mat4.rotate(this.kneejoint_left.transform(), 0.5*Math.PI, [0,0,1]);
+        mat4.scale(kneejointSkin.transform(), kneejointSize);
 
         //skin ankle
         var ankleSkin = new SceneNode("ankle skin");
