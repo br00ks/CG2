@@ -31,8 +31,6 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         var band_triangles = new Band(gl, {height: 1.0, drawStyle: "triangles"} );
         var band_lines = new Band(gl, {height: 1.0, drawStyle: "lines"} );
         var triangle = new Triangle(gl);
-        //var paraboloid_triangles = new ParametricSurface(gl, ???????,  {height: 1.0, drawStyle: "triangles"} );
-        var paraboloid_triangles = new Band(gl, {height: 1.0, drawStyle: "triangles"} );//HIER FEHLT NOCH DIE PARABOLOID-OBERFLÄCHE
 
         //Dimension der in der Zeichnung benannten Teile
         
@@ -50,7 +48,8 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         var lowerlegSize = [0.1,0.1,0.2];
         var hipSize = [0.3, 0.06, 0.2];
         var kneejointSize = [0.12, 0.12, 0.12];
-        var handSize = [0.3, 0.06, 0.2];
+        var handSize = [0.2,0.2,0.2];
+        //var handSize = [0.1,0.07,0.03];
         var ankleSize = [0.1, 0.1, 0.08];
         var footSize = [0.2,0.18,0.04];
         var hipjointSize = [0.12, 0.12, 0.12];
@@ -112,7 +111,11 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
 
         // skeleton hand right
         this.hand_right = new SceneNode("hand right");
-        mat4.translate(this.hand_right.transform(), [0,0,-forearmSize[1]]);
+        mat4.translate(this.hand_right.transform(), [0,wristSize[1]/2,wristSize[1]/2]);
+
+        // skeleton hand left
+        this.hand_left = new SceneNode("hand left");
+        mat4.translate(this.hand_left.transform(), [0,wristSize[1]/2,-wristSize[1]/2- wristSize[1]/2]);
 
         // skeleton wrist left
         this.wrist_left = new SceneNode("wrist left");
@@ -196,6 +199,7 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         this.forearm_left.add(this.wrist_left);
 
         this.wrist_right.add(this.hand_right);
+        this.wrist_left.add(this.hand_left);
 
         this.pelvic.add(this.torso);
 
@@ -279,10 +283,11 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
 
         // skin hand
         var handSkin = new SceneNode("hand skin solid");
-        handSkin.add(paraboloid_triangles, programs.uni);
-        //handSkin.add(band_lines, programs.pink);
+        handSkin.add(models.helicoid, programs.uni);
+        handSkin.add(models.helicoid2, programs.pink);
         mat4.scale(handSkin.transform(), handSize);
         mat4.rotate(this.hand_right.transform(), 0.5*Math.PI, [1,0,0]);
+        mat4.rotate(this.hand_left.transform(), 0.5*Math.PI, [1,0,0]);
 
          //skin pelvic skin
         var pelvicSkin = new SceneNode("pelvic skin");
@@ -361,6 +366,7 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
         this.wrist_left.add(wristSkin);
 
         this.hand_right.add(handSkin);
+        this.hand_left.add(handSkin);
 
         this.pelvic.add(pelvicSkin);
         this.hip.add(hipSkin);
