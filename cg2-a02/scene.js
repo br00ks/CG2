@@ -139,6 +139,30 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
                         0.2 * v * Math.sin(u),
                         0.1 * v*v];
         }
+        //create a Helicoid surface to be drawn in this scene
+        var func_helicoid = function(u,v) {
+
+            //COMMENT Quelle: http://www.ssicom.org/js/x910511.htm
+            var cosh = function (aValue) {
+                var term1 = Math.pow(Math.E, aValue);
+                var term2 = Math.pow(Math.E, -aValue);
+
+                return ((term1+term2)/2)
+            };
+
+            //COMMENT Quelle: http://www.ssicom.org/js/x911035.htm
+            var sinh = function (aValue) {
+                var term1 = Math.pow(Math.E, aValue);
+                var term2 = Math.pow(Math.E, -aValue);
+
+                return ((term1-term2)/2)
+            };
+            return [    sinh(v) * Math.cos(25*u) / (1+ cosh(u) * cosh(v)),
+                        sinh(v) * Math.sin(25*u) / (1+ cosh(u) * cosh(v)),
+                        cosh(v) * sinh(u) / (1+ cosh(u) * cosh(v))
+
+            ];
+        }
 
 
         var config = {  
@@ -167,7 +191,10 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         this.models.plane = new ParametricSurface(gl, planeFunc, {drawStyle: "lines"});
 
         this.models.paraboloid = new ParametricSurface(gl, func_paraboloid,{drawStyle: "lines"} );
-        this.models.paraboloid2 = new ParametricSurface(gl, func_paraboloid,{drawStyle: "triangles"} );
+        this.models.paraboloid2 = new ParametricSurface(gl, func_paraboloid,{drawStyle: "triangles"});
+
+        this.models.helicoid = new ParametricSurface(gl, func_helicoid,{drawStyle: "lines"});
+        this.models.helicoid2 = new ParametricSurface(gl, func_helicoid,{drawStyle: "triangles"});
 
         this.robot = new Robot(gl, this.programs, {height: 0.4, drawStyle: "triangles"}, this.models);
 
@@ -193,6 +220,7 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
                              "Show Pseudosphere": false,
                              "Show Plane": false,
                              "Show Paraboloid": false,
+                             "Show Helicoid" : false,
                              "Show Robot": true
                              };                       
     };
@@ -280,6 +308,10 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             this.models.paraboloid.draw(gl, this.programs.uni);
             this.models.paraboloid2 .draw(gl, this.programs.gold);
         }
+        if (this.drawOptions["Show Helicoid"]) {
+            this.models.helicoid.draw(gl, this.programs.uni);
+            this.models.helicoid2 .draw(gl, this.programs.gold);
+        }
         if(this.drawOptions["Show Robot"]) {    
             this.robot.draw(gl, null, this.transformation);
         }
@@ -365,7 +397,12 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             case "hipjoint left":
                 mat4.rotate(this.robot.hipjoint_left.transformation, angle, [0,1,0]);
                 break;
-
+            case "hand right":
+                mat4.rotate(this.robot.hand_right.transformation, angle, [0,0,1]);
+                break;
+            case "hand left":
+                mat4.rotate(this.robot.hand_left.transformation, angle, [0,0,1]);
+                break;
             default:
                 window.console.log("axis " + rotationAxis + " not implemented.");
             break;

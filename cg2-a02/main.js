@@ -136,7 +136,11 @@ define(["jquery", "gl-matrix", "webgl-debug", "animation", "scene", "html_contro
              'q': {axis: "hipjoint right", angle: 5.0},
              'Q': {axis: "hipjoint right", angle: -5.0},
              'w': {axis: "hipjoint left", angle: 5.0},
-             'W': {axis: "hipjoint left", angle: -5.0}
+             'W': {axis: "hipjoint left", angle: -5.0},
+             'ä': {axis: "hand right", angle: 5.0},
+             'Ä': {axis: "hand right", angle: -5.0},
+             'ü': {axis: "hand left", angle: 5.0},
+             'Ü': {axis: "hand left", angle: -5.0}
 
         };
 
