@@ -111,11 +111,11 @@ define(["vbo", "models/cube","models/band", "models/triangle", "models/parametri
 
         // skeleton hand right
         this.hand_right = new SceneNode("hand right");
-        mat4.translate(this.hand_right.transform(), [0,0,wristSize[1]/2]);
+        mat4.translate(this.hand_right.transform(), [0,wristSize[1]/2,wristSize[1]/2]);
 
         // skeleton hand left
         this.hand_left = new SceneNode("hand left");
-        mat4.translate(this.hand_left.transform(), [0,0,wristSize[1]/2]);
+        mat4.translate(this.hand_left.transform(), [0,wristSize[1]/2,-wristSize[1]/2- wristSize[1]/2]);
 
         // skeleton wrist left
         this.wrist_left = new SceneNode("wrist left");
