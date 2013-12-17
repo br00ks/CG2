@@ -48,7 +48,7 @@ define(["jquery", "gl-matrix", "webgl-debug", "animation", "scene", "html_contro
 
             // milliseconds for one round
             var round = 360/animation.customSpeed*1000;
-            console.log(round);
+            //console.log(round);
 
             // rotation angle, depending on animation time
             var angle = deltaT/1000 * animation.customSpeed; // in degrees
@@ -78,7 +78,7 @@ define(["jquery", "gl-matrix", "webgl-debug", "animation", "scene", "html_contro
             } else {
                 time = time + round;
             }
-            console.log(t);
+            //console.log(t);
 
             // (re-) draw the scene
             scene.draw();
