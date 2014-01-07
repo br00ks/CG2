@@ -70,7 +70,7 @@ define(["vbo"],
                 triangles.push(idx);
                 triangles.push(idx+1);
                 triangles.push(idx+vsegments+1);
-                //second triangle
+                // //second triangle
                 triangles.push(idx+1);
                 triangles.push(idx+vsegments+1);
                 triangles.push(idx+vsegments+2);
