@@ -8,9 +8,9 @@
 
 /* requireJS module definition */
 define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "material", "texture", 
-        "models/cube"], 
+        "models/cube", "models/parametric"], 
        (function(glmatrix, Program, SceneNode, shaders, DirectionalLight, Material, texture, 
-        Cube) {
+        Cube, Parametric) {
 
     "use strict";
 
@@ -81,6 +81,22 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
         this.universeNode.add(this.planetNode);
         this.universeNode.add(this.sunNode);
 
+//############################################################################
+        // contains all parametric objects
+        //this.models = {};
+        
+        // create the globe to be drawn in this scene
+       // this.models.globe = new ParametricSurface(gl, positionFunc, {drawStyle: "triangles"});
+
+        // create a parametric surface to be drawn in this scene
+        /*var positionFunc = function(u,v) {
+            return [ 0.5 * Math.sin(u) * Math.cos(v),
+                     0.5 * Math.sin(u) * Math.sin(v),
+                     0.5 * Math.cos(u) ];
+        };*/
+//############################################################################
+
+
         // the scene has an attribute "drawOptions" that is used by 
         // the HtmlController. Each attribute in this.drawOptions 
         // automatically generates a corresponding checkbox in the UI.
@@ -118,6 +134,12 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
 
         // show/hide certain parts of the scene            
         this.surfaceNode.setVisible( this.drawOptions["Show Surface"] ); 
+//############################################################################
+        // draw the globe object
+       /*if(this.drawOptions["Show Surface"]) {    
+            this.models.globe.draw(gl, this.programs.planet);
+        }*/
+//############################################################################
 
         // draw the scene 
         this.universeNode.draw(gl, null, modelViewMatrix);
