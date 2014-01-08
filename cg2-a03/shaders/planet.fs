@@ -24,6 +24,8 @@ uniform mat4  projectionMatrix;
 // Ambient Light
 uniform vec3 ambientLight;
 
+uniform bool debug;
+
 // Material
 struct PhongMaterial {
     vec3  ambient;
@@ -53,7 +55,7 @@ uniform LightSource light;
  + assuming directional light
  
  */
-vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) {
+vec3    phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) {
     
     // ambient part
     vec3 ambient = material.ambient * ambientLight;

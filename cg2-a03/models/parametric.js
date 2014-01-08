@@ -21,7 +21,7 @@ define(["vbo"],
      * config: configuration object defining attributes uMin, uMax, vMin, vMax, 
      *         and drawStyle (i.e. "points", "wireframe", or "surface")
      */ 
-    var ParametricSurface = function(gl, posFunc, config) {
+    var ParametricSurface = function(gl, posFunc, normalFunc, config) {
             
         //window.console.log("ParametricSurface() constructor not implemented yet.")
         //Werte analog zur Scene.js
@@ -33,10 +33,12 @@ define(["vbo"],
         var vsegments = config.vSegments || 10;
         this.drawStyle   = config.drawStyle || "points";
         this.posFunc = posFunc;
+        this.normalFunc = normalFunc;
 
         console.log("Creating a ParametricSurface with umin="+umin+", umax="+umax+", vmin="+vmin+", vmax="+vmax ); 
-        // vertex coordinates
+        // vertex coordinates + normal coordinates
         var coords = [];
+        var normals = [];
 
         var umin_temp = 0;
         var vmin_temp = 0;
@@ -53,9 +55,14 @@ define(["vbo"],
                 var z = this.posFunc(umin_temp, vmin_temp)[2];
                 coords.push(x,y,z);
 
+                // calculate the normals
+                var x_normal = this.normalFunc(umin_temp, vmin_temp)[0]; 
+                var y_normal = this.normalFunc(umin_temp, vmin_temp)[1];
+                var z_normal = this.normalFunc(umin_temp, vmin_temp)[2];
+                normals.push(x_normal,y_normal,z_normal);
+
             };
         };
-
 
         // parametric surface out of triangles (solid surface)
         var triangles = []; // store the indices of the vertices 
@@ -105,27 +112,36 @@ define(["vbo"],
             lines.push(idx+vsegments+2);
 
         };
+
+        
         // create buffer
         this.triangleBuffer = new vbo.Indices(gl, { "indices": triangles } );
         
-        // create vertex buffer object (VBO) for the coordinates
+        // create vertex buffer object (VBO) for the coordinates = vertex position
         this.coordsBuffer = new vbo.Attribute(gl, { "numComponents": 3,
                                                     "dataType": gl.FLOAT,
                                                     "data": coords 
-                                                  } );
+          
+                                                } );
+
+        // create vertex buffer object (VBO) for the coordinates = vertex position
+        this.normalBuffer = new vbo.Attribute(gl, { "numComponents": 3,
+                                                    "dataType": gl.FLOAT,
+                                                    "data": normals 
+                                                  } );  
         //create buffer
         this.lineBuffer = new vbo.Indices(gl, { "indices": lines } );
        
     };  
-//############################################################################
-//Hier muss das Material übergeben werden....
-//############################################################################
     // draw method: activate buffers and issue WebGL draw() method
-    ParametricSurface.prototype.draw = function(gl,program) {
+    ParametricSurface.prototype.draw = function(gl,material) {
+
+        material.apply();
 
         // bind the attribute buffers
-        program.use();
+        var program = material.getProgram();
         this.coordsBuffer.bind(gl, program, "vertexPosition");
+        this.normalBuffer.bind(gl, program, "vertexNormal");
 
         // bind the correct buffer
         if (this.drawStyle == "triangles") {

@@ -10,7 +10,7 @@
 define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "material", "texture", 
         "models/cube", "models/parametric"], 
        (function(glmatrix, Program, SceneNode, shaders, DirectionalLight, Material, texture, 
-        Cube, Parametric) {
+        Cube, ParametricSurface) {
 
     "use strict";
 
@@ -42,6 +42,9 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
         this.materials.planet.setUniform( "material.specular",  "vec3", [0.4,0.4,0.4] ); 
         this.materials.planet.setUniform( "material.shininess", "float", 80 ); 
 
+        // set uniform - DEBUG initially false
+        this.materials.planet.setUniform("material.debug", "bool", false);
+
         // set light properties for shader
         this.materials.planet.setUniform( "ambientLight", "vec3", [0.4,0.4,0.4]);
         this.materials.planet.setUniform( "light.on", "bool", true );
@@ -64,37 +67,64 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
         // which shaders/materials will be affected by this light?
         this.sunLight.addMaterial(this.materials.planet);
 
+        // config data for planet surface
+        var config = {  
+            "uMin": 0, 
+            "uMax": Math.PI, 
+            "vMin": 0, 
+            "vMax": 2*Math.PI, 
+            "uSegments": 50,
+            "vSegments": 50,
+            "drawStyle": "triangles"
+        };
+
+        var config_grid = {  
+            "uMin": 0, 
+            "uMax": Math.PI, 
+            "vMin": 0, 
+            "vMax": 2*Math.PI, 
+            "uSegments": 50,
+            "vSegments": 50,
+            "drawStyle": "lines"
+        };
+
+        // function for circle
+        var positionFunc = function(u,v) {
+            return [ 1 * Math.sin(u) * Math.cos(v),
+                     1 * Math.sin(u) * Math.sin(v),
+                     1 * Math.cos(u) ];
+        };
+
+        var normalFunc = function(u,v) {
+            var temp = [ 1 * Math.sin(u) * Math.cos(v),
+                     1 * Math.sin(u) * Math.sin(v),
+                     1 * Math.cos(u) ];
+            return vec3.normalize(temp, null);
+        };
+
         // planet surface
-        this.planetSurface = new Cube(gl);
+        this.planetSurface = new ParametricSurface(gl, positionFunc, normalFunc, config);
         this.surfaceNode = new SceneNode("Surface");
         this.surfaceNode.add(this.planetSurface, this.materials.planet);
+
+        // planet grid
+        this.planetSurface_grid = new ParametricSurface(gl, positionFunc, normalFunc, config_grid);
+        this.surfaceNodeGrid = new SceneNode("Surface Grid");
+        this.surfaceNodeGrid.add(this.planetSurface_grid, this.materials.grid);
 
         // planet node contains surface + wireframe (todo)
         this.planetNode = new SceneNode("Planet");
         this.planetNode.add(this.surfaceNode);
+        this.planetNode.add(this.surfaceNodeGrid);
 
-        // rotate cube so that we see two faces initially 
-        mat4.rotate(this.planetNode.transform(), Math.PI/4, [0,1,0]);
+
+        // rotate surface so that we see two faces initially 
+        mat4.rotate(this.planetNode.transform(), Math.PI/2, [1,0,0]);
 
         // our universe: planet + sunlight
         this.universeNode = new SceneNode("Universe");
         this.universeNode.add(this.planetNode);
         this.universeNode.add(this.sunNode);
-
-//############################################################################
-        // contains all parametric objects
-        //this.models = {};
-        
-        // create the globe to be drawn in this scene
-       // this.models.globe = new ParametricSurface(gl, positionFunc, {drawStyle: "triangles"});
-
-        // create a parametric surface to be drawn in this scene
-        /*var positionFunc = function(u,v) {
-            return [ 0.5 * Math.sin(u) * Math.cos(v),
-                     0.5 * Math.sin(u) * Math.sin(v),
-                     0.5 * Math.cos(u) ];
-        };*/
-//############################################################################
 
 
         // the scene has an attribute "drawOptions" that is used by 
@@ -102,6 +132,8 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
         // automatically generates a corresponding checkbox in the UI.
         this.drawOptions = { 
                              "Show Surface": true,
+                             "Show Grid" : false,
+                             "Debug" : false
                              };                       
     };
 
@@ -133,13 +165,12 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
         gl.depthFunc(gl.LESS);  
 
         // show/hide certain parts of the scene            
-        this.surfaceNode.setVisible( this.drawOptions["Show Surface"] ); 
-//############################################################################
-        // draw the globe object
-       /*if(this.drawOptions["Show Surface"]) {    
-            this.models.globe.draw(gl, this.programs.planet);
-        }*/
-//############################################################################
+        this.surfaceNode.setVisible( this.drawOptions["Show Surface"]
+                                     ); 
+        this.surfaceNodeGrid.setVisible( this.drawOptions["Show Grid"]
+                                     ); 
+
+        // if DEBUG setUnform true, else setuniform false
 
         // draw the scene 
         this.universeNode.draw(gl, null, modelViewMatrix);
