@@ -23,6 +23,8 @@ uniform mat4 modelViewMatrix;
 uniform mat4 projectionMatrix;
 uniform mat3 normalMatrix;
 
+uniform bool debug;
+
 varying vec4 ecPosition;
 varying vec3 ecNormal;
 

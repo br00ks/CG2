@@ -85,6 +85,11 @@ vec3    phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial materia
     // specular contribution
     vec3 specular = material.specular * light.color * pow(rdotv, material.shininess);
 
+
+    if(debug)
+        return vec3(0,1,0);    
+    
+
     // return sum of all contributions
     return ambient + diffuse + specular;
     

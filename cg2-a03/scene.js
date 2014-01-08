@@ -133,7 +133,7 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
         this.drawOptions = { 
                              "Show Surface": true,
                              "Show Grid" : false,
-                             "Debug" : false
+                             "Debug" : true
                              };                       
     };
 
@@ -169,8 +169,15 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
                                      ); 
         this.surfaceNodeGrid.setVisible( this.drawOptions["Show Grid"]
                                      ); 
+        // set debug-uniform true, if "Debug" == true, else set uniform false
+        if (this.drawOptions["Debug"]) {
+            this.materials.planet.setUniform("material.debug", "bool", true);
+            console.log("true");
+        } else {
+            this.materials.planet.setUniform("material.debug", "bool", false);
+            console.log("false");
 
-        // if DEBUG setUnform true, else setuniform false
+        }
 
         // draw the scene 
         this.universeNode.draw(gl, null, modelViewMatrix);
