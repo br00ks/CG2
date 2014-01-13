@@ -21,7 +21,7 @@ define(["vbo"],
      * config: configuration object defining attributes uMin, uMax, vMin, vMax, 
      *         and drawStyle (i.e. "points", "wireframe", or "surface")
      */ 
-    var ParametricSurface = function(gl, posFunc, normalFunc, config) {
+    var ParametricSurface = function(gl, posFunc, normalFunc, vertexTexCoords, config) {
             
         //window.console.log("ParametricSurface() constructor not implemented yet.")
         //Werte analog zur Scene.js
@@ -34,6 +34,8 @@ define(["vbo"],
         this.drawStyle   = config.drawStyle || "points";
         this.posFunc = posFunc;
         this.normalFunc = normalFunc;
+        //Texturattribut, bestehend aus 2 Koordinaten pro Vertex-->2D Texture
+        this.vertexTexCoords = vertexTexCoords;
 
         console.log("Creating a ParametricSurface with umin="+umin+", umax="+umax+", vmin="+vmin+", vmax="+vmax ); 
         // vertex coordinates + normal coordinates
@@ -129,6 +131,11 @@ define(["vbo"],
                                                     "dataType": gl.FLOAT,
                                                     "data": normals 
                                                   } );  
+        // create vertex buffer object (VBO) for the coordinates = vertex position
+        /*this.vertexTexCoordsBuffer = new vbo.Attribute(gl, { "numComponents": 2,
+                                                    "dataType": gl.FLOAT,
+                                                    "data": vertexTexCoords 
+                                                  } ); */ 
         //create buffer
         this.lineBuffer = new vbo.Indices(gl, { "indices": lines } );
        
@@ -142,10 +149,12 @@ define(["vbo"],
         var program = material.getProgram();
         this.coordsBuffer.bind(gl, program, "vertexPosition");
         this.normalBuffer.bind(gl, program, "vertexNormal");
+        //this.vertexTexCoordsBuffer.bind(gl, program, "vertexTexCoords");
 
         // bind the correct buffer
         if (this.drawStyle == "triangles") {
             this.triangleBuffer.bind(gl);
+            //this.vertexTexCoordsBuffer.bind(gl);
         } else {
             this.lineBuffer.bind(gl);
         }

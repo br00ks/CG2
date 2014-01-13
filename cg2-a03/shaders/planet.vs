@@ -28,6 +28,12 @@ uniform bool debug;
 varying vec4 ecPosition;
 varying vec3 ecNormal;
 
+//textur
+//input
+attribute vec2 vertexTexCoords;
+//outout to fragment shader 
+varying vec2 texCoord;	
+
 void main() {
     
     // transform vertex position and normal into eye coordinates
@@ -38,6 +44,8 @@ void main() {
     // set the fragment position in clip coordinates
     gl_Position  = projectionMatrix * ecPosition;
 
+    // hand over to fragment shader
+    texCoord = vertexTexCoords; 
+
     
 }
-

@@ -101,14 +101,19 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
                      1 * Math.cos(u) ];
             return vec3.normalize(temp, null);
         };
+        var vertexTexCoords = function(u,v) {
+            // return [ u/(Math.PI*2), v/(Math.PI) ];
+            return [u,v]; //initiale Werte von u, v 
+        };
+
 
         // planet surface
-        this.planetSurface = new ParametricSurface(gl, positionFunc, normalFunc, config);
+        this.planetSurface = new ParametricSurface(gl, positionFunc, normalFunc, vertexTexCoords, config);
         this.surfaceNode = new SceneNode("Surface");
         this.surfaceNode.add(this.planetSurface, this.materials.planet);
 
         // planet grid
-        this.planetSurface_grid = new ParametricSurface(gl, positionFunc, normalFunc, config_grid);
+        this.planetSurface_grid = new ParametricSurface(gl, positionFunc, normalFunc, vertexTexCoords, config_grid);
         this.surfaceNodeGrid = new SceneNode("Surface Grid");
         this.surfaceNodeGrid.add(this.planetSurface_grid, this.materials.grid);
 

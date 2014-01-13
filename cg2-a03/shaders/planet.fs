@@ -15,7 +15,9 @@ precision mediump float;
 // position and normal in eye coordinates
 varying vec4  ecPosition;
 varying vec3  ecNormal;
-varying vec2  texCoords;
+//varying-Variable für den fs-->kommt vom vs
+varying vec2 texCoord; // input from vertex shader
+//uniform sampler2D myTexture; // global
  
 // transformation matrices
 uniform mat4  modelViewMatrix;
@@ -86,8 +88,17 @@ vec3    phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial materia
     vec3 specular = material.specular * light.color * pow(rdotv, material.shininess);
 
 
-    if(debug)
-        return vec3(0,1,0);    
+    if(debug){
+        return vec3(0,1,0);   
+        //float firstTexturcoordinate = texCoords.r;
+        //return firstTexturcoordinate;
+    }
+    //der Winkel zwischen 0 und 3 Grad muss noch eingestellt werden und bei debug
+    if (ndotl <= 0.0){
+            return ambient;
+    } else {
+        return ambient * diffuse ;
+    }
     
 
     // return sum of all contributions
