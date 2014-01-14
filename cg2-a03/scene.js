@@ -37,13 +37,17 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
         // set uniforms required by the respective shaders
         this.materials.blue.setUniform( "uniColor", "vec4", [0.1, 0.1, 0.8, 1] );
         this.materials.grid.setUniform( "uniColor", "vec4", [0.7, 0.7, 0.7, 1] );
-        this.materials.planet.setUniform( "material.ambient",   "vec3", [0.4,0.4,0.4] ); 
+        this.materials.planet.setUniform( "material.ambient",   "vec3", [0.6,0.1,0.1] ); 
         this.materials.planet.setUniform( "material.diffuse",   "vec3", [0.8,0.2,0.2] ); 
         this.materials.planet.setUniform( "material.specular",  "vec3", [0.4,0.4,0.4] ); 
         this.materials.planet.setUniform( "material.shininess", "float", 80 ); 
 
         // set uniform - DEBUG initially false
         this.materials.planet.setUniform("debug", "bool", false);
+
+        this.materials.planet.setUniform("daylight", "bool", false);
+
+        this.materials.planet.setUniform("nightlights", "bool", false);
 
         // set light properties for shader --> HEEEEERE!!! AMBIETNE!!
         this.materials.planet.setUniform( "ambientLight", "vec3", [0.4,0.4,0.4]);
@@ -133,16 +137,20 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
         this.drawOptions = { 
                              "Show Surface": true,
                              "Show Grid" : false,
-                             "Debug" : false
+                             "Debug" : false,
+                             "Daytime Texture": false, 
+                             "Night Lights": false
                              };
 
         // TEXTURE
         this.tex = new texture.Texture2D(gl, "textures/earth_month04.jpg");
+        this.texnight = new texture.Texture2D(gl, "textures/earth_at_night_2048.jpg");
         var _scene = this;
 
         texture.onAllTexturesLoaded( function() {
             _scene.programs.planet.use();
-            _scene.programs.planet.setTexture("tex1", 0, _scene.tex);
+            _scene.programs.planet.setTexture("daylightTexture", 0, _scene.tex);
+            _scene.programs.planet.setTexture("nightTexture", 1, _scene.texnight);
             _scene.draw();
         });
 
@@ -183,14 +191,27 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
         // set debug-uniform true, if "Debug" == true, else set uniform false
         if (this.drawOptions["Debug"]) {
             this.materials.planet.setUniform("debug", "bool", true);
-            console.log("true");
+            //console.log("true");
         } else {
             this.materials.planet.setUniform("debug", "bool", false);
-            console.log("false");
-
+            //console.log("false");
         }
 
-        // draw the scene 
+        if (this.drawOptions["Daytime Texture"]) {
+            this.materials.planet.setUniform("daylight", "bool", true);
+
+        } else {
+            this.materials.planet.setUniform("daylight", "bool", false);
+        }
+
+        if (this.drawOptions["Night Lights"]) {
+            this.materials.planet.setUniform("nightlights", "bool", true);
+
+        } else {
+          this.materials.planet.setUniform("nightlights", "bool", false);
+        }
+
+        //  the scene 
         this.universeNode.draw(gl, null, modelViewMatrix);
     };
 

@@ -17,7 +17,11 @@ varying vec4  ecPosition;
 varying vec3  ecNormal;
 //varying-Variable für den fs-->kommt vom vs
 varying vec2 texCoord; // input from vertex shader
-uniform sampler2D tex1; // global
+
+// TEXTURES
+uniform sampler2D daylightTexture; 
+uniform sampler2D nightTexture; 
+
  
 // transformation matrices
 uniform mat4  modelViewMatrix;
@@ -27,6 +31,8 @@ uniform mat4  projectionMatrix;
 uniform vec3 ambientLight;
 
 uniform bool debug;
+uniform bool daylight;
+uniform bool nightlights;
 
 // Material
 struct PhongMaterial {
@@ -58,34 +64,53 @@ uniform LightSource light;
  
  */
 vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) {
-    
+
+    vec3 colornight = texture2D(nightTexture, texCoord).rgb;
+    vec3 colorday = texture2D(daylightTexture, texCoord).rgb;
+
     // ambient part
-    vec3 ambient = material.ambient * ambientLight;
+    vec3 ambient = material.ambient * ambientLight * 0.0;
+    if (!daylight && !nightlights) {
+        ambient = material.ambient * ambientLight;
+    }
     
     // back face towards viewer (looking at the earth from the inside)?
     float ndotv = dot(n,v);
-    if(ndotv<0.0)
-        return vec3(1,0,0);
+    if(ndotv<0.0) 
+        return vec3(0,0,0);
     
     // vector from light to current point
     vec3 l = normalize(light.direction);
     
     // cos of angle between light and surface. 
     float ndotl = dot(n,-l);
+
     if(ndotl<=0.0) 
-        return ambient; // shadow / facing away from the light source
+        if (nightlights) {
+            return colornight;
+        } else if (daylight) {
+            return colorday * vec3(0.08,0.08,0.08); // shadow / facing away from the light source
+        } else {
+            return ambient;
+        }
     
     // diffuse contribution
-    vec3 color1 = texture2D(tex1, texCoord).rgb;
-    float x = texture2D(tex1, texCoord).r;
-    vec3 diffuse = color1 * light.color * ndotl;
+    vec3 diffuse = material.diffuse * light.color * ndotl;
+    float x = 3.0 * ndotl; 
+    if (daylight) {
+        if(nightlights) {
+            diffuse = (colornight+ colorday) * x *  light.color ;
+        } else {
+            diffuse = colorday * light.color * x;
+        }
+    }
     
      // reflected light direction = perfect reflection direction
     vec3 r = reflect(l,n);
         
     // angle between reflection dir and viewing dir
     float rdotv = max( dot(r,v), 0.0);
-    
+ 
     // specular contribution
     vec3 specular = material.specular * light.color * pow(rdotv, material.shininess);
 
@@ -118,7 +143,7 @@ void main() {
     vec3 color = phong( ecPosition.xyz, normalEC, viewdirEC,
                         light, material );
     if (debug) {
-        if (mod(texCoord.s , 0.2) < 0.1) {
+        if (mod(texCoord.s , 0.1) < 0.05) {
             color = color * 0.5;
         } 
     }

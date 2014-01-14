@@ -60,7 +60,9 @@ define(["vbo"],
                 var z_normal = this.normalFunc(umin_temp, vmin_temp)[2];
                 normals.push(x_normal,y_normal,z_normal);
 
+                // divided by vmax/umax --> value between [0,1] 
                 vertexTexCoords.push(-vmin_temp/vmax, umin_temp/umax);
+
                 vmin_temp += (vmax - vmin) / vsegments; // calculates the position of v
 
 
