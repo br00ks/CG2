@@ -37,15 +37,15 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
         // set uniforms required by the respective shaders
         this.materials.blue.setUniform( "uniColor", "vec4", [0.1, 0.1, 0.8, 1] );
         this.materials.grid.setUniform( "uniColor", "vec4", [0.7, 0.7, 0.7, 1] );
-        this.materials.planet.setUniform( "material.ambient",   "vec3", [0.6,0.2,0.2] ); 
+        this.materials.planet.setUniform( "material.ambient",   "vec3", [0.4,0.4,0.4] ); 
         this.materials.planet.setUniform( "material.diffuse",   "vec3", [0.8,0.2,0.2] ); 
         this.materials.planet.setUniform( "material.specular",  "vec3", [0.4,0.4,0.4] ); 
         this.materials.planet.setUniform( "material.shininess", "float", 80 ); 
 
         // set uniform - DEBUG initially false
-        this.materials.planet.setUniform("material.debug", "bool", false);
+        this.materials.planet.setUniform("debug", "bool", false);
 
-        // set light properties for shader
+        // set light properties for shader --> HEEEEERE!!! AMBIETNE!!
         this.materials.planet.setUniform( "ambientLight", "vec3", [0.4,0.4,0.4]);
         this.materials.planet.setUniform( "light.on", "bool", true );
         this.materials.planet.setUniform( "light.type", "int", 0 );
@@ -101,19 +101,14 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
                      1 * Math.cos(u) ];
             return vec3.normalize(temp, null);
         };
-        var vertexTexCoords = function(u,v) {
-            // return [ u/(Math.PI*2), v/(Math.PI) ];
-            return [u,v]; //initiale Werte von u, v 
-        };
-
 
         // planet surface
-        this.planetSurface = new ParametricSurface(gl, positionFunc, normalFunc, vertexTexCoords, config);
+        this.planetSurface = new ParametricSurface(gl, positionFunc, normalFunc, config);
         this.surfaceNode = new SceneNode("Surface");
         this.surfaceNode.add(this.planetSurface, this.materials.planet);
 
         // planet grid
-        this.planetSurface_grid = new ParametricSurface(gl, positionFunc, normalFunc, vertexTexCoords, config_grid);
+        this.planetSurface_grid = new ParametricSurface(gl, positionFunc, normalFunc, config_grid);
         this.surfaceNodeGrid = new SceneNode("Surface Grid");
         this.surfaceNodeGrid.add(this.planetSurface_grid, this.materials.grid);
 
@@ -138,8 +133,19 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
         this.drawOptions = { 
                              "Show Surface": true,
                              "Show Grid" : false,
-                             "Debug" : true
-                             };                       
+                             "Debug" : false
+                             };
+
+        // TEXTURE
+        this.tex = new texture.Texture2D(gl, "textures/earth_month04.jpg");
+        var _scene = this;
+
+        texture.onAllTexturesLoaded( function() {
+            _scene.programs.planet.use();
+            _scene.programs.planet.setTexture("tex1", 0, _scene.tex);
+            _scene.draw();
+        });
+
     };
 
     // the scene's draw method draws whatever the scene wants to draw
@@ -176,10 +182,10 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
                                      ); 
         // set debug-uniform true, if "Debug" == true, else set uniform false
         if (this.drawOptions["Debug"]) {
-            this.materials.planet.setUniform("material.debug", "bool", true);
+            this.materials.planet.setUniform("debug", "bool", true);
             console.log("true");
         } else {
-            this.materials.planet.setUniform("material.debug", "bool", false);
+            this.materials.planet.setUniform("debug", "bool", false);
             console.log("false");
 
         }

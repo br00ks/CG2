@@ -21,36 +21,33 @@ define(["vbo"],
      * config: configuration object defining attributes uMin, uMax, vMin, vMax, 
      *         and drawStyle (i.e. "points", "wireframe", or "surface")
      */ 
-    var ParametricSurface = function(gl, posFunc, normalFunc, vertexTexCoords, config) {
+    var ParametricSurface = function(gl, posFunc, normalFunc, config) {
             
         //window.console.log("ParametricSurface() constructor not implemented yet.")
         //Werte analog zur Scene.js
-        var umin = config.uMin || -Math.PI;
-        var umax = config.uMax ||  Math.PI;
-        var vmin = config.vMin || -Math.PI;
-        var vmax = config.vMax ||  Math.PI;
+        var umin = config.uMin;
+        var umax = config.uMax;
+        var vmin = config.vMin;
+        var vmax = config.vMax;
         var usegments = config.uSegments || 20;
         var vsegments = config.vSegments || 10;
         this.drawStyle   = config.drawStyle || "points";
         this.posFunc = posFunc;
         this.normalFunc = normalFunc;
-        //Texturattribut, bestehend aus 2 Koordinaten pro Vertex-->2D Texture
-        this.vertexTexCoords = vertexTexCoords;
 
         console.log("Creating a ParametricSurface with umin="+umin+", umax="+umax+", vmin="+vmin+", vmax="+vmax ); 
         // vertex coordinates + normal coordinates
         var coords = [];
         var normals = [];
+        var vertexTexCoords = [];
 
         var umin_temp = 0;
         var vmin_temp = 0;
 
         // generate vertex coordinates and store in an array
         for (var i=0; i <= usegments; i++) { 
-            umin_temp += (umax - umin) / usegments; // calculates the position of u
             vmin_temp = vmin;   //nach ersten Durchgang wieder zurücksetzen, um nicht über das Array hinaus zu laufen
             for (var j = 0; j <= vsegments; j++) {
-                vmin_temp += (vmax - vmin) / vsegments; // calculates the position of v
                 // calculate the coords depending on the function
                 var x = this.posFunc(umin_temp, vmin_temp)[0]; 
                 var y = this.posFunc(umin_temp, vmin_temp)[1];
@@ -63,7 +60,13 @@ define(["vbo"],
                 var z_normal = this.normalFunc(umin_temp, vmin_temp)[2];
                 normals.push(x_normal,y_normal,z_normal);
 
+                vertexTexCoords.push(-vmin_temp/vmax, umin_temp/umax);
+                vmin_temp += (vmax - vmin) / vsegments; // calculates the position of v
+
+
             };
+            umin_temp += (umax - umin) / usegments; // calculates the position of u
+
         };
 
         // parametric surface out of triangles (solid surface)
@@ -131,11 +134,12 @@ define(["vbo"],
                                                     "dataType": gl.FLOAT,
                                                     "data": normals 
                                                   } );  
+
         // create vertex buffer object (VBO) for the coordinates = vertex position
-        /*this.vertexTexCoordsBuffer = new vbo.Attribute(gl, { "numComponents": 2,
+        this.vertexTexCoordsBuffer = new vbo.Attribute(gl, { "numComponents": 2,
                                                     "dataType": gl.FLOAT,
                                                     "data": vertexTexCoords 
-                                                  } ); */ 
+                                                  } ); 
         //create buffer
         this.lineBuffer = new vbo.Indices(gl, { "indices": lines } );
        
@@ -149,15 +153,7 @@ define(["vbo"],
         var program = material.getProgram();
         this.coordsBuffer.bind(gl, program, "vertexPosition");
         this.normalBuffer.bind(gl, program, "vertexNormal");
-        //this.vertexTexCoordsBuffer.bind(gl, program, "vertexTexCoords");
-
-        // bind the correct buffer
-        if (this.drawStyle == "triangles") {
-            this.triangleBuffer.bind(gl);
-            //this.vertexTexCoordsBuffer.bind(gl);
-        } else {
-            this.lineBuffer.bind(gl);
-        }
+        this.vertexTexCoordsBuffer.bind(gl, program, "vertexTexCoords");
 
 
         // draw the vertices as points
@@ -166,10 +162,12 @@ define(["vbo"],
 
         // draw the vertices as triangles
         } else if (this.drawStyle == "triangles") {
+            this.triangleBuffer.bind(gl);
              gl.drawElements(gl.TRIANGLES, this.triangleBuffer.numIndices(), gl.UNSIGNED_SHORT, 0);
        
         // draw the vertices as lines
         } else if (this.drawStyle == "lines") {
+            this.lineBuffer.bind(gl);
              gl.drawElements(gl.LINES, this.lineBuffer.numIndices(), gl.UNSIGNED_SHORT, 0);
 
         } else {

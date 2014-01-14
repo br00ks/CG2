@@ -31,6 +31,7 @@ varying vec3 ecNormal;
 //textur
 //input
 attribute vec2 vertexTexCoords;
+
 //outout to fragment shader 
 varying vec2 texCoord;	
 

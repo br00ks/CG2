@@ -17,7 +17,7 @@ varying vec4  ecPosition;
 varying vec3  ecNormal;
 //varying-Variable für den fs-->kommt vom vs
 varying vec2 texCoord; // input from vertex shader
-//uniform sampler2D myTexture; // global
+uniform sampler2D tex1; // global
  
 // transformation matrices
 uniform mat4  modelViewMatrix;
@@ -57,7 +57,7 @@ uniform LightSource light;
  + assuming directional light
  
  */
-vec3    phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) {
+vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) {
     
     // ambient part
     vec3 ambient = material.ambient * ambientLight;
@@ -76,11 +76,13 @@ vec3    phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial materia
         return ambient; // shadow / facing away from the light source
     
     // diffuse contribution
-    vec3 diffuse = material.diffuse * light.color * ndotl;
+    vec3 color1 = texture2D(tex1, texCoord).rgb;
+    float x = texture2D(tex1, texCoord).r;
+    vec3 diffuse = color1 * light.color * ndotl;
     
      // reflected light direction = perfect reflection direction
     vec3 r = reflect(l,n);
-    
+        
     // angle between reflection dir and viewing dir
     float rdotv = max( dot(r,v), 0.0);
     
@@ -89,22 +91,15 @@ vec3    phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial materia
 
 
     if(debug){
-        return vec3(0,1,0);   
-        //float firstTexturcoordinate = texCoords.r;
-        //return firstTexturcoordinate;
+        if(ndotl >= 0.0 && ndotl <= 0.03) {
+            return vec3(0,1,0);   
+        }
     }
-    //der Winkel zwischen 0 und 3 Grad muss noch eingestellt werden und bei debug
-    if (ndotl <= 0.0){
-            return ambient;
-    } else {
-        return ambient * diffuse ;
-    }
-    
 
     // return sum of all contributions
     return ambient + diffuse + specular;
-    
 }
+
 
 void main() {
     
@@ -122,6 +117,12 @@ void main() {
     // calculate color using phong illumination
     vec3 color = phong( ecPosition.xyz, normalEC, viewdirEC,
                         light, material );
+    if (debug) {
+        if (mod(texCoord.s , 0.2) < 0.1) {
+            color = color * 0.5;
+        } 
+    }
+
 
     gl_FragColor = vec4(color, 1.0);
     
