@@ -93,6 +93,8 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
             return colornight;
         } else if (daylight) {
             return colorday * vec3(0.08,0.08,0.08); // shadow / facing away from the light source
+        } else if (bathymetry) {
+            return colorbathymetry;
         } else {
             return ambient;
         }
@@ -101,13 +103,15 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
     vec3 diffuse = material.diffuse * light.color * ndotl;
     if (daylight) {
         if (nightlights) {
-            diffuse = 3.0 * colorday * ndotl + colornight * (1.0 - ndotl) * light.color;
+            diffuse = 2.0 * colorday * ndotl + colornight * pow((1.0 - ndotl),2.5) * light.color;
+
             // begonnen mit colorday * ndotl + colornight * light.color
             // dann colorday * ndotl + colornight * ndotl * light.color;
             // aber falsch, weil colorday und colornight nicht die gleiche gewichtung ndotl haben!
             // daher colornight mit (1 - ndotl) multiplizieren
+
         } else {
-            diffuse = 3.0 * colorday * ndotl * light.color;
+            diffuse = 2.0 * colorday * ndotl * light.color;
         }
     } else {
         diffuse = material.diffuse * light.color * ndotl;
@@ -163,14 +167,14 @@ void main() {
         } 
     }
 
-    if(bathymetry){
+    /*if(bathymetry){
     //if length of light direction view and planet < irgendwas dann Land, sonst Wasser ???? 
         if (texCoord.s < 0.00) {
             color = color * 0.3;
         } else if(texCoord.s > 0.00) {
             color = color * 0.5;
         }
-    }
+    }*/
 
 
     gl_FragColor = vec4(color, 1.0);
