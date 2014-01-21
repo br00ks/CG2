@@ -51,6 +51,8 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
 
         this.materials.planet.setUniform("bathymetry", "bool", false);
 
+        this.materials.planet.setUniform("clouds", "bool", false); 
+
         // set light properties for shader --> HEEEEERE!!! AMBIETNE!!
         this.materials.planet.setUniform( "ambientLight", "vec3", [0.4,0.4,0.4]);
         this.materials.planet.setUniform( "light.on", "bool", true );
@@ -142,7 +144,8 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
                              "Debug" : false,
                              "Daytime Texture": false, 
                              "Night Lights": false,
-                             "Red Green": true
+                             "Red Green": true,
+                             "Clouds": false
                              };
 
         // TEXTURE
@@ -219,6 +222,12 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
             this.materials.planet.setUniform("bathymetry", "bool", true);
         } else {
           this.materials.planet.setUniform("bathymetry", "bool", false);
+        }
+
+        if (this.drawOptions["Clouds"]) {
+            this.materials.planet.setUniform("clouds", "bool", true);
+        } else {
+          this.materials.planet.setUniform("clouds", "bool", false);
         }
 
         //  the scene 
