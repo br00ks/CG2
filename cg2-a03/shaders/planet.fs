@@ -69,7 +69,7 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
 
     vec3 colornight = texture2D(nightTexture, texCoord).rgb;
     vec3 colorday = texture2D(daylightTexture, texCoord).rgb;
-    float colorbathymetry = texture2D(bathymetryTexture, texCoord).rgb * 255.0;
+    vec3 colorbathymetry = texture2D(bathymetryTexture, texCoord).rgb;
 
     // ambient part
     vec3 ambient = material.ambient * ambientLight * 0.0;
@@ -88,16 +88,8 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
     // cos of angle between light and surface. 
     float ndotl = dot(n,-l);
 
-    if(ndotl<=0.0) 
-        if (nightlights) {
-            return colornight;
-        } else if (daylight) {
-            return colorday * vec3(0.08,0.08,0.08); // shadow / facing away from the light source
-        } else if (bathymetry) {
-            return colorbathymetry;
-        } else {
-            return ambient;
-        }
+
+
     
     // diffuse contribution
     vec3 diffuse = material.diffuse * light.color * ndotl;
@@ -134,16 +126,21 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
     }
 
     if(bathymetry){
-    /*
-        if(colorbathymetry < 150.0) {
-            return vec3(1,0,0);
-        } else {
+    
+        if(colorbathymetry.r * 255.0 < 100.0) {
             return vec3(0,1,0);
+        } else {
+            return vec3(1,0,0);
         }
-    */
-        return colorbathymetry;
+    
     }
-
+    
+    if(ndotl<=0.0) 
+        if (nightlights) {
+            return colornight;
+        } else if (daylight) {
+            return colorday * vec3(0.08,0.08,0.08); // shadow / facing away from the light source
+        } 
 
 
     // return sum of all contributions
