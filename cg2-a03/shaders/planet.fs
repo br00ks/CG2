@@ -69,7 +69,7 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
 
     vec3 colornight = texture2D(nightTexture, texCoord).rgb;
     vec3 colorday = texture2D(daylightTexture, texCoord).rgb;
-    vec3 colorbathymetry = texture2D(bathymetryTexture, texCoord).rgb;
+    float colorbathymetry = texture2D(bathymetryTexture, texCoord).rgb * 255.0;
 
     // ambient part
     vec3 ambient = material.ambient * ambientLight * 0.0;
@@ -133,8 +133,14 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
         }
     }
 
-    //float reflectionColor;
     if(bathymetry){
+    /*
+        if(colorbathymetry < 150.0) {
+            return vec3(1,0,0);
+        } else {
+            return vec3(0,1,0);
+        }
+    */
         return colorbathymetry;
     }
 
@@ -166,15 +172,6 @@ void main() {
             color = color * 0.5;
         } 
     }
-
-    /*if(bathymetry){
-    //if length of light direction view and planet < irgendwas dann Land, sonst Wasser ???? 
-        if (texCoord.s < 0.03) {
-            color = color * 0.3;
-        } else if(texCoord.s > 0.00) {
-            color = color * 0.5;
-        }
-    }*/
 
 
     gl_FragColor = vec4(color, 1.0);
