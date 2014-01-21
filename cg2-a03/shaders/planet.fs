@@ -129,7 +129,7 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
         }
     }
 
-    float reflectionColor;
+    //float reflectionColor;
     if(bathymetry){
         return colorbathymetry;
     }
@@ -165,7 +165,7 @@ void main() {
 
     if(bathymetry){
     //if length of light direction view and planet < irgendwas dann Land, sonst Wasser ???? 
-        if (texCoord.s < 0.00) {
+        if (texCoord.s < 0.03) {
             color = color * 0.3;
         } else if(texCoord.s > 0.00) {
             color = color * 0.5;
