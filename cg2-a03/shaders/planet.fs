@@ -96,13 +96,18 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
     
     // diffuse contribution
     vec3 diffuse = material.diffuse * light.color * ndotl;
-    float x = 3.0 * ndotl; 
     if (daylight) {
-        if(nightlights) {
-            diffuse = (colornight+ colorday) * x *  light.color ;
+        if (nightlights) {
+            diffuse = 3.0 * colorday * ndotl + colornight * (1.0 - ndotl) * light.color;
+            // begonnen mit colorday * ndotl + colornight * light.color
+            // dann colorday * ndotl + colornight * ndotl * light.color;
+            // aber falsch, weil colorday und colornight nicht die gleiche gewichtung ndotl haben!
+            // daher colornight mit (1 - ndotl) multiplizieren
         } else {
-            diffuse = colorday * light.color * x;
+            diffuse = 3.0 * colorday * ndotl * light.color;
         }
+    } else {
+        diffuse = material.diffuse * light.color * ndotl;
     }
     
      // reflected light direction = perfect reflection direction
