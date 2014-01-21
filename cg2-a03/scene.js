@@ -49,6 +49,8 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
 
         this.materials.planet.setUniform("nightlights", "bool", false);
 
+        this.materials.planet.setUniform("bathymetry", "bool", false);
+
         // set light properties for shader --> HEEEEERE!!! AMBIETNE!!
         this.materials.planet.setUniform( "ambientLight", "vec3", [0.4,0.4,0.4]);
         this.materials.planet.setUniform( "light.on", "bool", true );
@@ -139,18 +141,22 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
                              "Show Grid" : false,
                              "Debug" : false,
                              "Daytime Texture": false, 
-                             "Night Lights": false
+                             "Night Lights": false,
+                             "Red Green": true
                              };
 
         // TEXTURE
         this.tex = new texture.Texture2D(gl, "textures/earth_month04.jpg");
         this.texnight = new texture.Texture2D(gl, "textures/earth_at_night_2048.jpg");
+        this.texbathymetry = new texture.Texture2D(gl, "textures/earth_bathymetry_2048.jpg");
+
         var _scene = this;
 
         texture.onAllTexturesLoaded( function() {
             _scene.programs.planet.use();
             _scene.programs.planet.setTexture("daylightTexture", 0, _scene.tex);
             _scene.programs.planet.setTexture("nightTexture", 1, _scene.texnight);
+            _scene.programs.planet.setTexture("bathymetryTexture", 2, _scene.texbathymetry);
             _scene.draw();
         });
 
@@ -199,16 +205,20 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
 
         if (this.drawOptions["Daytime Texture"]) {
             this.materials.planet.setUniform("daylight", "bool", true);
-
         } else {
             this.materials.planet.setUniform("daylight", "bool", false);
         }
 
         if (this.drawOptions["Night Lights"]) {
             this.materials.planet.setUniform("nightlights", "bool", true);
-
         } else {
           this.materials.planet.setUniform("nightlights", "bool", false);
+        }
+
+        if (this.drawOptions["Red Green"]) {
+            this.materials.planet.setUniform("bathymetry", "bool", true);
+        } else {
+          this.materials.planet.setUniform("bathymetry", "bool", false);
         }
 
         //  the scene 

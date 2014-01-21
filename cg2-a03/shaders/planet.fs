@@ -21,6 +21,7 @@ varying vec2 texCoord; // input from vertex shader
 // TEXTURES
 uniform sampler2D daylightTexture; 
 uniform sampler2D nightTexture; 
+uniform sampler2D bathymetryTexture;
 
  
 // transformation matrices
@@ -33,6 +34,7 @@ uniform vec3 ambientLight;
 uniform bool debug;
 uniform bool daylight;
 uniform bool nightlights;
+uniform bool bathymetry;
 
 // Material
 struct PhongMaterial {
@@ -67,6 +69,7 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
 
     vec3 colornight = texture2D(nightTexture, texCoord).rgb;
     vec3 colorday = texture2D(daylightTexture, texCoord).rgb;
+    vec3 colorbathymetry = texture2D(bathymetryTexture, texCoord).rgb;
 
     // ambient part
     vec3 ambient = material.ambient * ambientLight * 0.0;
@@ -121,6 +124,13 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
         }
     }
 
+    float reflectionColor;
+    if(bathymetry){
+        return colorbathymetry;
+    }
+
+
+
     // return sum of all contributions
     return ambient + diffuse + specular;
 }
@@ -146,6 +156,15 @@ void main() {
         if (mod(texCoord.s , 0.1) < 0.05) {
             color = color * 0.5;
         } 
+    }
+
+    if(bathymetry){
+    //if length of light direction view and planet < irgendwas dann Land, sonst Wasser ???? 
+        if (texCoord.s < 0.00) {
+            color = color * 0.3;
+        } else if(texCoord.s > 0.00) {
+            color = color * 0.5;
+        }
     }
 
 
