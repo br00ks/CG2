@@ -22,6 +22,7 @@ varying vec2 texCoord; // input from vertex shader
 uniform sampler2D daylightTexture; 
 uniform sampler2D nightTexture; 
 uniform sampler2D bathymetryTexture;
+uniform sampler2D cloudsTexture;
 
  
 // transformation matrices
@@ -35,6 +36,8 @@ uniform bool debug;
 uniform bool daylight;
 uniform bool nightlights;
 uniform bool bathymetry;
+uniform bool glossmap;
+uniform bool clouds;
 
 // Material
 struct PhongMaterial {
@@ -70,6 +73,18 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
     vec3 colornight = texture2D(nightTexture, texCoord).rgb;
     vec3 colorday = texture2D(daylightTexture, texCoord).rgb;
     vec3 colorbathymetry = texture2D(bathymetryTexture, texCoord).rgb;
+    float colorclouds = texture2D(cloudsTexture, texCoord).r;
+
+    if(clouds) {
+        //testweise wolken ausgeben
+        //return vec3(colorclouds,colorclouds,colorclouds);
+        //desto dichter die Wolken sind, desto  mehr sollte die Wolkenfarbe die Erdfarbe überdecken
+        if(colorclouds * 255.0 < 100.0) {
+            return vec3(colorclouds,colorclouds,colorclouds);
+        } else {
+            return vec3(0,0,0);
+        }
+    }
 
     // ambient part
     vec3 ambient = material.ambient * ambientLight * 0.0;
@@ -118,6 +133,14 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
     // specular contribution
     vec3 specular = material.specular * light.color * pow(rdotv, material.shininess);
 
+    if(glossmap) {
+        if((colorbathymetry.r * 255.0) < 100.0) {
+            specular = material.specular*0.5 * light.color * pow(rdotv, material.shininess);
+        } else {
+            specular = material.specular*1.0 * light.color * pow(rdotv, material.shininess/10.0);
+        }
+    }
+
 
     if(debug){
         if(ndotl >= 0.0 && ndotl <= 0.03) {
@@ -126,13 +149,11 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
     }
 
     if(bathymetry){
-    
         if(colorbathymetry.r * 255.0 < 100.0) {
             return vec3(0,1,0);
         } else {
             return vec3(1,0,0);
         }
-    
     }
     
     if(ndotl<=0.0) 
@@ -145,6 +166,7 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
 
     // return sum of all contributions
     return ambient + diffuse + specular;
+
 }
 
 

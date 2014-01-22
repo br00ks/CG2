@@ -51,6 +51,8 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
 
         this.materials.planet.setUniform("bathymetry", "bool", false);
 
+        this.materials.planet.setUniform("glossmap", "bool", false);
+
         this.materials.planet.setUniform("clouds", "bool", false); 
 
         // set light properties for shader --> HEEEEERE!!! AMBIETNE!!
@@ -142,16 +144,18 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
                              "Show Surface": true,
                              "Show Grid" : false,
                              "Debug" : false,
-                             "Daytime Texture": false, 
-                             "Night Lights": false,
-                             "Red Green": true,
-                             "Clouds": false
+                             "Daytime Texture": true, 
+                             "Night Lights": true,
+                             "Red Green": false,
+                             "Clouds": true,
+                             "Gloss Map" : false
                              };
 
         // TEXTURE
         this.tex = new texture.Texture2D(gl, "textures/earth_month04.jpg");
         this.texnight = new texture.Texture2D(gl, "textures/earth_at_night_2048.jpg");
         this.texbathymetry = new texture.Texture2D(gl, "textures/earth_bathymetry_2048.jpg");
+        this.texclouds = new texture.Texture2D(gl, "textures/earth_clouds_2048.jpg");
 
         var _scene = this;
 
@@ -160,6 +164,7 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
             _scene.programs.planet.setTexture("daylightTexture", 0, _scene.tex);
             _scene.programs.planet.setTexture("nightTexture", 1, _scene.texnight);
             _scene.programs.planet.setTexture("bathymetryTexture", 2, _scene.texbathymetry);
+            _scene.programs.planet.setTexture("cloudsTexture", 3, _scene.texclouds);
             _scene.draw();
         });
 
@@ -223,7 +228,11 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
         } else {
           this.materials.planet.setUniform("bathymetry", "bool", false);
         }
-
+        if (this.drawOptions["Gloss Map"]) {
+            this.materials.planet.setUniform("glossmap", "bool", true);
+        } else {
+          this.materials.planet.setUniform("glossmap", "bool", false);
+        }
         if (this.drawOptions["Clouds"]) {
             this.materials.planet.setUniform("clouds", "bool", true);
         } else {
