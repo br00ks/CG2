@@ -73,16 +73,22 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
     vec3 colornight = texture2D(nightTexture, texCoord).rgb;
     vec3 colorday = texture2D(daylightTexture, texCoord).rgb;
     vec3 colorbathymetry = texture2D(bathymetryTexture, texCoord).rgb;
-    float colorclouds = texture2D(cloudsTexture, texCoord).r;
+    float colorclouds = texture2D(cloudsTexture, texCoord).r; 
 
+    
     if(clouds) {
         //testweise wolken ausgeben
         //return vec3(colorclouds,colorclouds,colorclouds);
         //desto dichter die Wolken sind, desto  mehr sollte die Wolkenfarbe die Erdfarbe überdecken
         if(colorclouds * 255.0 < 100.0) {
-            return vec3(colorclouds,colorclouds,colorclouds);
+            //Interpolation angucken!!!
+            float Color;
+            Color = (texture2D(bathymetryTexture, texCoord).r + texture2D(cloudsTexture, texCoord).r) / 2.0;
         } else {
-            return vec3(0,0,0);
+            return vec3(colorclouds,colorclouds,colorclouds);
+            //return vec3(1,1,1);
+
+            //Fehlt: Abdunklung: Auswirkung auf Lichter in Nacht?? Wie soll das realisiert werden?
         }
     }
 
