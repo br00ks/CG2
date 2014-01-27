@@ -15,16 +15,14 @@ precision mediump float;
 // position and normal in eye coordinates
 varying vec4  ecPosition;
 varying vec3  ecNormal;
-//varying-Variable für den fs-->kommt vom vs
 varying vec2 texCoord; // input from vertex shader
 
-// TEXTURES
+// Textures
 uniform sampler2D daylightTexture; 
 uniform sampler2D nightTexture; 
 uniform sampler2D bathymetryTexture;
 uniform sampler2D cloudsTexture;
 
- 
 // transformation matrices
 uniform mat4  modelViewMatrix;
 uniform mat4  projectionMatrix;
@@ -32,6 +30,7 @@ uniform mat4  projectionMatrix;
 // Ambient Light
 uniform vec3 ambientLight;
 
+// boolean
 uniform bool debug;
 uniform bool daylight;
 uniform bool nightlights;
@@ -70,33 +69,14 @@ uniform LightSource light;
  */
 vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) {
 
+    // colors out of textures
     vec3 colornight = texture2D(nightTexture, texCoord).rgb;
     vec3 colorday = texture2D(daylightTexture, texCoord).rgb;
     vec3 colorbathymetry = texture2D(bathymetryTexture, texCoord).rgb;
     float colorclouds = texture2D(cloudsTexture, texCoord).r; 
 
-    
-    if(clouds) {
-        //testweise wolken ausgeben
-        //return vec3(colorclouds,colorclouds,colorclouds);
-        //desto dichter die Wolken sind, desto  mehr sollte die Wolkenfarbe die Erdfarbe überdecken
-        if(colorclouds * 255.0 < 100.0) {
-            //Interpolation angucken!!!
-            float Color;
-            Color = (texture2D(bathymetryTexture, texCoord).r + texture2D(cloudsTexture, texCoord).r) / 2.0;
-        } else {
-            return vec3(colorclouds,colorclouds,colorclouds);
-            //return vec3(1,1,1);
-
-            //Fehlt: Abdunklung: Auswirkung auf Lichter in Nacht?? Wie soll das realisiert werden?
-        }
-    }
-
     // ambient part
-    vec3 ambient = material.ambient * ambientLight * 0.0;
-    if (!daylight && !nightlights) {
-        ambient = material.ambient * ambientLight;
-    }
+    vec3 ambient = material.ambient * ambientLight;
     
     // back face towards viewer (looking at the earth from the inside)?
     float ndotv = dot(n,v);
@@ -110,13 +90,12 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
     float ndotl = dot(n,-l);
 
 
+    // diffuse part
+    vec3 diffuse;
 
-    
-    // diffuse contribution
-    vec3 diffuse = material.diffuse * light.color * ndotl;
     if (daylight) {
         if (nightlights) {
-            diffuse = 2.0 * colorday * ndotl + colornight * pow((1.0 - ndotl),2.5) * light.color;
+            diffuse =2.0* colorday * ndotl + colornight * vec3(0.4,0.4,0.4)* pow((1.0 - ndotl),2.5) * light.color;
 
             // begonnen mit colorday * ndotl + colornight * light.color
             // dann colorday * ndotl + colornight * ndotl * light.color;
@@ -124,12 +103,28 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
             // daher colornight mit (1 - ndotl) multiplizieren
 
         } else {
-            diffuse = 2.0 * colorday * ndotl * light.color;
+            diffuse = colorday * ndotl * light.color;
         }
     } else {
         diffuse = material.diffuse * light.color * ndotl;
     }
+    if (!daylight && nightlights) {
+        diffuse = colornight * vec3(0.4,0.4,0.4);
+    }
+
+    if(ndotl<=0.0) {
+        if (nightlights) {
+            diffuse = colornight * vec3(0.4,0.4,0.4);
+        } else if (daylight) {
+            diffuse = colorday * vec3(0.08,0.08,0.08); // shadow / facing away from the light source
+        } 
+    }
     
+    if (clouds) {
+        diffuse = diffuse * (0.9- colorclouds * ndotl) + colorclouds * ndotl;
+    }
+
+
      // reflected light direction = perfect reflection direction
     vec3 r = reflect(l,n);
         
@@ -161,14 +156,6 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
             return vec3(1,0,0);
         }
     }
-    
-    if(ndotl<=0.0) 
-        if (nightlights) {
-            return colornight;
-        } else if (daylight) {
-            return colorday * vec3(0.08,0.08,0.08); // shadow / facing away from the light source
-        } 
-
 
     // return sum of all contributions
     return ambient + diffuse + specular;
@@ -192,9 +179,11 @@ void main() {
     // calculate color using phong illumination
     vec3 color = phong( ecPosition.xyz, normalEC, viewdirEC,
                         light, material );
+
+    // draw the stripes on surface                
     if (debug) {
         if (mod(texCoord.s , 0.1) < 0.05) {
-            color = color * 0.5;
+            color = color * 0.5; 
         } 
     }
 

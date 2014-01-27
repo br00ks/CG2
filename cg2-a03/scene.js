@@ -56,7 +56,7 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
         this.materials.planet.setUniform("clouds", "bool", false); 
 
         // set light properties for shader --> HEEEEERE!!! AMBIETNE!!
-        this.materials.planet.setUniform( "ambientLight", "vec3", [0.4,0.4,0.4]);
+        this.materials.planet.setUniform( "ambientLight", "vec3", [0.0,0.0,0.0]);
         this.materials.planet.setUniform( "light.on", "bool", true );
         this.materials.planet.setUniform( "light.type", "int", 0 );
         this.materials.planet.setUniform( "light.direction", "vec3", [-1,0,0] );
